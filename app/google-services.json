@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "153085411217",
+    "project_id": "codenamefive",
+    "storage_bucket": "codenamefive.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:153085411217:android:a4e78d3cba74502e34e430",
+        "android_client_info": {
+          "package_name": "com.itridtechnologies.resturantapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "153085411217-f19vpcdg1vrufpocad59vjok1ni83k6t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC12PLsCbul8seeY2Fki_HL2h4PBqs6KyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "153085411217-f19vpcdg1vrufpocad59vjok1ni83k6t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "153085411217-0a9ht04bbgdas2e7b17np7ugpfo93he7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.code"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

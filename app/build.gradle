@@ -1,0 +1,123 @@
+plugins {
+    id 'com.android.application'
+    id 'com.google.gms.google-services'
+}
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        applicationId "com.itridtechnologies.resturantapp"
+        minSdkVersion 26
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures {
+        dataBinding true
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.work:work-runtime:2.3.4'
+    implementation 'com.google.firebase:firebase-messaging:22.0.0'
+    implementation 'com.google.firebase:firebase-core:19.0.0'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    //Material Design
+    implementation 'com.rengwuxian.materialedittext:library:2.1.4'
+
+    //gson
+    implementation 'com.google.code.gson:gson:2.8.6'
+
+    //retrofit & gson-convertor
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    //okHttp
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.5.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.5.0'
+
+    //volley
+    implementation 'com.android.volley:volley:1.1.1'
+
+    //Card View dependency
+    implementation "androidx.cardview:cardview:1.0.0"
+
+    //Circular View Dependency
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    //Glide Dependency
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+
+    //Swipe Refresh Layout
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
+    //date time picker
+    implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
+
+    //Dependencies For Live Data
+    def lifecycle_version = "2.3.1"
+
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
+    testImplementation "android.arch.core:core-testing:1.1.1"
+
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.3.1"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata:2.3.1"
+
+    // Saved state module for ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
+
+    // Annotation processor
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
+
+
+
+    //Dependencies for Room Database
+    def room_version = "2.3.0"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    // optional - Test helpers
+    testImplementation "androidx.room:room-testing:$room_version"
+
+
+    ///Workmanager
+    def work_version = "2.5.0"
+    implementation "androidx.work:work-runtime:$work_version"
+
+    ///Range Picker
+    implementation "com.archit.calendar:awesome-calendar:2.0.0"
+
+    //Printing
+    implementation "com.itextpdf:itextg:5.5.10"
+    implementation "com.karumi:dexter:5.0.0"
+
+    //Pulse Animation
+    implementation "com.gauravbhola.ripplepulsebackground:library:1.0.0"
+
+//
+}

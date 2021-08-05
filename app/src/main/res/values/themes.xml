@@ -1,0 +1,304 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.ResturantApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/theme_color</item>
+        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <!--        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>-->
+        <!-- Customize your theme here. -->
+        // change color of overflow menu background and text
+        <item name="android:itemBackground">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@color/blackColorText</item>
+    </style>
+
+    <style name="ToolbarColored" parent="Theme.ResturantApp">
+        <item name="android:textColorSecondary">@color/colorAccent</item>
+    </style>
+
+    <style name="Theme.ResturantApp.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="textColor">
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/regular</item>
+    </style>
+
+    <style name="delayBox">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@drawable/cancel_order_background</item>
+        <item name="fontFamily">@font/regular</item>
+    </style>
+
+    <style name="historyOptionBg">
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:background">@drawable/bg_menu_recycler</item>
+    </style>
+
+    <style name="NavBarColor">
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:titleTextColor">@color/black</item>
+    </style>
+
+    <style name="busyModeSwitch">
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:background">@color/background_grey</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="fieldsBg">
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="darkText">
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="fieldsBgGrey">
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:textColor">@color/grey</item>
+    </style>
+
+    <style name="fieldsBgAppGrey">
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:background">@color/background_grey</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="appBack">
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:background">@color/background_grey</item>
+    </style>
+
+    <style name="containerBack">
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:background">#F1F1F1</item>
+    </style>
+
+    <style name="Back">
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="lightGreyStyle">
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:textColor">@color/grey</item>
+    </style>
+
+    <style name="FontMediumBlack">
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="FontMediumBlackMenu">
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_marginTop">27dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+    </style>
+
+    <style name="FontMediumBlackMenuAddon">
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/greyColorText</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+    </style>
+
+    <style name="recipetHeaderStyle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">20sp</item>
+        <item name="fontFamily">@font/regular</item>
+    </style>
+
+
+    <style name="recipetHeaderStyleId">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="FontHeadlineBlack">
+        <item name="android:textSize">20sp</item>
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="FontSmallGrey">
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:textColor">@color/grey</item>
+    </style>
+
+    <style name="FontMediumGrey">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/grey</item>
+        <item name="fontFamily">@font/regular</item>
+    </style>
+
+    <style name="AppTheme.transparent" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
+    </style>
+
+    ///styling for unpaid button
+
+    <style name="UnpaidStyle">
+        <item name="android:radius">5dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:color">@color/red</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:gravity">center</item>
+        <item name="fontFamily">@font/regular</item>
+        <item name="backgroundColor">@color/red</item>
+        <item name="background">@drawable/paid_unpaid_background</item>
+    </style>
+
+
+    //style for payment and status
+
+    <style name="PaymentCustomerName">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:drawablePadding">20dp</item>
+        <item name="fontFamily">@font/regular</item>
+    </style>
+
+    //style for circle image view for profile
+
+    <style name="UserProfile">
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:src">@drawable/ic_person</item>
+    </style>
+
+    //styling for call customer
+
+    <style name="CallCustomer">
+        <item name="android:textColor">@color/theme_color</item>
+        <item name="android:background">@color/white</item>
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    //styling linear layout
+
+    <style name="linearLayoutNO">
+        <item name="background">@color/white</item>
+        <item name="color">@color/white</item>
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    //styling text
+
+    <style name="FontSmallBlack">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:background">@color/white</item>
+        <item name="fontFamily">@font/regular</item>
+    </style>
+
+
+    //styling text
+
+    <style name="FontSmallBlackOrder">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/regular</item>
+    </style>
+
+    //styling text
+
+    <style name="FontSmallTheme">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/theme_color</item>
+        <item name="fontFamily">@font/regular</item>
+    </style>
+
+    //styling Range Picker
+
+    <style name="RangePickTheme"></style>
+
+
+    //styling text We are Open
+
+    <style name="WeAreOpen">
+        <item name="android:textSize">20sp</item>
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:textColor">@color/theme_color</item>
+    </style>
+
+
+    <style name="FontSmallWhite">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/whiteColorText</item>
+        <item name="fontFamily">@font/regular</item>
+    </style>
+
+    //Styling For Call Customer
+
+    <style name="CallCustomerNO">
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:textColor">@color/theme_color</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:background">@color/white</item>
+    </style>
+
+    <style name="FriesChoice">
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:color">@color/light_grey</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="tab_style">
+        <item name="tabTextAppearance">@style/tab_text_default</item>
+        <item name="tabTextColor">@color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="tabSelectedTextColor">@color/colorAccent</item>
+        <item name="fontFamily">@font/regular</item>
+        <item name="tabIndicatorColor">@color/colorAccent</item>
+        <item name="tabBackground">@drawable/tab_bg_selector</item>
+    </style>
+
+    <style name="tab_text_default" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">16sp</item>
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="tab_text_focused" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">16sp</item>
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+</resources>

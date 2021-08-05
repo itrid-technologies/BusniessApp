@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+   <androidx.cardview.widget.CardView
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toTopOf="parent">
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+          android:id="@+id/inner_layout_order"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@color/white">
+
+         <TextView
+             android:id="@+id/order_quantity"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginLeft="20dp"
+             android:layout_marginTop="15dp"
+             android:layout_marginBottom="15dp"
+             android:text="3"
+             android:textColor="@color/black"
+             android:textSize="16dp"
+             android:textStyle="bold"
+             app:layout_constraintBottom_toBottomOf="parent"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_constraintTop_toTopOf="parent" />
+
+         <TextView
+             android:id="@+id/order_name"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginLeft="25dp"
+             android:text="Zinger Burger"
+             android:textColor="@color/black"
+             android:textSize="14dp"
+             app:layout_constraintBottom_toBottomOf="parent"
+             app:layout_constraintStart_toEndOf="@id/order_quantity"
+             app:layout_constraintTop_toTopOf="parent" />
+
+         <TextView
+             android:id="@+id/Rs"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginLeft="100dp"
+             android:layout_marginRight="2dp"
+             android:text="Rs."
+             android:textColor="@color/black"
+             android:textSize="14dp"
+             app:layout_constraintBottom_toBottomOf="parent"
+             app:layout_constraintEnd_toStartOf="@+id/order_price"
+             app:layout_constraintTop_toTopOf="parent" />
+
+         <TextView
+             android:id="@+id/order_price"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginRight="15dp"
+             android:text="140.00"
+             android:textColor="@color/black"
+             android:textSize="14dp"
+             app:layout_constraintBottom_toBottomOf="parent"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintTop_toTopOf="parent" />
+
+
+         <View
+             android:id="@+id/view_bottom"
+             android:layout_width="match_parent"
+             android:layout_height="0.5dp"
+             android:background="@color/grey"
+             app:layout_constraintBottom_toBottomOf="parent"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintStart_toStartOf="parent" />
+      </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <androidx.constraintlayout.widget.ConstraintLayout
+          android:id="@+id/layout_addons"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="52dp"
+          android:visibility="visible">
+
+         <TextView
+             android:id="@+id/choice_fries"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginLeft="55dp"
+             android:layout_marginTop="13dp"
+             android:text="@string/FriesChoice"
+             android:textColor="@color/grey"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_constraintTop_toTopOf="parent"
+             app:layout_constraintVertical_bias="0.017" />
+
+         <TextView
+             android:id="@+id/name_choice_fries"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginLeft="65dp"
+             android:layout_marginTop="5dp"
+             android:text="Peri Fires"
+             android:textAllCaps="false"
+             android:textColor="@color/black"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_constraintTop_toBottomOf="@id/choice_fries"
+             app:layout_constraintVertical_bias="0.101" />
+
+         <TextView
+             android:id="@+id/choice_sauce"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginLeft="55dp"
+             android:layout_marginTop="13dp"
+             android:text="@string/FriesSauce"
+             android:textColor="@color/grey"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_constraintTop_toBottomOf="@id/name_choice_fries" />
+
+         <TextView
+             android:id="@+id/name_choice_sauce"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginLeft="65dp"
+             android:layout_marginTop="9dp"
+             android:text="Garlic Sause"
+             android:textColor="@color/black"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_constraintTop_toBottomOf="@id/choice_sauce" />
+
+
+         <TextView
+             android:id="@+id/Rss"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="36dp"
+             android:layout_marginEnd="8dp"
+             android:layout_marginRight="8dp"
+             android:text="Rs."
+             android:textColor="@color/black"
+             android:textSize="14dp"
+             app:layout_constraintEnd_toStartOf="@+id/addon_fires_price"
+             app:layout_constraintTop_toTopOf="parent" />
+
+         <TextView
+             android:id="@+id/addon_fires_price"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="36dp"
+             android:layout_marginRight="20dp"
+             android:text="140.00"
+             android:textColor="@color/black"
+             android:textSize="14dp"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintTop_toTopOf="parent" />
+
+
+         <TextView
+             android:id="@+id/Rsss"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="98dp"
+             android:layout_marginEnd="8dp"
+             android:layout_marginRight="8dp"
+             android:text="Rs."
+             android:textColor="@color/black"
+             android:textSize="14dp"
+             app:layout_constraintEnd_toStartOf="@+id/addon_fires_price"
+             app:layout_constraintTop_toTopOf="parent" />
+
+         <TextView
+             android:id="@+id/addon_sauce_price"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="98dp"
+             android:layout_marginRight="20dp"
+             android:text="140.00"
+             android:textColor="@color/black"
+             android:textSize="14dp"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintTop_toTopOf="parent" />
+
+
+         <View
+             android:id="@+id/view1"
+             android:layout_width="match_parent"
+             android:layout_height="0.5dp"
+             android:layout_marginTop="15dp"
+             android:background="@color/grey"
+             app:layout_constraintBottom_toBottomOf="parent"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_constraintTop_toBottomOf="@id/name_choice_sauce" />
+
+
+      </androidx.constraintlayout.widget.ConstraintLayout>
+   </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

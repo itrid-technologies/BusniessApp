@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/new_orders"
+        android:icon="@drawable/order_history"
+        android:title="New orders" />
+
+    <item
+        android:id="@+id/in_progress"
+        android:icon="@drawable/remove_circle"
+        android:title="In progress" />
+
+    <item
+        android:id="@+id/ready_for_pickup"
+        android:icon="@drawable/ic_help"
+        android:title="Ready for pickup" />
+
+    <item
+        android:id="@+id/order_history"
+        android:icon="@drawable/order_history"
+        android:title="Order history" />
+
+</menu>

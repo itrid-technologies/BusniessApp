@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="2dp">
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       style="@style/FontMediumBlack"
+       android:orientation="vertical">
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="?attr/actionBarSize"
+          android:layout_marginStart="12dp"
+          android:layout_marginEnd="12dp"
+          android:orientation="horizontal"
+          android:weightSum="3">
+
+         <TextView
+             android:id="@+id/tv_order_item_qty"
+             style="@style/FontMediumBlack"
+             android:layout_width="0dp"
+             android:layout_height="match_parent"
+             android:layout_weight="0.2"
+             android:gravity="start|center_vertical"
+             tools:text="1" />
+
+         <TextView
+             android:id="@+id/tv_order_item_name"
+             style="@style/FontMediumBlack"
+             android:layout_width="0dp"
+             android:layout_height="match_parent"
+             android:layout_weight="2"
+             android:gravity="start|center_vertical"
+             tools:text="Sample Name" />
+
+         <TextView
+             android:id="@+id/tv_order_item_price"
+             style="@style/FontMediumBlack"
+             android:layout_width="0dp"
+             android:layout_height="match_parent"
+             android:layout_weight="0.8"
+             android:gravity="end|center_vertical"
+             tools:text="RS. 200.00" />
+
+      </LinearLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/border_grey" />
+
+      <androidx.recyclerview.widget.RecyclerView
+          android:id="@+id/rv_order_sub_items"
+          android:layout_width="match_parent"
+          android:layout_height="200dp"
+          android:layout_marginStart="36dp"
+          android:layout_marginLeft="36dp"
+          android:layout_marginTop="12dp"
+          android:scrollbars="vertical"
+          android:visibility="gone"
+          app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+          tools:visibility="visible" />
+
+   </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

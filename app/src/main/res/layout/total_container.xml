@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:weightSum="5"
+    android:paddingTop="7dp"
+    android:paddingBottom="7dp"
+    android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_subtotal_name"
+            style="@style/FontMediumBlack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:layout_marginStart="30dp"
+            android:text="@string/Subtotal" />
+
+        <TextView
+            android:id="@+id/tv_subtotal_amount"
+            style="@style/FontMediumBlack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:text="@string/_200_00"
+            android:layout_marginEnd="30dp" />
+
+</LinearLayout>

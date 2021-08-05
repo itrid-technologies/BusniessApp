@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--    By Default Android theme colors-->
+    <color name="purple_200">#90949C</color>
+    <color name="purple_500">#90949C</color>
+    <color name="purple_700">#90949C</color>
+    <color name="teal_200">#12D2B3</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+<!--    Our Colors-->
+    <color name="whitee">#FFFFFFFF</color>
+    <color name="red">#e24845</color>
+    <color name="theme_color">#12D2B3</color>
+    <color name="grey">#90949C</color>
+    <color name="border_grey">#E7E9EB</color>
+    <color name="light_grey">#C3C1C1</color>
+    <color name="background_grey">#F5F7F6</color>
+    <color name="disable_grey">#E5E5E5</color>
+    <color name="unpaid_red">#D21241</color>
+    <color name="green">#25C16F</color>
+    <color name="colorPrimary">#12D2B3</color>
+    <color name="colorPrimaryDark">#FFFFFF</color>
+    <color name="colorAccent">#12D2B3</color>
+    <color name="blue">#5BBCCD</color>
+    <color name="icon_grey">#DADADA</color>
+    <color name="backgroundGreyProcessing">#F1F1F1</color>
+    <color name="blackColorText">#2e3333</color>
+    <color name="greyColorText">#828585</color>
+    <color name="whiteColorText">#FFF</color>
+    <color name="borderColor">#E5E5E5</color>
+    <color name="darkGreen">#24963E</color>
+    <color name="bottomGrey">#F1F1F1</color>
+    <color name="darkHeader">#2B2E3E</color>
+    <color name="reciept_black">#212000</color>
+</resources>

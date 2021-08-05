@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/appBack"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UiViews.Activities.ReadyDetails">
+
+    <include
+        android:id="@+id/nav_bar_RO"
+        layout="@layout/nav_bar_issues"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nsv_readyDetails"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/nav_bar_RO">
+
+        <FrameLayout
+            android:id="@+id/frame_container_RO"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginBottom="24dp"
+                    android:scrollbars="vertical"
+                    android:stretchColumns="0"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/borderColor" />
+
+
+                    <TableRow
+                        android:id="@+id/payment_status_layout_RO"
+                        style="@style/fieldsBg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:orientation="horizontal"
+                            android:padding="12dp">
+
+                            <ImageView
+                                android:id="@+id/img_wallet_RO"
+                                android:layout_width="35dp"
+                                android:layout_height="30dp"
+                                android:layout_marginTop="2dp"
+                                android:foregroundGravity="center_vertical"
+                                android:src="@drawable/ic_payment_status"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/tv_Payment_status_RO"
+                                style="@style/textColor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="10dp"
+                                android:gravity="center_vertical"
+                                android:singleLine="true"
+                                android:text="Payment Status"
+                                android:textSize="14sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/img_wallet_RO"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:layout_width="60dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:background="@drawable/paid_unpaid_background"
+                                android:gravity="center"
+                                android:text="UnPaid"
+                                android:id="@+id/payStatus"
+                                android:textColor="@color/white"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/borderColor" />
+                    </TableRow>
+
+                    <TableRow
+                        style="@style/fieldsBg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="12dp">
+
+                            <ImageView
+                                android:id="@+id/img_customer_RO"
+                                android:layout_width="35dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentTop="true"
+                                android:foregroundGravity="center_vertical"
+                                android:src="@drawable/ic_person"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/tv_ready_det_customer_name_RO"
+                                style="@style/textColor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginTop="3dp"
+                                android:text="@string/sir_imran"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/img_customer_RO"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/tv_in_progress_call_customer_RO"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="250dp"
+                                android:text="@string/call_customer"
+                                android:textColor="@color/theme_color"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/borderColor" />
+                    </TableRow>
+
+
+                    <TableRow
+                        android:id="@+id/prepare_time_layout_RO"
+                        style="@style/fieldsBg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:orientation="horizontal"
+                            android:padding="12dp">
+
+                            <ImageView
+                                android:id="@+id/rem_time_RO"
+                                android:layout_width="35dp"
+                                android:layout_height="30dp"
+                                android:layout_marginTop="2dp"
+                                android:foregroundGravity="center_vertical"
+                                android:src="@drawable/ic_location" />
+
+                            <TextView
+                                android:id="@+id/tv_address_RO"
+                                style="@style/textColor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="10dp"
+                                android:gravity="center_vertical"
+                                android:singleLine="true"
+                                android:text="@string/Adress"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+                    </TableRow>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/borderColor" />
+
+                    <TableRow
+                        style="@style/fieldsBg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="12dp">
+
+                            <ImageView
+                                android:id="@+id/img_delivery_partner_RO"
+                                android:layout_width="35dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentTop="true"
+                                android:foregroundGravity="center_vertical"
+                                android:src="@drawable/ic_person"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/tv_deliver_partner_name_RO"
+                                style="@style/textColor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginTop="3dp"
+                                android:text="Daniyal Qamar"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/img_delivery_partner_RO"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/tv_in_progress_call_delivery_partner_RO"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="250dp"
+                                android:text="@string/call_partner"
+                                android:textColor="@color/theme_color"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </TableRow>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/borderColor" />
+
+                    <TableRow
+                        style="@style/fieldsBgGrey"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="12dp"
+                        android:weightSum="100">
+
+                        <TextView
+                            style="@style/FontSmallGrey"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginLeft="30dp"
+                            android:layout_weight="50"
+                            android:text="Order details" />
+
+                        <TextView
+                            android:id="@+id/print"
+                            style="@style/FontSmallTheme"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="50"
+                            android:gravity="right"
+                            android:text="@string/Print" />
+
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:background="@color/borderColor" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/preparing_details_recycler"
+                            style="@style/fieldsBg"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                    </TableRow>
+
+                    <TableRow android:layout_width="match_parent">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:background="@color/grey" />
+                    </TableRow>
+
+                    <TableRow
+                        style="@style/fieldsBg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="12dp"
+                        android:weightSum="100">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="70"
+                            android:orientation="vertical"
+
+                            >
+
+                            <TextView
+                                android:id="@+id/tv_sub_total_RO"
+                                style="@style/FontMediumBlack"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="right"
+                                android:paddingLeft="120dp"
+                                android:text="@string/Subtotal"
+
+                                />
+
+                            <TextView
+                                android:id="@+id/tv_total_RO"
+                                style="@style/FontMediumBlack"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:gravity="right"
+                                android:paddingLeft="120dp"
+                                android:text="@string/Total"
+                                android:textStyle="bold" />
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="30"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_sub_total_amount_RO"
+                                style="@style/FontMediumBlack"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:gravity="right"
+                                android:text="@string/subTotalAmount" />
+
+                            <TextView
+                                android:id="@+id/tv_total_amount_RO"
+                                style="@style/FontMediumBlack"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:gravity="right"
+                                android:text="@string/TotalAmount"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/borderColor" />
+                    </TableRow>
+
+                    <TableRow
+                        style="@style/FontSmallBlack"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="12dp">
+
+                        <TextView
+                            style="@style/textColor"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="98"
+                            android:text="@string/OrderNote" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="12dp"
+                        android:weightSum="100">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/background_round_rect" />
+
+                        <EditText
+                            android:id="@+id/et_order_note_RO"
+                            style="@style/fieldsBg"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="99"
+                            android:gravity="top"
+                            android:hint="@string/BussinessOrderNote"
+                            android:padding="20dp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/tv_delivery_note_PD"
+                        style="@style/FontSmallBlack"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:padding="12dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            style="@style/textColor"
+                            android:id="@+id/tv_delNote"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="98"
+                            android:text="@string/DeliveryNote" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingHorizontal="12dp"
+                        android:visibility="gone"
+                        android:weightSum="100">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/background_round_rect_blue" />
+
+                        <EditText
+                            android:id="@+id/et_delivery_note_RO"
+                            style="@style/fieldsBg"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="99"
+                            android:gravity="top"
+                            android:hint="@string/DeliveryNoteHere"
+                            android:padding="20dp" />
+                    </TableRow>
+
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="12dp">
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="20dp"
+                            android:layout_weight="90"
+                            android:background="@color/colorAccent"
+                            android:text="@string/Delivered"
+                            android:textAllCaps="false"
+                            android:textColor="@color/white" />
+                    </TableRow>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        app:layout_constraintTop_toBottomOf="@+id/table_PD" />
+                </TableLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </FrameLayout>
+    </androidx.core.widget.NestedScrollView>
+    <!-- END OF SCROLL VIEW IN WHICH ALL SCROLLS-->
+
+    <ProgressBar
+        android:id="@+id/PBReadyDetails"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="85dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

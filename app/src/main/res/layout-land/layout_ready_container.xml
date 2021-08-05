@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/appBack"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        app:cardElevation="4dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Back"
+            android:id="@+id/inner_layout_ready">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ready_order_number"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="#7789"
+                android:textSize="16dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="20dp"
+                android:textStyle="bold"
+                style="@style/Back"
+                />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/order_time_ready"
+                android:text="11:56 AM"
+                android:textSize="14dp"
+                style="@style/lightGreyStyle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="10dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/customer_name_ready_TV"
+                android:text="Imran Rasheed"
+                android:textSize="14dp"
+                style="@style/lightGreyStyle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ready_order_number"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/items_price_ready"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/customer_name_ready_TV"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="3dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3"
+                    android:id="@+id/item_quantity_ready"
+                    android:textSize="14dp"
+                    style="@style/lightGreyStyle"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" items (Rs. "
+                    android:id="@+id/item_text_ready"
+                    android:textSize="14dp"
+                    style="@style/lightGreyStyle"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="140.00"
+                    android:id="@+id/price_ready"
+                    android:textSize="14dp"
+                    style="@style/lightGreyStyle"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=")"
+                    android:id="@+id/end_bracket"
+                    android:textSize="14dp"
+                    style="@style/lightGreyStyle"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/searching_rider"
+                android:orientation="horizontal"
+                android:text="@string/searching_for_courier"
+                android:textSize="14dp"
+                style="@style/lightGreyStyle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/customer_name_ready_TV"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="3.5dp"/>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/rider_coming_ready"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/customer_name_ready_TV"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="3dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Daniyal"
+                    android:id="@+id/rider_name"
+                    android:textSize="14dp"
+                    android:textColor="@color/greyColorText"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" is Coming in "
+                    android:id="@+id/come_in_ready"
+                    android:textSize="14dp"
+                    android:textColor="@color/greyColorText"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10"
+                    android:id="@+id/coming_time_ready"
+                    android:textSize="14dp"
+                    android:textColor="@color/greyColorText"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" Minutes"
+                    android:id="@+id/minutes_ready"
+                    android:textSize="14dp"
+                    android:textColor="@color/greyColorText"
+                    />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/waiting_customer"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/customer_name_ready_TV"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="3dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Waiting for"
+                    android:id="@+id/wait_for"
+                    android:textSize="12dp"
+                    android:textColor="@color/greyColorText"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" Imran Rashid "
+                    android:id="@+id/cust_name_ready_to_collect"
+                    android:textSize="12dp"
+                    android:textColor="@color/greyColorText"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="to collect"
+                    android:id="@+id/price"
+                    android:textSize="12dp"
+                    android:textColor="@color/greyColorText"
+                    />
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/bottom_layout_container_dashboard"
+                style="@style/containerBack"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toTopOf="@+id/waiting_customer"
+                android:layout_marginTop="30dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Delivery"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"
+                    android:id="@+id/delivery_ready"
+                    android:textSize="14dp"
+                    android:textColor="@color/black"
+                    android:layout_marginLeft="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+                <TextView
+                    android:id="@+id/status_ready"
+                    android:layout_width="65dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/paid_unpaid_background"
+                    android:gravity="center"
+                    android:text="unPaid"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
