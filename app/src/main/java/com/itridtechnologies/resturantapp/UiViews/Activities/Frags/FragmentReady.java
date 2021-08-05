@@ -40,6 +40,7 @@ import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 import com.itridtechnologies.resturantapp.utils.Constants;
 import com.itridtechnologies.resturantapp.utils.Internet;
+import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -76,6 +77,8 @@ public class FragmentReady extends Fragment {
     private TextView mNoOrderText;
     private ImageView mNoOrderImage;
 
+    //Prefernce Manager
+    private PreferencesManager pm;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,11 +91,15 @@ public class FragmentReady extends Fragment {
         mPB = root.findViewById(R.id.PBReady);
         //setting name of toolbar
         Toolbar mToolbar = root.findViewById(R.id.action_bar_ready);
+
+        //giving context to preference manager
+        pm = new PreferencesManager(requireContext());
         ///Header Name
         mToolbar.setTitle("Ready");
         //Context for Room
         //initializing database
         databaseRoom = RoomDB.getInstance(requireContext());
+
         //Setting Toolbar Navigation Bar
         mToolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
@@ -108,10 +115,16 @@ public class FragmentReady extends Fragment {
                 }
                 case R.id.call_support: {
                     String mCellNumber = AppManager.getBusinessDetails().getData().getResults().getPhoneNumber();
-                    ;
                     String uri = "tel:" + mCellNumber.trim();
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.parse(uri));
+                    startActivity(intent);
+                    return false;
+                }
+                case R.id.over_flow_log_out:{
+                    Intent intent = new Intent(requireContext(), MainActivity.class);
+                    pm.clearSharedPref();
+                    pm.saveMyDataBool("login", false);
                     startActivity(intent);
                     return false;
                 }

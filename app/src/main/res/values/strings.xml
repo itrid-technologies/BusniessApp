@@ -5,7 +5,7 @@
     <string name="mail_not_entered">Please Enter You Email Address</string>
     <string name="login">Login</string>
     <string name="order_text">Review and confirm the order(s) and start preparing them according to the deadline.</string>
-    <string name="help">help</string>
+    <string name="help">Help</string>
     <string name="call_customer">Call Customer</string>
     <string name="call_partner">Call Partner</string>
     <string name="sir_imran">Imran Rasheed</string>
@@ -91,5 +91,7 @@ update the customer.</string>
     <string name="leave_feedback">Leave Feedback</string>
     <string name="busy_mode_is_enabled_to_receive_new_orders_turn_off_busy_mode">Busy mode is enabled. To receive new orders turn off busy mode.</string>
     <string name="your_business_is_busy">Your Business is Busy</string>
+    <string name="logout">Logout</string>
+    <string name="leave_for_a_customer_review">Leave for a customer Review</string>
 
 </resources>

@@ -99,10 +99,10 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
         }
 
         /////Hiding If Not Available
-        String avalibilityStatus = mMenuItem.getmAvailabilityStatus();
-        if (!avalibilityStatus.equals("Active")) {
-            holder.itemView.setVisibility(View.GONE);
-        }
+//        String avalibilityStatus = mMenuItem.getmAvailabilityStatus();
+//        if (!avalibilityStatus.equals("Active")) {
+//            holder.itemView.setVisibility(View.GONE);
+//        }
 
         ////Loading Image
         Glide.with(mCtx).load(mMenuItem.getmPic()).listener(new RequestListener<Drawable>() {

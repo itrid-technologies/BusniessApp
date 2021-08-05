@@ -1,0 +1,26 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="1dp"
+    android:height="1dp"
+    android:viewportWidth="14680.26"
+    android:viewportHeight="11920.74">
+  <path
+      android:pathData="M2972.9,6325.2C1524.2,6325.2 350,7499.5 350,8947.8c0,1448.7 1174.2,2622.9 2622.9,2622.9c1448.3,0 2622.9,-1174.2 2622.9,-2622.9C5595.8,7499.5 4421.2,6325.2 2972.9,6325.2zM2972.9,10698.8c-967.2,0 -1751,-783.8 -1751,-1751c0,-966.8 783.8,-1750.6 1751,-1750.6c966.8,0 1750.6,783.8 1750.6,1750.6C4723.5,9915 3939.8,10698.8 2972.9,10698.8z"
+      android:strokeWidth="700"
+      android:fillColor="@color/theme_color"
+      android:strokeColor="@color/theme_color"/>
+  <path
+      android:pathData="M11707.3,6325.2c-1448.7,0 -2622.9,1174.2 -2622.9,2622.6c0,1448.7 1174.2,2622.9 2622.9,2622.9c1448.3,0 2622.9,-1174.2 2622.9,-2622.9C14330.2,7499.5 13155.6,6325.2 11707.3,6325.2zM11707.3,10698.8c-967.2,0 -1751,-783.8 -1751,-1751c0,-966.8 783.8,-1750.6 1751,-1750.6c966.8,0 1750.6,783.8 1750.6,1750.6C13457.9,9915 12674.2,10698.8 11707.3,10698.8z"
+      android:strokeWidth="700"
+      android:fillColor="@color/theme_color"
+      android:strokeColor="@color/theme_color"/>
+  <path
+      android:pathData="M9380.6,1344.9m-994.9,0a994.9,994.9 0,1 1,1989.7 0a994.9,994.9 0,1 1,-1989.7 0"
+      android:strokeWidth="700"
+      android:fillColor="@color/theme_color"
+      android:strokeColor="@color/theme_color"/>
+  <path
+      android:pathData="M11049.9,5318.9h-2209.2L7867.9,4034.3L6643.2,5451.2l1312.9,697.7c204.2,108.6 332.3,321 332.3,552.7v2904.4c0,768.3 -1176.7,768.3 -1176.7,0V7300.6L5045.4,6185.2c-198.6,-106.9 -361.9,-273 -452.9,-479.4c-137.9,-312.1 -76.2,-618 249.4,-915c0,0 1689.6,-1689.6 2153.1,-2153.1c119.9,-119.9 275.5,-201.4 444.1,-218.7c145.6,-15.1 287.8,14.1 425.4,95.2c104.1,61.4 190.8,148.2 258.9,247.9l1209.5,1776.4h1717.1C11594.6,4538.6 11594.6,5318.9 11049.9,5318.9z"
+      android:strokeWidth="700"
+      android:fillColor="@color/theme_color"
+      android:strokeColor="@color/theme_color"/>
+</vector>

@@ -15,8 +15,8 @@
             android:title="@string/menu"
             app:showAsAction="never"/>
         <item
-            android:id="@+id/help"
-            android:title="Help"
+            android:id="@+id/menu_help"
+            android:title="@string/help"
             app:showAsAction="never"
             />
         <item
@@ -27,6 +27,11 @@
         <item
             android:id="@+id/call_support"
             android:title="@string/call_support"
+            app:showAsAction="never"
+            />
+        <item
+            android:id="@+id/over_flow_log_out"
+            android:title="@string/logout"
             app:showAsAction="never"
             />
     </group>

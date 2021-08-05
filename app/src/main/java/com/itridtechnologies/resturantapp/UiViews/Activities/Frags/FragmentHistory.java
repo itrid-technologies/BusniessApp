@@ -138,6 +138,7 @@ public class FragmentHistory extends Fragment {
         mToolbarHist.setTitle("History");
 
 
+
         //Setting Toolbar Navigation Bar
         mToolbarHist.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
@@ -156,6 +157,13 @@ public class FragmentHistory extends Fragment {
                     String uri = "tel:" + mCellNumber.trim();
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.parse(uri));
+                    startActivity(intent);
+                    return false;
+                }
+                case R.id.over_flow_log_out:{
+                    Intent intent = new Intent(requireContext(), MainActivity.class);
+                    pm.clearSharedPref();
+                    pm.saveMyDataBool("login", false);
                     startActivity(intent);
                     return false;
                 }

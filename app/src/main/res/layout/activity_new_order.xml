@@ -281,7 +281,7 @@
                             android:layout_height="30dp"
                             android:layout_alignParentTop="true"
                             android:foregroundGravity="center_vertical"
-                            android:src="@drawable/ic_person"
+                            android:src="@drawable/ic_defaultphoto"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />

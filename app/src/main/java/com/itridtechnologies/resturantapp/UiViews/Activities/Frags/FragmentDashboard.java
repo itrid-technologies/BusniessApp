@@ -64,6 +64,7 @@ import com.itridtechnologies.resturantapp.utils.Config;
 import com.itridtechnologies.resturantapp.utils.Constants;
 import com.itridtechnologies.resturantapp.utils.Internet;
 import com.itridtechnologies.resturantapp.utils.NotificationsUtils;
+import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -124,6 +125,9 @@ public class FragmentDashboard extends Fragment {
     //work for background
     OneTimeWorkRequest bgWork;
 
+    //Preference Manager
+    private PreferencesManager pm;
+
     ///Room database
     RoomDB databaseRoom;
     //Order item
@@ -151,6 +155,9 @@ public class FragmentDashboard extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        pm = new PreferencesManager(requireContext());
+
         Log.e(TAG, "onCreateView: i m created");
 
         anim_in = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
@@ -241,6 +248,13 @@ public class FragmentDashboard extends Fragment {
                     String uri = "tel:" + mCellNumber.trim();
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.parse(uri));
+                    startActivity(intent);
+                    return false;
+                }
+                case R.id.over_flow_log_out: {
+                    Intent intent = new Intent(requireContext(), MainActivity.class);
+                    pm.clearSharedPref();
+                    pm.saveMyDataBool("login", false);
                     startActivity(intent);
                     return false;
                 }
@@ -451,6 +465,10 @@ public class FragmentDashboard extends Fragment {
                     Log.e(TAG, "onResponse: Next day " + nextday);
                     try {
                         mIsClosed = response.body().getData().getBusinessHours().get(currentDay()).getIsClosed();
+                        if (mIsClosed == 1)
+                        {
+                            mIsClosed = response.body().getData().getBusinessHours().get(nextday).getIsClosed();
+                        }
                         mOpenTime = response.body().getData().getBusinessHours().get(nextday).getOpeningTime();
                         mCloseTime = response.body().getData().getBusinessHours().get(currentDay()).getClosingTime();
                         mOpenDay = response.body().getData().getBusinessHours().get(nextday).getDay();
@@ -488,15 +506,16 @@ public class FragmentDashboard extends Fragment {
             Log.e(TAG, "setTimeLayout: " + openTime.substring(0, openTime.length() - 3) + " close " + closeTime);
 
             String closeMsg = "Closed - Opening " + day + " " + openTime.substring(0, openTime.length() - 3) + " AM";
-            String openMsg = "Accepting Orders till " + closeTime.substring(0, closeTime.length() - 3) + " PM";
+            String openMsg = "Open Now - Accepting Orders till " + closeTime.substring(0, closeTime.length() - 3) + " PM";
 
             if (isClosed == 0) {
-                noOrders.setText(closeMsg);
-            } else {
+                imgNoOrder.setImageResource(R.drawable.ic_businessopen);
                 noOrders.setText(openMsg);
+            } else {
+                imgNoOrder.setImageResource(R.drawable.ic_businessclosed);
+                noOrders.setText(closeMsg);
             }
         }
-
     }
 
     ////Send to preparing order if autoaccept is on
@@ -899,7 +918,6 @@ public class FragmentDashboard extends Fragment {
                     if (mBusyMode.isChecked()) {
 
 
-
                         anim_in.setAnimationListener(new Animation.AnimationListener() {
                             @Override
                             public void onAnimationStart(Animation animation) {
@@ -920,9 +938,7 @@ public class FragmentDashboard extends Fragment {
                         mBusyNotify.startAnimation(anim_in);
 
 
-
                     } else if (!mBusyMode.isChecked()) {
-
 
 
                         anim_out.setAnimationListener(new Animation.AnimationListener() {
@@ -988,7 +1004,6 @@ public class FragmentDashboard extends Fragment {
         ///Setting delivery Switch
         if (busyStatus == 1) {
             mBusyMode.setChecked(true);
-
 
 
             anim_in.setAnimationListener(new Animation.AnimationListener() {

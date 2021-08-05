@@ -61,8 +61,8 @@
                 style="@style/fieldsBg"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
+                android:paddingStart="30dp"
                 android:gravity="center_vertical"
-                android:paddingLeft="30dp"
                 android:text="@string/phajja_siri_paye_184022"
                 app:layout_constraintTop_toBottomOf="@+id/view1set" />
 
@@ -501,52 +501,13 @@
                         app:layout_constraintTop_toTopOf="parent" />
                 </TableRow>
 
-
                 <TableRow android:layout_width="match_parent">
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="@color/grey" />
+                        android:layout_height="175dp" />
                 </TableRow>
-
-
-                <TableRow android:layout_width="match_parent">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:layout_marginTop="40dp"
-                        android:background="@color/grey" />
-                </TableRow>
-
-                <TableRow>
-
-                    <TextView
-                        android:id="@+id/logout"
-                        style="@style/fieldsBg"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="30dp"
-                        android:text="Log Out"
-                        android:textColor="@color/red"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </TableRow>
-
-                <TableRow android:layout_width="match_parent">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:background="@color/grey" />
-                </TableRow>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp" />
             </TableLayout>
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

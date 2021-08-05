@@ -47,7 +47,6 @@ public class Settings extends AppCompatActivity {
 
     private TextView mAcceptOrder;
     private TextView mRejectOrder;
-    private TextView mLogOut;
     private ImageButton mAddAcceptOrder;
     private ImageButton mAddRejectOrder;
     private ImageButton mSubAcceptOrder;
@@ -115,7 +114,6 @@ public class Settings extends AppCompatActivity {
 //        mAcceptNumber = Integer.parseInt(mAcceptOrder.getText().toString().trim());
 //        mRejectNumber = Integer.parseInt(mRejectOrder.getText().toString().trim());
         incDecReciepts();
-        logout();
     }
 
     private void darkMode() {
@@ -464,26 +462,9 @@ public class Settings extends AppCompatActivity {
 
     }
 
-    ///Logout Button
-    public void logout() {
-        mLogOut.setOnClickListener(v -> {
-            Intent intent = new Intent(Settings.this, MainActivity.class);
-            pm.saveMyDataBool("login", false);
-            startActivity(intent);
-        });
-    }
 
     ////setting buttons to increase and decrease no of recipts
     public void incDecReciepts() {
-
-
-        //Setting Toolbar Navigation Bar
-        mToolbar.setOnMenuItemClickListener(item -> {
-            Intent intent = new Intent(Settings.this, help.class);
-            startActivity(intent);
-            return false;
-        });
-
 
         //Setting Increasing accept button
         mAddAcceptOrder.setOnClickListener(v -> {
@@ -558,7 +539,6 @@ public class Settings extends AppCompatActivity {
         mAddRejectOrder = findViewById(R.id.plus_no_of_recipts_rej);
         mSubAcceptOrder = findViewById(R.id.minus_no_of_recipts);
         mSubRejectOrder = findViewById(R.id.minus_no_of_recipts_rej);
-        mLogOut = findViewById(R.id.logout);
         mTestReciept = findViewById(R.id.print_test_recipt);
         mBussinessName = findViewById(R.id.cellDataId);
         mDarkmode = findViewById(R.id.switchDarkMode);
@@ -596,6 +576,7 @@ public class Settings extends AppCompatActivity {
     ////Toolbar
     public void toolbar() {
         mToolbar.setTitle("Setting");
+
         //Setting Toolbar Navigation Bar
         mToolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
@@ -611,10 +592,16 @@ public class Settings extends AppCompatActivity {
                 }
                 case R.id.call_support: {
                     String mCellNumber = AppManager.getBusinessDetails().getData().getResults().getPhoneNumber();
-                    ;
                     String uri = "tel:" + mCellNumber.trim();
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.parse(uri));
+                    startActivity(intent);
+                    return false;
+                }
+                case R.id.over_flow_log_out:{
+                    Intent intent = new Intent(Settings.this, MainActivity.class);
+                    pm.clearSharedPref();
+                    pm.saveMyDataBool("login", false);
                     startActivity(intent);
                     return false;
                 }
@@ -625,7 +612,6 @@ public class Settings extends AppCompatActivity {
                 }
             }
         });
-
         ///Back Listener
         mToolbar.setNavigationOnClickListener(v -> {
             Intent intent = new Intent(Settings.this, BasicActvity.class);

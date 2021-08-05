@@ -32,6 +32,6 @@
     <color name="borderColor">#E5E5E5</color>
     <color name="darkGreen">#24963E</color>
     <color name="bottomGrey">#F1F1F1</color>
-    <color name="darkHeader">#2B2E3E</color>
+    <color name="darkHeader">#121212</color>
     <color name="reciept_black">#212000</color>
 </resources>

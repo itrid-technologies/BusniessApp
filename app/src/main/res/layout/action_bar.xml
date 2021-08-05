@@ -8,5 +8,5 @@
     android:elevation="4dp"
     android:theme="@style/ToolbarColored"
     app:menu="@menu/action_bar_items"
-    app:navigationIcon="@drawable/ic_left_arrow"
+    app:navigationIcon="@drawable/ic_cross"
     app:popupTheme="@style/Theme.ResturantApp" />

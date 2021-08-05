@@ -66,7 +66,7 @@ public class HistoryDetails extends AppCompatActivity {
     private List<DataItem> mOrderDetails = new ArrayList<>();
 
     private NestedScrollView mNSVHistDetails;
-    String p;
+    private String p;
     private final String token = AppManager.getBusinessDetails().getData().getToken();
     private Toolbar mToolbar;
 
@@ -85,10 +85,12 @@ public class HistoryDetails extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        p = pm.getMyDataString("orderIdHis");
+        Log.e(TAG, "onStart: id # " + p );
+        pos = pm.getMyDataString("orderHisPos");
+
         toolbarFun();
         setVariables();
-        p = pm.getMyDataString("orderIdHis");
-        pos = pm.getMyDataString("orderHisPos");
 
         Log.e(TAG, "onStart: order id history" + p);
         Log.e(TAG, "onStart: order id Position" + pos);
@@ -238,7 +240,7 @@ public class HistoryDetails extends AppCompatActivity {
     //Setting Toolbar
     public void toolbarFun() {
 
-        mToolbar.setTitle(p);
+        mToolbar.setTitle(" # " + p);
         mToolbar.setNavigationOnClickListener(v -> AppManager.intent(BasicActvity.class));
 
         mToolbar.setOnMenuItemClickListener(item -> {
@@ -258,6 +260,13 @@ public class HistoryDetails extends AppCompatActivity {
                     String uri = "tel:" + mCellNumber.trim();
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.parse(uri));
+                    startActivity(intent);
+                    return false;
+                }
+                case R.id.over_flow_log_out: {
+                    Intent intent = new Intent(HistoryDetails.this, MainActivity.class);
+                    pm.clearSharedPref();
+                    pm.saveMyDataBool("login", false);
                     startActivity(intent);
                     return false;
                 }

@@ -20,13 +20,13 @@
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nsvHistoryDetails"
         android:layout_width="match_parent"
-        tools:visibility="visible"
-        android:visibility="gone"
         android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/nav_bar_HD">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nav_bar_HD"
+        tools:visibility="visible">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -113,7 +113,7 @@
                             android:layout_width="35dp"
                             android:layout_height="30dp"
                             android:layout_marginLeft="10dp"
-                            android:src="@drawable/ic_person"
+                            android:src="@drawable/ic_defaultphoto"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -127,19 +127,6 @@
                             android:layout_marginTop="3dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toEndOf="@id/img_delivery_partner_PD"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:id="@+id/tv_in_progress_call_delivery_partner_PD"
-                            style="@style/textColor"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="630dp"
-                            android:layout_marginRight="10dp"
-                            android:text="Courier"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -248,7 +235,7 @@
                             android:layout_marginLeft="10dp"
                             android:layout_marginTop="2dp"
                             android:foregroundGravity="center_vertical"
-                            android:src="@drawable/ic_location"
+                            android:src="@drawable/ic_historystatus"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -382,6 +369,89 @@
 
                 </TableRow>
 
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/borderColor" />
+                </TableRow>
+
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="25dp"
+                        android:background="@color/borderColor" />
+                </TableRow>
+
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/tv_review_for_customer"
+                        style="@style/FontSmallBlack"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:gravity="center_vertical"
+                        android:paddingStart="30dp"
+                        android:text="@string/leave_for_a_customer_review"
+                        android:textColor="@color/theme_color"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/img_delivery_partner_PD"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </TableRow>
+
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/borderColor" />
+                </TableRow>
+
+
+                <TableRow>
+
+                    <TextView
+                        android:id="@+id/tv_review_for_courier"
+                        style="@style/FontSmallBlack"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center_vertical"
+                        android:paddingStart="30dp"
+                        android:text="@string/leave_for_a_customer_review"
+                        android:textColor="@color/theme_color"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/img_delivery_partner_PD"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </TableRow>
+
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/borderColor" />
+                </TableRow>
+
+
             </TableLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
@@ -391,6 +461,7 @@
         style="?attr/progressBarStyle"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

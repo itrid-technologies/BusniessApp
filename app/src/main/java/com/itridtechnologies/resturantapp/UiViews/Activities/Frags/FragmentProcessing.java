@@ -39,6 +39,7 @@ import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 import com.itridtechnologies.resturantapp.utils.Constants;
 import com.itridtechnologies.resturantapp.utils.Internet;
+import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -71,6 +72,9 @@ public class FragmentProcessing extends Fragment {
     //Working Variables
     private int mCurrentPage = 1;
 
+    //Preference Manager
+    private PreferencesManager pm;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,8 +83,13 @@ public class FragmentProcessing extends Fragment {
         mPBFull = root.findViewById(R.id.PBProcess);
         mNSVProgress = root.findViewById(R.id.nsv_process);
         Toolbar mToolbar = root.findViewById(R.id.nav_bar_PO);
+
+        pm = new PreferencesManager(requireContext());
+
         ///Header Name
         mToolbar.setTitle("Preparing");
+        //Setting Toolbar Navigation Bar
+
         //Setting Toolbar Navigation Bar
         mToolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
@@ -92,15 +101,20 @@ public class FragmentProcessing extends Fragment {
                 case R.id.settings: {
                     Intent intent = new Intent(getContext(), Settings.class);
                     startActivity(intent);
-
                     return false;
                 }
                 case R.id.call_support: {
                     String mCellNumber = AppManager.getBusinessDetails().getData().getResults().getPhoneNumber();
-                    ;
                     String uri = "tel:" + mCellNumber.trim();
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.parse(uri));
+                    startActivity(intent);
+                    return false;
+                }
+                case R.id.over_flow_log_out:{
+                    Intent intent = new Intent(requireContext(), MainActivity.class);
+                    pm.clearSharedPref();
+                    pm.saveMyDataBool("login", false);
                     startActivity(intent);
                     return false;
                 }

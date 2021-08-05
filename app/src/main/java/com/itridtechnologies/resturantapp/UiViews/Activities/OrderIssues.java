@@ -9,11 +9,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.itridtechnologies.resturantapp.R;
+import com.itridtechnologies.resturantapp.models.orderHistory.Order;
 import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
 public class OrderIssues extends AppCompatActivity {
@@ -21,6 +23,7 @@ public class OrderIssues extends AppCompatActivity {
     private AppCompatButton mDelayBtn;
     private Toolbar mToolbar;
     private String OrderNo;
+    private static final String TAG = "OrderIssues";
     private PreferencesManager pm;
 
     @Override
@@ -33,6 +36,7 @@ public class OrderIssues extends AppCompatActivity {
         toolbarFun();
         setBtns();
         OrderNo = getIntent().getStringExtra("orderNo");
+        Log.e(TAG, "onCreate: " + OrderNo);
         mToolbar.setTitle("Problem With #" + OrderNo);
     }
 

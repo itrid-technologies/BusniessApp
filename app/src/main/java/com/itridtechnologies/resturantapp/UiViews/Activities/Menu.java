@@ -96,6 +96,10 @@ public class Menu extends AppCompatActivity {
     ////Toolbar
     public void toolbar() {
         mToolbar.setTitle("Menu");
+
+
+        //Setting Toolbar Navigation Bar
+
         //Setting Toolbar Navigation Bar
         mToolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
@@ -111,10 +115,16 @@ public class Menu extends AppCompatActivity {
                 }
                 case R.id.call_support: {
                     String mCellNumber = AppManager.getBusinessDetails().getData().getResults().getPhoneNumber();
-                    ;
                     String uri = "tel:" + mCellNumber.trim();
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.parse(uri));
+                    startActivity(intent);
+                    return false;
+                }
+                case R.id.over_flow_log_out:{
+                    Intent intent = new Intent(Menu.this, MainActivity.class);
+                    pm.clearSharedPref();
+                    pm.saveMyDataBool("login", false);
                     startActivity(intent);
                     return false;
                 }
@@ -159,7 +169,7 @@ public class Menu extends AppCompatActivity {
             for (int i = 0; i < cats.size(); i++) {
                 //assign titles to tab Layout
                 //Setting categories one by one
-                mTabLayout.addTab(mTabLayout.newTab().setText(cats.get(i).toUpperCase()));
+                mTabLayout.addTab(mTabLayout.newTab().setText(cats.get(i)));
                 mTabLayout.setTabGravity(TabLayout.GRAVITY_START);
                 Log.e("tag", "fun com 2");
             }//for
@@ -216,10 +226,14 @@ public class Menu extends AppCompatActivity {
                     if (response.isSuccessful() && response.body() != null) {
                         Log.e(TAG, "onResponse: sucess");
                         for (int i = 0; i < response.body().getData().size(); i++) {
-                            if (response.body().getData().get(i).getCategoryStatus().equals("Active")) {
+
                                 ///Adding all categories with Active status in a string list
                                 cats.add(response.body().getData().get(i).getName());
-                            }
+
+//                            if (response.body().getData().get(i).getCategoryStatus().equals("Active")) {
+//                                ///Adding all categories with Active status in a string list
+//                                cats.add(response.body().getData().get(i).getName());
+//                            }
                         }
                         ///Calling set Tabs Function to add all strings
                         setTabs();
@@ -301,7 +315,7 @@ public class Menu extends AppCompatActivity {
 
                         Log.e(TAG, "onResponse: Item available" + response.body().getData().get(pos).getChildren().get(i).getAvailability());
 
-                        if (response.body().getData().get(pos).getChildren().get(i).getStatus().equals("Active")) {
+
                             //Adding data in the list
                             menuItemList.add(new MenuModel(
                                     response.body().getData().get(pos).getChildren().get(i).getName(),
@@ -313,7 +327,21 @@ public class Menu extends AppCompatActivity {
                                     mMenuAddonsList,
                                     response.body().getData().get(pos).getChildren().get(i).getStatus()
                             ));
-                        }
+
+
+//                        if (response.body().getData().get(pos).getChildren().get(i).getStatus().equals("Active")) {
+//                            //Adding data in the list
+//                            menuItemList.add(new MenuModel(
+//                                    response.body().getData().get(pos).getChildren().get(i).getName(),
+//                                    description,
+//                                    Helper.IMAGEURL + response.body().getData().get(pos).getChildren().get(i).getPhoto(),
+//                                    response.body().getData().get(pos).getChildren().get(i).getAvailability(),
+//                                    response.body().getData().get(pos).getChildren().get(i).getId(),
+//                                    String.valueOf(response.body().getData().get(pos).getChildren().get(i).getAddonAvailable()),
+//                                    mMenuAddonsList,
+//                                    response.body().getData().get(pos).getChildren().get(i).getStatus()
+//                            ));
+//                        }
 
 
                     }
@@ -374,11 +402,6 @@ public class Menu extends AppCompatActivity {
                         }
 
                     }
-                    else {
-                        Toast.makeText(getApplicationContext(), "Token Expired " + response.message(), Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    }
-//                        mPBMenu.setVisibility(View.GONE);
                     mTabLayout.setEnabled(true);
 
                     if (hasSubItems) {
