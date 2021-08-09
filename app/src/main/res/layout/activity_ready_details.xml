@@ -22,485 +22,491 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:visibility="gone"
-        tools:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/btn_delivered_ll"
-        app:layout_constraintTop_toBottomOf="@id/nav_bar_RO">
+        app:layout_constraintTop_toBottomOf="@id/nav_bar_RO"
+        tools:visibility="visible">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TableLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="24dp"
+                android:scrollbars="vertical"
+                android:stretchColumns="0"
+                app:layout_constraintTop_toTopOf="parent">
 
-
-                <TableLayout
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="40dp"
-                    android:layout_marginBottom="24dp"
-                    android:scrollbars="vertical"
-                    android:stretchColumns="0"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:layout_height="1dp"
+                    android:background="@color/borderColor" />
 
-                    <View
+
+                <TableRow
+                    android:id="@+id/paymentStatusReadyOrder"
+                    style="@style/fieldsBg"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/borderColor" />
+                        android:layout_height="60dp"
+                        android:orientation="horizontal"
+                        android:padding="12dp">
 
-
-                    <TableRow
-                        android:id="@+id/payment_status_layout_RO"
-                        style="@style/fieldsBg"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical">
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:orientation="horizontal"
-                            android:padding="12dp">
-
-                            <ImageView
-                                android:id="@+id/img_wallet_RO"
-                                android:layout_width="35dp"
-                                android:layout_height="30dp"
-                                android:layout_marginTop="2dp"
-                                android:foregroundGravity="center_vertical"
-                                android:src="@drawable/ic_payment_status"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <TextView
-                                android:id="@+id/tv_Payment_status_RO"
-                                style="@style/textColor"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="10dp"
-                                android:gravity="center_vertical"
-                                android:singleLine="true"
-                                android:text="Payment Status"
-                                android:textSize="14sp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@id/img_wallet_RO"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <TextView
-                                android:layout_width="60dp"
-                                android:layout_height="20dp"
-                                android:layout_gravity="center_vertical"
-                                android:background="@drawable/paid_unpaid_background"
-                                android:gravity="center"
-                                android:text="UnPaid"
-                                android:id="@+id/payStatus"
-                                android:textColor="@color/white"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/borderColor" />
-                    </TableRow>
-
-                    <TableRow
-                        style="@style/fieldsBg"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical">
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="12dp">
-
-                            <ImageView
-                                android:id="@+id/img_customer_RO"
-                                android:layout_width="35dp"
-                                android:layout_height="30dp"
-                                android:layout_alignParentTop="true"
-                                android:foregroundGravity="center_vertical"
-                                android:src="@drawable/ic_person"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <TextView
-                                android:id="@+id/tv_ready_det_customer_name_RO"
-                                style="@style/textColor"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:layout_marginTop="3dp"
-                                android:text="@string/sir_imran"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@id/img_customer_RO"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <TextView
-                                android:id="@+id/tv_in_progress_call_customer_RO"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="250dp"
-                                android:text="@string/call_customer"
-                                android:textColor="@color/theme_color"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/borderColor" />
-                    </TableRow>
-
-
-                    <TableRow
-                        android:id="@+id/prepare_time_layout_RO"
-                        style="@style/fieldsBg"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:orientation="horizontal"
-                            android:padding="12dp">
-
-                            <ImageView
-                                android:id="@+id/rem_time_RO"
-                                android:layout_width="35dp"
-                                android:layout_height="30dp"
-                                android:layout_marginTop="2dp"
-                                android:foregroundGravity="center_vertical"
-                                android:src="@drawable/ic_location" />
-
-                            <TextView
-                                android:id="@+id/tv_address_RO"
-                                style="@style/textColor"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="10dp"
-                                android:gravity="center_vertical"
-                                android:singleLine="true"
-                                android:text="@string/Adress"
-                                android:textSize="12sp" />
-
-                        </LinearLayout>
-                    </TableRow>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/borderColor" />
-
-                    <TableRow
-                        android:id="@+id/partner"
-                        style="@style/fieldsBg"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical">
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="12dp">
-
-                            <ImageView
-                                android:id="@+id/img_delivery_partner_RO"
-                                android:layout_width="35dp"
-                                android:layout_height="30dp"
-                                android:layout_alignParentTop="true"
-                                android:foregroundGravity="center_vertical"
-                                android:src="@drawable/ic_defaultphoto"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <TextView
-                                android:id="@+id/tv_deliver_partner_name_RO"
-                                style="@style/textColor"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:layout_marginTop="3dp"
-                                android:text="Not Available"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toEndOf="@id/img_delivery_partner_RO"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <TextView
-                                android:id="@+id/tv_in_progress_call_delivery_partner_RO"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_centerVertical="true"
-                                android:layout_marginLeft="250dp"
-                                android:text="@string/call_partner"
-                                android:textColor="@color/theme_color"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-                    </TableRow>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/borderColor" />
-
-                    <TableRow
-                        style="@style/fieldsBgGrey"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="12dp"
-                        android:weightSum="100">
+                        <ImageView
+                            android:id="@+id/img_wallet_RO"
+                            android:layout_width="35dp"
+                            android:layout_height="30dp"
+                            android:layout_marginTop="2dp"
+                            android:foregroundGravity="center_vertical"
+                            android:src="@drawable/ic_payment_status"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
-                            style="@style/FontSmallGrey"
-                            android:layout_width="0dp"
+                            android:id="@+id/tv_Payment_status_RO"
+                            style="@style/textColor"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:gravity="center_vertical"
+                            android:singleLine="true"
+                            android:text="Payment Status"
+                            android:textSize="14sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/img_wallet_RO"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/payStatus"
+                            android:layout_width="60dp"
+                            android:layout_height="20dp"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="30dp"
-                            android:layout_weight="50"
-                            android:text="Order details" />
+                            android:background="@drawable/paid_unpaid_background"
+                            android:gravity="center"
+                            android:text="UnPaid"
+                            android:textColor="@color/white"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </TableRow>
 
-                        <TextView
-                            android:id="@+id/print_ready"
-                            style="@style/FontSmallTheme"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="50"
-                            android:gravity="right"
-                            android:text="@string/Print" />
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                    </TableRow>
-
-                    <TableRow
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="1dp"
+                        android:background="@color/borderColor" />
+                </TableRow>
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="2dp"
-                            android:background="@color/borderColor" />
-                    </TableRow>
+                <TableRow
+                    style="@style/fieldsBg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
 
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/preparing_details_recycler"
-                            style="@style/fieldsBg"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-
-                    </TableRow>
-
-                    <TableRow android:layout_width="match_parent">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
-                            android:background="@color/grey" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        >
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/borderColor"
-                            />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp">
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rv_order_totals_ready"
-                            android:paddingTop="20dp"
-                            style="@style/fieldsBg"
-                            tools:listitem="@layout/total_container"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-
-                    </TableRow>
-
-                    <TableRow
-                        style="@style/fieldsBg"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingTop="10dp"
-                            android:paddingBottom="20dp"
-                            android:weightSum="5">
-
-                            <TextView
-                                android:id="@+id/tv_total"
-                                style="@style/FontMediumBlack"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="30dp"
-                                android:layout_weight="4"
-                                android:text="@string/Total"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/tv_sub_total_amount_RO"
-                                style="@style/FontMediumBlack"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="30dp"
-                                android:layout_weight="1"
-                                android:text="200.00"
-                                android:gravity="end"
-                                android:textStyle="bold" />
-
-                        </LinearLayout>
-
-                    </TableRow>
-
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/borderColor" />
-                    </TableRow>
-
-                    <TableRow
-                        style="@style/FontSmallBlack"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="12dp">
 
-                        <TextView
-                            style="@style/textColor"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="98"
-                            android:text="@string/OrderNote" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingHorizontal="12dp"
-                        android:weightSum="100">
-
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="5dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/background_round_rect" />
-
-                        <EditText
-                            android:id="@+id/et_order_note_RO"
-                            style="@style/fieldsBg"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:layout_weight="99"
-                            android:gravity="top"
-                            android:hint="@string/BussinessOrderNote"
-                            android:padding="20dp" />
-                    </TableRow>
-
-                    <TableRow
-                        android:id="@+id/tv_delivery_note_PD"
-                        style="@style/FontSmallBlack"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:padding="12dp"
-                        android:visibility="gone">
+                        <ImageView
+                            android:id="@+id/img_customer_RO"
+                            android:layout_width="35dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentTop="true"
+                            android:foregroundGravity="center_vertical"
+                            android:src="@drawable/ic_person"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:id="@+id/tv_ready_det_customer_name_RO"
                             style="@style/textColor"
-                            android:id="@+id/tv_delNote"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="98"
-                            android:text="@string/DeliveryNote" />
-                    </TableRow>
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="3dp"
+                            android:text="@string/sir_imran"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/img_customer_RO"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                    <TableRow
+                        <TextView
+                            android:id="@+id/tv_in_progress_call_customer_RO"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="250dp"
+                            android:text="@string/call_customer"
+                            android:textColor="@color/theme_color"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/borderColor" />
+                </TableRow>
+
+
+                <TableRow
+                    android:id="@+id/prepare_time_layout_RO"
+                    style="@style/fieldsBg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:orientation="horizontal"
+                        android:padding="12dp">
+
+                        <ImageView
+                            android:id="@+id/rem_time_RO"
+                            android:layout_width="35dp"
+                            android:layout_height="30dp"
+                            android:layout_marginTop="2dp"
+                            android:foregroundGravity="center_vertical"
+                            android:src="@drawable/ic_location" />
+
+                        <TextView
+                            android:id="@+id/tv_address_RO"
+                            style="@style/textColor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:gravity="center_vertical"
+                            android:singleLine="true"
+                            android:text="@string/Adress"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+                </TableRow>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/borderColor" />
+
+                <TableRow
+                    android:id="@+id/partner"
+                    style="@style/fieldsBg"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingHorizontal="12dp"
-                        android:visibility="gone"
-                        android:weightSum="100">
+                        android:padding="12dp">
 
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:background="@drawable/background_round_rect_blue" />
+                        <ImageView
+                            android:id="@+id/img_delivery_partner_RO"
+                            android:layout_width="35dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentTop="true"
+                            android:foregroundGravity="center_vertical"
+                            android:src="@drawable/ic_defaultphoto"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                        <EditText
-                            android:id="@+id/et_delivery_note_RO"
-                            style="@style/fieldsBg"
-                            android:layout_width="0dp"
+                        <TextView
+                            android:id="@+id/tv_deliver_partner_name_RO"
+                            style="@style/textColor"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="99"
-                            android:gravity="top"
-                            android:hint="@string/DeliveryNoteHere"
-                            android:padding="20dp" />
-                    </TableRow>
-                </TableLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="3dp"
+                            android:text="Not Available"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/img_delivery_partner_RO"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_in_progress_call_delivery_partner_RO"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="250dp"
+                            android:text="@string/call_partner"
+                            android:textColor="@color/theme_color"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </TableRow>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/borderColor" />
+
+                <TableRow
+                    style="@style/appBack"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp"
+                    android:weightSum="100">
+
+                    <TextView
+                        style="@style/FontSmallGrey"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="30dp"
+                        android:layout_weight="50"
+                        android:text="Order details" />
+
+                    <TextView
+                        android:id="@+id/print_ready"
+                        style="@style/FontSmallTheme"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="50"
+                        android:gravity="right"
+                        android:text="@string/Print" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/borderColor" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/preparing_details_recycler"
+                        style="@style/fieldsBg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="vertical" />
+
+                </TableRow>
+
+                <TableRow android:layout_width="match_parent">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="0.5dp"
+                        android:background="@color/grey" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/borderColor" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_order_totals_ready"
+                        style="@style/fieldsBg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="20dp"
+                        tools:listitem="@layout/total_container" />
+
+                </TableRow>
+
+                <TableRow
+                    style="@style/fieldsBg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="20dp"
+                        android:weightSum="5">
+
+                        <TextView
+                            android:id="@+id/tv_total"
+                            style="@style/FontMediumBlack"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="30dp"
+                            android:layout_weight="4"
+                            android:text="@string/Total"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_sub_total_amount_RO"
+                            style="@style/FontMediumBlack"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="30dp"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:text="200.00"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                </TableRow>
+
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/borderColor" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/orderNoteTitle"
+                    style="@style/appBack"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp">
+
+                    <TextView
+                        style="@style/textColor"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="98"
+                        android:text="@string/OrderNote" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:paddingHorizontal="12dp"
+                    android:weightSum="100">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/background_round_rect" />
+
+                    <TextView
+                        android:id="@+id/et_order_note_RO"
+                        style="@style/fieldsBg"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="99"
+                        android:gravity="top"
+                        android:hint="@string/BussinessOrderNote"
+                        android:padding="20dp" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/tv_delivery_note_PD"
+                    style="@style/appBack"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:padding="12dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tv_delNote"
+                        style="@style/textColor"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="98"
+                        android:text="@string/DeliveryNote" />
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/TR_delivery_note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:paddingHorizontal="12dp"
+                    android:visibility="gone"
+                    android:weightSum="100">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/background_round_rect_blue" />
+
+                    <TextView
+                        android:id="@+id/et_delivery_note_RO"
+                        style="@style/fieldsBg"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="99"
+                        android:gravity="top"
+                        android:hint="@string/DeliveryNoteHere"
+                        android:padding="20dp" />
+                </TableRow>
+            </TableLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
     <!-- END OF SCROLL VIEW IN WHICH ALL SCROLLS-->
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:background="@color/white"
         android:id="@+id/btn_delivered_ll"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_height="80dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_delivered"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="20dp"
             android:layout_marginBottom="20dp"
             android:layout_weight="90"
-            android:id="@+id/btn_delivered"
             android:background="@color/colorAccent"
             android:text="@string/Delivered"
             android:textAllCaps="false"
-            android:layout_margin="20dp"
             android:textColor="@color/white" />
     </LinearLayout>
 
@@ -510,8 +516,8 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginTop="85dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

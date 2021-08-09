@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.JsonReader;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 
@@ -121,13 +122,14 @@ public class FeedbackActivity extends AppCompatActivity {
     }//onStart
 
     private void addInChipGroup() {
-
         for (String tag : mTagsFromServer) {
             Chip chip = new Chip(FeedbackActivity.this);
             Log.e(TAG, "addInChipGroup: " + tag);
             chip.setText(tag);
             binding.frequentOptions.addView(chip);
         }
+        binding.nsvFeedback.setVisibility(View.VISIBLE);
+        binding.pbFeedback.setVisibility(View.GONE);
     }//addInChipGroup
 
     //click listeners
@@ -141,24 +143,28 @@ public class FeedbackActivity extends AppCompatActivity {
         });
 
         //updating thumbs up and thumbs down and updating rating value
-        binding.thumbsUp.setOnClickListener(v -> {
-            binding.thumbsUp.setImageResource(R.drawable.ic_like_tint);
-            binding.thumbsDown.setImageResource(R.drawable.ic_dislike_untint);
-            binding.thumbsDown.setBackgroundResource(R.drawable.selected_thumb_bg);
-            binding.thumbsUp.setBackgroundResource(R.drawable.selected_thumb_down_bg);
-            mRating = 5;
-            Log.e(TAG, "listeners: mRating " + mRating);
+        if (binding.thumbsUp != null) {
+            binding.thumbsUp.setOnClickListener(v -> {
+                binding.thumbsUp.setImageResource(R.drawable.ic_like_tint);
+                binding.thumbsDown.setImageResource(R.drawable.ic_dislike_untint);
+                binding.thumbsDown.setBackgroundResource(R.drawable.selected_thumb_bg);
+                binding.thumbsUp.setBackgroundResource(R.drawable.selected_thumb_down_bg);
+                mRating = 5;
+                Log.e(TAG, "listeners: mRating " + mRating);
 
-        });
+            });
+        }
 
-        binding.thumbsDown.setOnClickListener(v -> {
-            binding.thumbsUp.setImageResource(R.drawable.ic_like_untint);
-            binding.thumbsDown.setImageResource(R.drawable.ic_dislike_tint);
-            binding.thumbsDown.setBackgroundResource(R.drawable.unselected_thumb_bg);
-            binding.thumbsUp.setBackgroundResource(R.drawable.unselected_thumb_bg);
-            mRating = 1;
-            Log.e(TAG, "listeners: mRating " + mRating);
-        });
+        if (binding.thumbsDown != null) {
+            binding.thumbsDown.setOnClickListener(v -> {
+                binding.thumbsUp.setImageResource(R.drawable.ic_like_untint);
+                binding.thumbsDown.setImageResource(R.drawable.ic_dislike_tint);
+                binding.thumbsDown.setBackgroundResource(R.drawable.unselected_thumb_bg);
+                binding.thumbsUp.setBackgroundResource(R.drawable.unselected_thumb_bg);
+                mRating = 1;
+                Log.e(TAG, "listeners: mRating " + mRating);
+            });
+        }
 
     }//listeners()
 

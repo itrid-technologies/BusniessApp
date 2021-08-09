@@ -57,6 +57,7 @@ public class AdapterHistoryOrders extends RecyclerView.Adapter<AdapterHistoryOrd
         //set data
 
         holder.itemName.setText(orderItem.getItemName());
+        holder.itemQty.setText(String.valueOf(orderItem.getItemQty()));
         holder.itemPrice.setText(Constants.CURRENCY_SIGN + " " + orderItem.getItemPrice());
 
         //Assigning List

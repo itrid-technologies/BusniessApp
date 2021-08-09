@@ -1,5 +1,16 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TableRow;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
@@ -8,19 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
-
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.TableRow;
-import android.widget.TextView;
-import android.widget.Toast;
-
 
 import com.itridtechnologies.resturantapp.Adapters.AdapterBusinessOrders;
 import com.itridtechnologies.resturantapp.Adapters.AdapterTotal;
@@ -39,7 +37,6 @@ import com.itridtechnologies.resturantapp.models.newOrder.NewOrderResponse;
 import com.itridtechnologies.resturantapp.models.newOrder.OrderAddressItem;
 import com.itridtechnologies.resturantapp.models.newOrder.OrderItemsItem;
 import com.itridtechnologies.resturantapp.models.newOrder.OrderTotalsItem;
-import com.itridtechnologies.resturantapp.models.orderFeesSetting.FeeUpdateResponse;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 import com.itridtechnologies.resturantapp.utils.Constants;
@@ -49,7 +46,6 @@ import org.jetbrains.annotations.NotNull;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -66,15 +62,13 @@ public class ReadyDetails extends AppCompatActivity {
     private TextView mCustName;
     private TextView mPaymentStatus;
     private TextView mAddress;
-    private TextView mTVDeliveryNote;
     private TextView mTVSubTotalAmount;
     private TextView mPartner;
-    private EditText mOrderNote;
+    private TextView mOrderNote;
     private NestedScrollView mNSVReadyDetails;
-    private EditText mDeliveryNote;
+    private TextView mDeliveryNote;
     private TextView mPrint;
     private String or;
-    private String str = "";
     private AppCompatButton mDelivered;
     private List<OrderItemsItem> mOrderItemList = new ArrayList<>();
     private List<OrderDetailModel> mOrders = new ArrayList<>();
@@ -86,6 +80,11 @@ public class ReadyDetails extends AppCompatActivity {
 
     //Table row
     private TableRow mRiderRow;
+    private TableRow mOrderNoteTitle;
+    private TableRow mDeliveryTitle;
+    private TableRow mDeliveryNoteRow;
+    private TableRow mPaymentRow;
+    private TableRow mAddressCell;
 
     ///Room database
     RoomDB databaseRoom;
@@ -135,7 +134,6 @@ public class ReadyDetails extends AppCompatActivity {
         Log.e(TAG, "onCreateView: time" + mSavingTime);
 
 
-
         //get orders from server
         or = String.valueOf(getIntent().getStringExtra("orderId"));
         mToolbar.setTitle("#" + or);
@@ -154,9 +152,9 @@ public class ReadyDetails extends AppCompatActivity {
 
         //Setting Click listener and print intent
         mPrint.setOnClickListener(v -> {
-            Intent intent = new Intent(ReadyDetails.this,Reciept.class);
-            intent.putExtra("orderId",or);
-            intent.putExtra("isTest","0");
+            Intent intent = new Intent(ReadyDetails.this, Reciept.class);
+            intent.putExtra("orderId", or);
+            intent.putExtra("isTest", "0");
             startActivity(intent);
         });
 
@@ -167,8 +165,7 @@ public class ReadyDetails extends AppCompatActivity {
     }
 
     //Set to history
-    private void setToDelivered(String id)
-    {
+    private void setToDelivered(String id) {
 
         Call<SetToDelivered> feeUpdate = RetrofitNetMan.getRestApiService().setToDelivered(token, id);
         feeUpdate.enqueue(new Callback<SetToDelivered>() {
@@ -180,10 +177,8 @@ public class ReadyDetails extends AppCompatActivity {
                     updateDatabase();
 
                 } else if (response.code() == 400) {
-                    Log.e("TAG", "onResponse: " +  response.message() );
-                }
-
-                else {
+                    Log.e("TAG", "onResponse: " + response.message());
+                } else {
                     Toast.makeText(getApplicationContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }
@@ -192,13 +187,12 @@ public class ReadyDetails extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<SetToDelivered> call12, Throwable t) {
-                Log.e("TAG", "onResponse: " +  t.getMessage());
+                Log.e("TAG", "onResponse: " + t.getMessage());
             }
         });
     }
 
-    private void updateDatabase()
-    {
+    private void updateDatabase() {
 
         Constants.ORDER_ITEM = new OrdersItem(
                 mOrderItem.getPickuptime(),
@@ -238,8 +232,8 @@ public class ReadyDetails extends AppCompatActivity {
         WorkManager.getInstance(ReadyDetails.this).getWorkInfoByIdLiveData(bgWork.getId())
                 .observe(this, info -> {
                     if (info != null && info.getState().isFinished()) {
-                        Intent intent = new Intent(ReadyDetails.this, FeedbackActivity.class);
-                        intent.putExtra("ORDER_ID",or);
+                        Intent intent = new Intent(ReadyDetails.this, BasicActvity.class);
+                        intent.putExtra("AOR", "History");
                         startActivity(intent);
                     } else {
                         Log.e(TAG, "onResponse: no info returning from live data");
@@ -273,24 +267,23 @@ public class ReadyDetails extends AppCompatActivity {
                         }
                     }
 
-                    mIsPickUp = mOrderItem.getOrderType();
+                    Log.e(TAG, "onResponse: delivery note " + mOrderItem.getOrderType());
 
                     UpdateUI
                             (
                                     mOrderItem.getBusinessNotes(),
                                     mOrderItem.getCourierNotes(),
+                                    mOrderItem.getOrderType(),
                                     mOrderItem.getFirstName(),
                                     mOrderItem.getLastName(),
                                     mOrderItem.getPhoneNumber(),
                                     String.valueOf(mOrderItem.getPaymentStatus()),
                                     "Not Available",
                                     mTotalAmount,
-                                    "Not Available",
-                                    mIsPickUp
+                                    "Not Available"
                             );
 
-                }
-                else {
+                } else {
                     Toast.makeText(getApplicationContext(), "Token Expired " + response.message(), Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }
@@ -310,20 +303,19 @@ public class ReadyDetails extends AppCompatActivity {
         adapter = new AdapterBusinessOrders(mOrdersReady, ReadyDetails.this);
         mReadyOrderRV.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-        
+
         mPBReadyOrder.setVisibility(View.GONE);
         mNSVReadyDetails.setVisibility(View.VISIBLE);
     }
 
     @SuppressLint("SetTextI18n")
     public void UpdateUI(String bNote, String dNote
-            , String fName, String lName, String pNo
+            , int orderType, String fName, String lName, String pNo
             , String status, String Address
-            , Double tPrice, String partnerName, int pickup) {
-
+            , Double tPrice, String partnerName) {
 
         //Setting Name of Customer
-        Log.e(TAG, "UpdateUI: " + fName + " " + lName );
+        Log.e(TAG, "UpdateUI: " + fName + " " + lName);
         if (!fName.isEmpty() && !lName.isEmpty()) {
             String Name = fName + " " + lName;
             mCustName.setText(Name);
@@ -331,19 +323,14 @@ public class ReadyDetails extends AppCompatActivity {
 
         }
 
-        if (pickup == 1)
-        {
-            mRiderRow.setVisibility(View.GONE);
-        }
-
         ///Partner Name
         mPartner.setText(partnerName);
-
 
         ///Setting Phone Number
         if (!pNo.isEmpty()) {
             mCellNumber = pNo;
         }
+
         ///Setting Payment Status
         if (!status.isEmpty()) {
             if (status.trim().equals("1")) {
@@ -353,19 +340,19 @@ public class ReadyDetails extends AppCompatActivity {
             }
         }
 
-
         //Total and subtotal AMoutn
-
         if (tPrice != null) {
             mTVSubTotalAmount.setText(Constants.CURRENCY_SIGN + " " + tPrice);
         } else {
             mTVSubTotalAmount.setText(Constants.CURRENCY_SIGN + " " + "0");
         }
 
-
         //set business & delivery notes
         if (!bNote.isEmpty()) {
             mOrderNote.setText(bNote);
+        } else {
+            mOrderNoteTitle.setVisibility(View.GONE);
+            mOrderNote.setVisibility(View.GONE);
         }
 
         //Set Customer Address
@@ -373,20 +360,30 @@ public class ReadyDetails extends AppCompatActivity {
             mAddress.setText(Address);
         }
 
-        ///Check Delivery Note
-        if (!dNote.isEmpty()) {
 
-            if (dNote.trim().equals("Delivery")) {
-                mPaymentStatus.setVisibility(View.VISIBLE);
-                if (dNote.trim().equals("Self-Delivery")) {
-                    mDeliveryNote.setVisibility(View.VISIBLE);
-                    mTVDeliveryNote.setVisibility(View.VISIBLE);
-                    mTVDeliveryNote.setText(dNote);
-                }
+        if (orderType == 1) {
+            Log.e(TAG, "UpdateUI: Rider type " + orderType);
+            mRiderRow.setVisibility(View.VISIBLE);
+            mAddressCell.setVisibility(View.GONE);
+        } else if (orderType == 0) {
+            Log.e(TAG, "UpdateUI: Self type " + orderType);
+            mRiderRow.setVisibility(View.GONE);
+            mAddressCell.setVisibility(View.GONE);
+        }
+        //set Payment status visible when type is delivery
+        else if (orderType == 2) {
+            Log.e(TAG, "UpdateUI: Delivery type " + orderType);
+            mPaymentRow.setVisibility(View.VISIBLE);
+            if (!dNote.isEmpty()) {
+                mDeliveryNoteRow.setVisibility(View.VISIBLE);
+                mDeliveryTitle.setVisibility(View.VISIBLE);
+                mDeliveryNote.setText(dNote);
             }
+        } else {
+            AppManager.SnackBar(ReadyDetails.this, "Order Type DoesNot Exist");
         }
 
-    }
+    }//UpdateUI
 
     //Setting Onclich Listener to make real call
     //Setting Intent to make real call
@@ -408,16 +405,13 @@ public class ReadyDetails extends AppCompatActivity {
 
     }
 
-
     private OrdersItem getOrderFromDB(String or) {
         return databaseRoom.mainDao().getOrderById(Integer.parseInt(or));
     }
 
-
     private OrderAddressItem getOrderAddressFromDB(String or) {
         return databaseRoom.mainDao().getOrderAddressById(Integer.parseInt(or));
     }
-
 
     private OrderTotalsItem getOrderTotalFromDB(String or) {
         return databaseRoom.mainDao().getOrderTotalsById(Integer.parseInt(or));
@@ -450,26 +444,27 @@ public class ReadyDetails extends AppCompatActivity {
         mCustName = findViewById(R.id.tv_ready_det_customer_name_RO);
         mAddress = findViewById(R.id.tv_address_RO);
         mOrderNote = findViewById(R.id.et_order_note_RO);
+        mOrderNoteTitle = findViewById(R.id.orderNoteTitle);
         mDeliveryNote = findViewById(R.id.et_delivery_note_RO);
         mPaymentStatus = findViewById(R.id.payStatus);
+        mPaymentRow = findViewById(R.id.paymentStatusReadyOrder);
         mNSVReadyDetails = findViewById(R.id.nsv_readyDetails);
-        mTVDeliveryNote = findViewById(R.id.tv_delNote);
         mTVSubTotalAmount = findViewById(R.id.tv_sub_total_amount_RO);
         mRCVTotals = findViewById(R.id.rv_order_totals_ready);
         mDelivered = findViewById(R.id.btn_delivered);
         mPrint = findViewById(R.id.print_ready);
         mPartner = findViewById(R.id.tv_deliver_partner_name_RO);
         mRiderRow = findViewById(R.id.partner);
+        mDeliveryTitle = findViewById(R.id.tv_delivery_note_PD);
+        mDeliveryNoteRow = findViewById(R.id.TR_delivery_note);
+        mAddressCell = findViewById(R.id.prepare_time_layout_RO);
 
     }
 
     ///Click Listener
-    public void Listener()
-    {
+    public void Listener() {
         mDelivered.setOnClickListener(v -> {
-
             setToDelivered(or);
-
         });
 
     }
@@ -484,6 +479,8 @@ public class ReadyDetails extends AppCompatActivity {
 
         mToolbar.setOnMenuItemClickListener(item -> {
             Intent intent = new Intent(ReadyDetails.this, OrderIssues.class);
+            Log.e(TAG, "toolbarfun: " + or);
+            intent.putExtra("orderNo", or);
             startActivity(intent);
             return false;
         });
@@ -494,20 +491,17 @@ public class ReadyDetails extends AppCompatActivity {
         //retrieve token from pref
         String token = AppManager.getBusinessDetails().getData().getToken();
 
-        Call<NewOrderResponse> call = RetrofitNetMan.getRestApiService().getOrders(token, "5");
+        Call<NewOrderResponse> call = RetrofitNetMan.getRestApiService().getOrders(token, or);
         call.enqueue(new Callback<NewOrderResponse>() {
             @Override
             public void onResponse(@NotNull Call<NewOrderResponse> call, @NotNull Response<NewOrderResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
 
                     //collect data & update ui
-
                     ///Commenting temporily
                     mOrderItemList = response.body().getData().getOrderItems();
 
                     if (!mOrderItemList.isEmpty()) {
-                        Log.d("API", "Adding Data");
-                        str = String.valueOf(response.body().getData().getOrder().get(0).getOrderType());
 //                        mAddonItemList = response.body().getData().getOrderItems();
                         double orderTotal = 0;
                         int orderSize = response.body().getData().getOrderItems().size();

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +50,6 @@ public class HistoryDetails extends AppCompatActivity {
 
     //Declaring Variables
     private TextView mCustomerName;
-    private TextView mRiderName;
     private TextView mAmmount;
     private TextView mTotal;
     private TextView mOrderStatus;
@@ -57,6 +57,10 @@ public class HistoryDetails extends AppCompatActivity {
     private RecyclerView mRVHistoryDetail;
     private RecyclerView mRVTotals;
     private PreferencesManager pm;
+
+    //Reviews
+    private TextView mCustomerReview;
+    private TextView mCourierReview;
 
     private String pos;
 
@@ -68,7 +72,7 @@ public class HistoryDetails extends AppCompatActivity {
     private List<DataItem> mOrderDetails = new ArrayList<>();
 
     private NestedScrollView mNSVHistDetails;
-    private String p;
+    private String or;
     private final String token = AppManager.getBusinessDetails().getData().getToken();
     private Toolbar mToolbar;
 
@@ -87,23 +91,43 @@ public class HistoryDetails extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        p = pm.getMyDataString("orderIdHis");
-        Log.e(TAG, "onStart: id # " + p );
+        or = pm.getMyDataString("orderIdHis");
+        Log.e(TAG, "onStart: id # " + or);
         pos = pm.getMyDataString("orderHisPos");
 
         toolbarFun();
         setVariables();
 
-        Log.e(TAG, "onStart: order id history" + p);
+        Log.e(TAG, "onStart: order id history" + or);
         Log.e(TAG, "onStart: order id Position" + pos);
 
-        getHistDetails(p);
+        getHistDetails(or);
+
+        //setting listeners on Review Fields
+        reviewListeners();
+
     }
+
+    private void reviewListeners() {
+        mCustomerReview.setOnClickListener(v -> {
+            list.clear();
+            Intent intent = new Intent(HistoryDetails.this, FeedbackActivity.class);
+            intent.putExtra("ORDER_ID", or);
+            startActivity(intent);
+        });
+
+
+        mCourierReview.setOnClickListener(v -> {
+            list.clear();
+            Intent intent = new Intent(HistoryDetails.this, FeedbackActivity.class);
+            intent.putExtra("ORDER_ID", or);
+            startActivity(intent);
+        });
+    }//reviewListeners
 
     //Setting Variables
     public void setVariables() {
         mCustomerName = findViewById(R.id.tv_custname_hist);
-        mRiderName = findViewById(R.id.tv_hist_partner_name);
         mAmmount = findViewById(R.id.tv_price_hist);
         mOrderStatus = findViewById(R.id.status_hist);
         mNSVHistDetails = findViewById(R.id.nsvHistoryDetails);
@@ -111,8 +135,9 @@ public class HistoryDetails extends AppCompatActivity {
         mProgressHistDetails = findViewById(R.id.pb_hist_details);
         mTotal = findViewById(R.id.tv_sub_total_amount_HO);
         mRVTotals = findViewById(R.id.rv_totals_history);
+        mCourierReview = findViewById(R.id.tv_review_for_courier);
+        mCustomerReview = findViewById(R.id.tv_review_for_customer);
     }
-
 
 
     @SuppressLint("SetTextI18n")
@@ -137,21 +162,21 @@ public class HistoryDetails extends AppCompatActivity {
                     DecimalFormat format = new DecimalFormat("0.00");
 
                     //CALCULATING TOTAL
-                    for (int i=0; i<response.body().getData().getResults().get(pos).getOrderTotal().size();i++)
-                    {
-                        mTotalValue =  mTotalValue + Double.parseDouble(response.body().getData().getResults().get(pos).getOrderTotal().get(i).getValue());
+                    for (int i = 0; i < response.body().getData().getResults().get(pos).getOrderTotal().size(); i++) {
+                        mTotalValue = mTotalValue + Double.parseDouble(response.body().getData().getResults().get(pos).getOrderTotal().get(i).getValue());
                         list.add(new TotalModel(
                                 response.body().getData().getResults().get(pos).getOrderTotal().get(i).getLabel(),
                                 response.body().getData().getResults().get(pos).getOrderTotal().get(i).getValue()
                         ));
                     }
 
+                    Log.e(TAG, "onResponse: " + mTotalAmount + mTotalValue);
+
                     //Updating History User interface
                     UpdateHistUI(
                             response.body().getData().getResults().get(pos).getFirstName(),
                             response.body().getData().getResults().get(pos).getLastName(),
-                            response.body().getData().getResults().get(pos).getBusinessName(),
-                            String.valueOf(format.format(mTotalValue + mTotalAmount)),
+                            format.format(mTotalValue + mTotalAmount),
                             response.body().getData().getResults().get(pos).getStatus()
                     );
 
@@ -159,7 +184,6 @@ public class HistoryDetails extends AppCompatActivity {
                     totalFun(format.format(mTotalValue + mTotalAmount));
 
                 } //Not null
-
             }
 
             @Override
@@ -176,10 +200,10 @@ public class HistoryDetails extends AppCompatActivity {
             @Override
             public void onResponse(@NotNull Call<HistOrderDetailResponse> call, @NotNull Response<HistOrderDetailResponse> response) {
 
-                if (response.isSuccessful() && response.body()!=null) {
+                if (response.isSuccessful() && response.body() != null) {
                     if (response.body().isSuccess()) {
 
-                        for (int i=0 ;i<response.body().getData().size();i++){
+                        for (int i = 0; i < response.body().getData().size(); i++) {
                             mTotalAmount = mTotalAmount + Double.parseDouble(response.body().getData().get(i).getItemPrice());
                         }
 
@@ -191,11 +215,9 @@ public class HistoryDetails extends AppCompatActivity {
                         mNSVHistDetails.setVisibility(View.VISIBLE);
                     }
 
-
                     getDetails(pos);
-                }
-                else {
-                    AppManager.SnackBar(HistoryDetails.this,response.message());
+                } else {
+                    AppManager.SnackBar(HistoryDetails.this, response.message());
                 }
             }
 
@@ -206,8 +228,7 @@ public class HistoryDetails extends AppCompatActivity {
         });
     }
 
-    public void UpdateItemNameList()
-    {
+    public void UpdateItemNameList() {
         //Setting Adapter
         AdapterHistoryOrders adapter;
         mRVHistoryDetail.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -218,20 +239,16 @@ public class HistoryDetails extends AppCompatActivity {
 
     //Updating UI
     @SuppressLint("SetTextI18n")
-    private void UpdateHistUI(String fCustName, String lCustName
-            , String RiderName, String orderAmount, String status) {
+    private void UpdateHistUI(String fCustName, String lCustName, String orderAmount, String status) {
 
         ///Name of Customer
         if (fCustName != null && lCustName != null) {
             String customerName = fCustName + " " + lCustName;
             mCustomerName.setText(customerName);
         }
-        //Rider Name
-        if (RiderName != null) {
-            mRiderName.setText(RiderName);
-        }
         //Amount
         if (orderAmount != null) {
+            Log.e(TAG, "UpdateHistUI: " + orderAmount);
             mAmmount.setText(Constants.CURRENCY_SIGN + " " + orderAmount);
         }
         //Status
@@ -244,7 +261,7 @@ public class HistoryDetails extends AppCompatActivity {
     //Setting Toolbar
     public void toolbarFun() {
 
-        mToolbar.setTitle(" # " + p);
+        mToolbar.setTitle(" # " + or);
         mToolbar.setNavigationOnClickListener(v -> AppManager.intent(BasicActvity.class));
 
         mToolbar.setOnMenuItemClickListener(item -> {

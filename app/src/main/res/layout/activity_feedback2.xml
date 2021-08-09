@@ -9,9 +9,11 @@
         tools:context=".UiViews.Activities.FeedbackActivity">
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/nsv_feedback"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/background_grey"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/btn_delivered_ll"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -57,12 +59,12 @@
                     app:layout_constraintTop_toBottomOf="@+id/your_expereince_tv">
 
                     <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        app:layout_constraintTop_toTopOf="parent">
 
 
                         <ImageView
@@ -94,8 +96,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="35dp"
-                    android:layout_marginEnd="35dp"
                     android:layout_marginTop="15dp"
+                    android:layout_marginEnd="35dp"
                     android:gravity="center"
                     android:text="Excellent rating. What did you enjoy? What was wrong with your pickup experience?/ What was wrong with Bilal?"
                     android:textColor="@color/grey"
@@ -124,53 +126,53 @@
                     app:singleLine="false"
                     app:singleSelection="false">
 
-<!--                    <com.google.android.material.chip.Chip-->
-<!--                        android:id="@+id/chip1"-->
-<!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_margin="5dp"-->
-<!--                        android:text="@string/didn_t_come_inside" />-->
+                    <!--                    <com.google.android.material.chip.Chip-->
+                    <!--                        android:id="@+id/chip1"-->
+                    <!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_margin="5dp"-->
+                    <!--                        android:text="@string/didn_t_come_inside" />-->
 
-<!--                    <com.google.android.material.chip.Chip-->
-<!--                        android:id="@+id/chip2"-->
-<!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_margin="5dp"-->
-<!--                        android:text="@string/delivery_bag_unavailable" />-->
+                    <!--                    <com.google.android.material.chip.Chip-->
+                    <!--                        android:id="@+id/chip2"-->
+                    <!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_margin="5dp"-->
+                    <!--                        android:text="@string/delivery_bag_unavailable" />-->
 
-<!--                    <com.google.android.material.chip.Chip-->
-<!--                        android:id="@+id/chip3"-->
-<!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_margin="5dp"-->
-<!--                        android:text="@string/unprofessional_behavior" />-->
-<!--                    -->
-<!--                    <com.google.android.material.chip.Chip-->
-<!--                        android:id="@+id/chip4"-->
-<!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_margin="5dp"-->
-<!--                        android:text="@string/late_pickup" />-->
-<!--                    -->
-<!--                    <com.google.android.material.chip.Chip-->
-<!--                        android:id="@+id/chip5"-->
-<!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_margin="5dp"-->
-<!--                        android:text="@string/late_dropoff" />-->
+                    <!--                    <com.google.android.material.chip.Chip-->
+                    <!--                        android:id="@+id/chip3"-->
+                    <!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_margin="5dp"-->
+                    <!--                        android:text="@string/unprofessional_behavior" />-->
+                    <!--                    -->
+                    <!--                    <com.google.android.material.chip.Chip-->
+                    <!--                        android:id="@+id/chip4"-->
+                    <!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_margin="5dp"-->
+                    <!--                        android:text="@string/late_pickup" />-->
+                    <!--                    -->
+                    <!--                    <com.google.android.material.chip.Chip-->
+                    <!--                        android:id="@+id/chip5"-->
+                    <!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_margin="5dp"-->
+                    <!--                        android:text="@string/late_dropoff" />-->
 
-<!--                    <com.google.android.material.chip.Chip-->
-<!--                        android:id="@+id/chip6"-->
-<!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_margin="5dp"-->
-<!--                        android:text="@string/delivery_partner_using_someone_else_account" />-->
+                    <!--                    <com.google.android.material.chip.Chip-->
+                    <!--                        android:id="@+id/chip6"-->
+                    <!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:layout_margin="5dp"-->
+                    <!--                        android:text="@string/delivery_partner_using_someone_else_account" />-->
 
                 </com.google.android.material.chip.ChipGroup>
 
@@ -228,7 +230,16 @@
                 android:textAllCaps="false"
                 android:textColor="@color/white" />
         </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <ProgressBar
+            android:id="@+id/pb_feedback"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

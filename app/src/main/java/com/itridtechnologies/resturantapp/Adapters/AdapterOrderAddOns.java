@@ -41,8 +41,9 @@ public class AdapterOrderAddOns extends RecyclerView.Adapter<AdapterOrderAddOns.
     @Override
     public void onBindViewHolder(@NonNull @NotNull detailHolderClass holder, int position) {
         AddonItemsItem mAddonItems = addOnName.get(position);
+
         holder.mAddonName.setText(mAddonItems.getAddonItemName());
-        holder.mAddonPrice.setText(Constants.CURRENCY_SIGN + " " + mAddonItems.getAddonItemPrice());
+        holder.mAddonPrice.setText(Constants.CURRENCY_SIGN + " (" + mAddonItems.getAddonItemPrice() + ")");
     }
 
     @Override

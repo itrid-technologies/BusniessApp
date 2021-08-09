@@ -97,41 +97,6 @@
                         android:background="@color/borderColor" />
                 </TableRow>
 
-                <TableRow
-                    style="@style/fieldsBg"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="12dp">
-
-                        <ImageView
-                            android:id="@+id/img_delivery_partner_PD"
-                            android:layout_width="35dp"
-                            android:layout_height="30dp"
-                            android:layout_marginLeft="10dp"
-                            android:src="@drawable/ic_defaultphoto"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:id="@+id/tv_hist_partner_name"
-                            style="@style/FontSmallBlack"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginTop="3dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/img_delivery_partner_PD"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </TableRow>
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -169,7 +134,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="15dp"
+                            android:layout_marginStart="15dp"
                             android:gravity="center_vertical"
                             android:singleLine="true"
                             android:text="@string/order_amount"
@@ -177,27 +142,15 @@
                             app:layout_constraintStart_toEndOf="@id/img_wallet_PD" />
 
                         <TextView
-                            style="@style/textColor"
-                            android:layout_width="wrap_content"
-                            android:layout_height="20dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="495dp"
-                            android:gravity="center"
-                            android:text="@string/rs"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/tv_price_hist"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
                             android:id="@+id/tv_price_hist"
                             style="@style/textColor"
-                            android:layout_width="60dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="20dp"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="1dp"
                             android:layout_marginRight="10dp"
                             android:gravity="center"
-                            android:text="1000.00"
+                            tools:text="1000.00"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -448,6 +401,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="@color/borderColor" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"/>
                 </TableRow>
 
 

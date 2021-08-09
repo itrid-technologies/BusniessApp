@@ -471,6 +471,7 @@ public class FragmentDashboard extends Fragment {
                                 if (mIsClosed == 0) {
                                     mOpenDay = response.body().getData().getBusinessHours().get(nextday).getDay();
                                     mOpenCloseTime = response.body().getData().getBusinessHours().get(nextday).getOpeningTime();
+                                    mOpenToday = "no";
                                     Log.e(TAG, "onResponse: open day " + mOpenDay);
                                     break;
                                 } else {
@@ -484,7 +485,7 @@ public class FragmentDashboard extends Fragment {
                         }//For ends business is open
                         else {
                             mOpenCloseTime = response.body().getData().getBusinessHours().get(currentDay()).getClosingTime();
-                            mOpenCloseTime = "yes";
+                            mOpenToday = "yes";
                         }
 
                     } catch (Exception e) {
@@ -514,13 +515,15 @@ public class FragmentDashboard extends Fragment {
         String openTime = openCloseTime;
         String closeTime = openToday;
 
+        Log.e(TAG, "setTimeLayout: open today " + openToday );
+
         if (closeTime.equals("N/A") && openTime.equals("N/A")) {
             String msg = "Business Hours are not Assigned";
             noOrders.setText(msg);
         }
         else if (openToday.equals("yes")){
-            Log.e(TAG, "setTimeLayout: " + openCloseTime.substring(0, openCloseTime.length() - 3) + " close " + closeTime);
-            String openMsg = "Open Now - Accepting Orders till " + openCloseTime.substring(0, openCloseTime.length() - 3) + " PM";
+            Log.e(TAG, "setTimeLayout: " + openCloseTime.substring(0, openTime.length() - 3) + " close " + closeTime);
+            String openMsg = "Open Now - Accepting Orders till " + openTime.substring(0, openCloseTime.length() - 3) + " PM";
             if (isClosed == 0) {
                 imgNoOrder.setImageResource(R.drawable.ic_businessopen);
                 noOrders.setText(openMsg);

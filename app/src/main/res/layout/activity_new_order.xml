@@ -17,15 +17,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nsv_newOrder"
         android:layout_width="match_parent"
-        android:visibility="gone"
-        tools:visibility="visible"
         android:layout_height="0dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/ll_btns"
-        app:layout_constraintTop_toBottomOf="@id/nav_bar_NO">
+        app:layout_constraintTop_toBottomOf="@id/nav_bar_NO"
+        tools:visibility="visible">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -50,12 +49,11 @@
                 <TableRow
                     android:id="@+id/layout_prepare_time_tr"
                     style="@style/fieldsBg"
-                    tools:visibility="visible"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    >
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
                     <LinearLayout
                         android:id="@+id/layout_prepare_time"
@@ -91,19 +89,29 @@
                             android:layout_height="20dp"
                             android:layout_gravity="center_vertical"
                             android:gravity="right"
-                            tools:text="12:00 PM"
-                            android:textColor="@color/black" />
+                            android:textColor="@color/black"
+                            tools:text="12:00 PM" />
                     </LinearLayout>
                 </TableRow>
 
 
                 <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/borderColor" />
+                </TableRow>
+
+                <TableRow
                     android:id="@+id/payment_status_layout_NO"
                     style="@style/fieldsBg"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:visibility="gone">
+                    android:gravity="center_vertical">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -265,10 +273,10 @@
                 <TableRow
                     android:id="@+id/layout_partner"
                     style="@style/fieldsBg"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:visibility="gone">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -320,7 +328,7 @@
                     android:background="@color/borderColor" />
 
                 <TableRow
-                    style="@style/FontSmallBlack"
+                    style="@style/appBack"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="12dp"
@@ -369,13 +377,12 @@
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    >
+                    android:layout_height="0dp">
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="@color/borderColor"
-                        />
+                        android:background="@color/borderColor" />
                 </TableRow>
 
                 <TableRow
@@ -384,11 +391,11 @@
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_order_totals"
-                        android:paddingTop="20dp"
                         style="@style/fieldsBg"
-                        tools:listitem="@layout/total_container"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:paddingTop="20dp"
+                        tools:listitem="@layout/total_container" />
 
                 </TableRow>
 
@@ -422,8 +429,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="30dp"
                             android:layout_weight="1"
-                            android:text="200.00"
                             android:gravity="end"
+                            android:text="200.00"
                             android:textStyle="bold" />
 
                     </LinearLayout>
@@ -443,6 +450,7 @@
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/orderNoteTitle"
                     android:padding="12dp">
 
                     <TextView
@@ -458,7 +466,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:paddingHorizontal="12dp"
-                    android:visibility="visible"
                     android:weightSum="100">
 
                     <View
@@ -467,7 +474,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/background_round_rect" />
 
-                    <EditText
+                    <TextView
                         android:id="@+id/edt_business_note"
                         style="@style/FontMediumBlack"
                         android:layout_width="0dp"
@@ -479,6 +486,7 @@
                 </TableRow>
 
                 <TableRow
+                    android:id="@+id/deliveryTitle"
                     style="@style/FontSmallBlack"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -510,13 +518,13 @@
                         android:layout_weight="1"
                         android:background="@drawable/background_round_rect_blue" />
 
-                    <EditText
+                    <TextView
+                        android:id="@+id/TV_deliveryNoteHere"
                         style="@style/FontMediumBlack"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="99"
                         android:gravity="top"
-                        android:hint="@string/DeliveryNoteHere"
                         android:padding="20dp" />
                 </TableRow>
 

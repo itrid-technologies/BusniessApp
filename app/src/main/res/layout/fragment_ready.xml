@@ -69,7 +69,6 @@
                         android:text="@string/ReadyOrderContent" />
                 </TableRow>
 
-
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -80,8 +79,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
                         android:layout_marginRight="0dp"
+                        android:animateLayoutChanges="false"
+                        android:scrollbars="vertical"
                         tools:listitem="@layout/layout_ready_container" />
-                    />
                 </TableRow>
             </TableLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

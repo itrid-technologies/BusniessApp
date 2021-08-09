@@ -69,7 +69,7 @@ public class OrderIssues extends AppCompatActivity {
     public void toolbarFun()
     {
         mToolbar.setNavigationOnClickListener(v -> {
-            Intent intent = new Intent(OrderIssues.this,NewOrder.class);
+            Intent intent = new Intent(OrderIssues.this,BasicActvity.class);
             intent.putExtra("orderId",OrderNo);
             startActivity(intent);
         });

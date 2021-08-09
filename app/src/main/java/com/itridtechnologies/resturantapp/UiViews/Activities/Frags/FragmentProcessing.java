@@ -85,11 +85,12 @@ public class FragmentProcessing extends Fragment {
         Toolbar mToolbar = root.findViewById(R.id.nav_bar_PO);
 
         pm = new PreferencesManager(requireContext());
+        //Context for Room
+        //initializing database
+        databaseRoom = RoomDB.getInstance(requireContext());
 
         ///Header Name
         mToolbar.setTitle("Preparing");
-        //Setting Toolbar Navigation Bar
-
         //Setting Toolbar Navigation Bar
         mToolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
@@ -111,7 +112,7 @@ public class FragmentProcessing extends Fragment {
                     startActivity(intent);
                     return false;
                 }
-                case R.id.over_flow_log_out:{
+                case R.id.over_flow_log_out: {
                     Intent intent = new Intent(requireContext(), MainActivity.class);
                     pm.clearSharedPref();
                     pm.saveMyDataBool("login", false);
@@ -125,12 +126,6 @@ public class FragmentProcessing extends Fragment {
                 }
             }
         });
-        //Context for Room
-        //initializing database
-        databaseRoom = RoomDB.getInstance(requireContext());
-
-        //Database and Internet
-        conditionsInternetAndDatabase();
         return root;
     }
 
@@ -139,6 +134,13 @@ public class FragmentProcessing extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         noOrders = view.findViewById(R.id.tv_no_order_process);
         imgNoOrder = view.findViewById(R.id.ic_noOrder_process);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //Database and Internet
+        conditionsInternetAndDatabase();
     }
 
     public void conditionsInternetAndDatabase() {
@@ -150,7 +152,7 @@ public class FragmentProcessing extends Fragment {
             List<OrdersItem> orders = databaseRoom.mainDao().getProcessOrders();
             Log.e(TAG, "onStart: List size" + orders.size());
             if (!orders.isEmpty()) {
-                Log.e(TAG, "onResponse:Processing List in database");
+                Log.e(TAG, "onResponse:Processing List in database c0unt " + orders.size());
                 setUpRecFirstTime(orders);
                 mNSVProgress.setVisibility(View.VISIBLE);
                 mPBFull.setVisibility(View.GONE);
@@ -271,8 +273,7 @@ public class FragmentProcessing extends Fragment {
                             Log.e(TAG, "onResponse: " + e.getMessage());
                         }
                     }
-                }
-                else {
+                } else {
                     Toast.makeText(requireContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(requireContext(), MainActivity.class));
                 }

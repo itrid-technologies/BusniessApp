@@ -1,5 +1,6 @@
 package com.itridtechnologies.resturantapp.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
@@ -25,7 +26,7 @@ import java.util.TimeZone;
 
 import static android.content.ContentValues.TAG;
 
-public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.detailHolder>{
+public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.detailHolder> {
 
     private final List<OrdersItem> prepareList;
     private final Context mCtx;
@@ -59,6 +60,7 @@ public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.deta
         return new AdapterFirstTime.detailHolder(view, mListener);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull @NotNull detailHolder holder, int position) {
 
@@ -68,22 +70,21 @@ public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.deta
         int orderType;
         orderType = mOrderInfo.getOrderType();
 
-        if (orderType == 1)
-        {
-            if (isRiderAssigned == 1)
-            {
+        if (orderType == 1) {
+            if (isRiderAssigned == 1) {
                 holder.mRider.setText("Bilal is Coming in 10 minutes");
-            }
-            else {
+            } else {
                 holder.mRider.setText("Waiting for courier");
             }
-        }
-        else
-        {
+        } else if (orderType == 0) {
             holder.mRider.setText(
                     "Waiting for " + mOrderInfo.getFirstName()
                             + " " + mOrderInfo.getLastName()
-            + " to Collect"
+                            + " to Collect"
+            );
+        } else {
+            holder.mRider.setText(
+                    mOrderInfo.getItemCount() + " items (Rs. 140.00)"
             );
         }
 
@@ -97,8 +98,8 @@ public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.deta
 
         String time = prepareList.get(position).getDateAdded();
         String[] minTime = time.split("T");
-        Log.e(TAG, "onBindViewHolder: time 1 " + minTime[1] );
-        Log.e(TAG, "onBindViewHolder: time 1 " + minTime[1] );
+        Log.e(TAG, "onBindViewHolder: time 1 " + minTime[1]);
+        Log.e(TAG, "onBindViewHolder: time 1 " + minTime[1]);
 
         holder.mOrderTime.setText(minTime[1].substring(0, minTime[1].length() - 8));
 
@@ -109,17 +110,16 @@ public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.deta
             mStatus = "Paid";
         }
 
-        ///Order Type
+        ///Setting the String name of Order Type 0,1,2
         if (mType.trim().equals("0")) {
-            mType = "Pickup";
-        } else if (mType.trim().equals("1")) {
-            mType = "Delivery";
-        } else {
             mType = "Self-Delivery";
+        } else if (mType.trim().equals("1")) {
+            mType = "Deliver with own courier";
+        } else {
+            mType = "Delivery";
         }
 
-
-        sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" , Locale.getDefault());
+        sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 
 
@@ -139,20 +139,12 @@ public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.deta
             holder.mStatus.setBackground(mCtx.getResources().getDrawable(R.drawable.paid_background));
         }
 
-//            holder.mOrderNumber.setTextColor(Color.BLACK);
-//            holder.mOrderTime.setTextColor(Color.BLACK);
-//            holder.mType.setTextColor(Color.BLACK);
-//            holder.mPrice.setTextColor(Color.GRAY);
-//            holder.mItemQuantity.setTextColor(Color.GRAY);
-//            holder.mCustomerName.setTextColor(Color.GRAY);
-
     }
 
     @Override
     public int getItemCount() {
         return prepareList.size();
     }
-
 
     //my listener interface
     public interface itemClickListener {
@@ -166,7 +158,8 @@ public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.deta
         private final TextView mRider;
         private final TextView mType;
         private final TextView mStatus;
-        public detailHolder(@NonNull @NotNull View itemView,final itemClickListener listener) {
+
+        public detailHolder(@NonNull @NotNull View itemView, final itemClickListener listener) {
             super(itemView);
             mOrderNumber = itemView.findViewById(R.id.order_number_PO);
             mCustomerName = itemView.findViewById(R.id.customer_name_PO);
@@ -174,7 +167,6 @@ public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.deta
             mType = itemView.findViewById(R.id.delivery_PO);
             mStatus = itemView.findViewById(R.id.status_PO);
             mRider = itemView.findViewById(R.id.rider_coming_PO);
-
 
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
@@ -184,7 +176,6 @@ public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.deta
                     }
                 }
             });
-
         }
     }
 }
