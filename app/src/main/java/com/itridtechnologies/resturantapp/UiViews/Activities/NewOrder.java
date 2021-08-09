@@ -1,15 +1,6 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.Toolbar;
-
-import androidx.core.widget.NestedScrollView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
@@ -23,23 +14,24 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
 import com.google.gson.JsonObject;
-import com.itridtechnologies.resturantapp.Adapters.AdapterBusinessOrderSubItems;
 import com.itridtechnologies.resturantapp.Adapters.AdapterBusinessOrders;
-import com.itridtechnologies.resturantapp.Adapters.AdapterOrderAddOns;
 import com.itridtechnologies.resturantapp.Adapters.AdapterTotal;
 import com.itridtechnologies.resturantapp.ClassRoom.RoomDB;
 import com.itridtechnologies.resturantapp.R;
-import com.itridtechnologies.resturantapp.Work.AllOrderAddress;
-import com.itridtechnologies.resturantapp.Work.AllOrderItems;
-import com.itridtechnologies.resturantapp.Work.AllOrderTotals;
-import com.itridtechnologies.resturantapp.Work.AllOrderWorker;
 import com.itridtechnologies.resturantapp.Work.OrderWorker;
 import com.itridtechnologies.resturantapp.model.TotalModel;
 import com.itridtechnologies.resturantapp.models.ActionOrder.ActionResponse;
-import com.itridtechnologies.resturantapp.models.OrderSubItems.AddonItemsItem;
 import com.itridtechnologies.resturantapp.models.OrderSubItems.DataItem;
-import com.itridtechnologies.resturantapp.models.OrderSubItems.OrderAddonsItem;
 import com.itridtechnologies.resturantapp.models.OrderSubItems.SubItems;
 import com.itridtechnologies.resturantapp.models.Pagination.OrdersItem;
 import com.itridtechnologies.resturantapp.models.SetToReady.SetToReadyResponse;
@@ -480,6 +472,7 @@ public class NewOrder extends AppCompatActivity {
     }
 
     //Setting Adapter
+    @SuppressLint("SetTextI18n")
     private void UpdateUI(String bNote, String dNote
             , String fName, String lName, String pNo
             , String status, Double tPrice, String partner
@@ -551,7 +544,7 @@ public class NewOrder extends AppCompatActivity {
         } else {
             mTVDeliveryNote.setText("");
         }
-        mTotalPayment.setText(String.valueOf(tPrice));
+        mTotalPayment.setText(Constants.CURRENCY_SIGN + " " + tPrice);
 
     }//UI
 

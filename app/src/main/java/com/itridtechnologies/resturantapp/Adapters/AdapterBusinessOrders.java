@@ -1,5 +1,6 @@
 package com.itridtechnologies.resturantapp.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.models.OrderSubItems.DataItem;
 import com.itridtechnologies.resturantapp.models.OrderSubItems.OrderAddonsItem;
+import com.itridtechnologies.resturantapp.utils.Constants;
 
 
 import java.util.List;
@@ -36,6 +38,7 @@ public class AdapterBusinessOrders extends RecyclerView.Adapter<AdapterBusinessO
         return new detailHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull detailHolder holder, int position) {
         DataItem orderitem = mOrderItemListt.get(position);
@@ -48,7 +51,7 @@ public class AdapterBusinessOrders extends RecyclerView.Adapter<AdapterBusinessO
         holder.rvSubItems.setAdapter(adapterSubItems);
 
         holder.itemName.setText(orderitem.getItemName());
-        holder.itemPrice.setText(orderitem.getItemPrice());
+        holder.itemPrice.setText(Constants.CURRENCY_SIGN + " " + orderitem.getItemPrice());
         holder.itemQty.setText(String.valueOf(orderitem.getItemQty()));
 
     }

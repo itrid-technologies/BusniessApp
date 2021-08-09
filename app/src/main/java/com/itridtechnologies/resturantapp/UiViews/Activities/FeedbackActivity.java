@@ -17,12 +17,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.databinding.ActivityFeedback2Binding;
 import com.itridtechnologies.resturantapp.models.Feedback.FeedbackResponse;
+import com.itridtechnologies.resturantapp.models.feedbacktags.FeedbackTagsResponse;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 
@@ -42,14 +45,9 @@ public class FeedbackActivity extends AppCompatActivity {
     private AppCompatButton mFeedbackBtn;
 
     //Adding tags in array
-    private ArrayList<String> tags = new ArrayList<String>();
-    //saving index to delete when un checked
-    private int index1;
-    private int index2;
-    private int index3;
-    private int index4;
-    private int index5;
-    private int index6;
+    private ArrayList<String> tags = new ArrayList<>();
+    //getting tags from server and adding here
+    private ArrayList<String> mTagsFromServer = new ArrayList<>();
 
     //rating
     private String mOrderId;
@@ -115,13 +113,22 @@ public class FeedbackActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         //setting chips
-        getFromChips();
-
+        setChips();
+//        getFromChips();
         //setting listener on button
         listeners();
     }//onStart
+
+    private void addInChipGroup() {
+
+        for (String tag : mTagsFromServer) {
+            Chip chip = new Chip(FeedbackActivity.this);
+            Log.e(TAG, "addInChipGroup: " + tag);
+            chip.setText(tag);
+            binding.frequentOptions.addView(chip);
+        }
+    }//addInChipGroup
 
     //click listeners
     private void listeners() {
@@ -195,76 +202,100 @@ public class FeedbackActivity extends AppCompatActivity {
 
     }//postFeedback
 
-    //getting data from chip and setting in feedback edit text
-    private void getFromChips() {
-        binding.chip1.setOnClickListener(v -> {
-            if (binding.chip1.isChecked()) {
-                tags.add(binding.chip1.getText().toString());
-                index1 = tags.size() - 1;
-                Log.e(TAG, "getFromChips: " + String.valueOf(tags) + index1);
-            } else {
-                tags.remove(tags.size() - 1);
-                Log.e(TAG, "getFromChips: " + String.valueOf(tags) + index6);
+    //setting chips
+    private void setChips() {
+        Call<FeedbackTagsResponse> call = RetrofitNetMan.getRestApiService().getTags();
+        call.enqueue(new Callback<FeedbackTagsResponse>() {
+            @Override
+            public void onResponse(@NotNull Call<FeedbackTagsResponse> call, @NotNull Response<FeedbackTagsResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    for (int i = 0; i < response.body().getData().size(); i++) {
+                        mTagsFromServer.add(response.body().getData().get(i).getDisplayName());
+                    }
+                    Log.e(TAG, "onResponse: get tag list " + mTagsFromServer);
+                    //Setting chips in View (Chip Group)
+                    addInChipGroup();
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<FeedbackTagsResponse> call, @NotNull Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage());
             }
         });
 
-        binding.chip2.setOnClickListener(v -> {
+    }//setChips
 
-            if (binding.chip2.isChecked()) {
-                tags.add(binding.chip2.getText().toString());
-                index2 = tags.size() - 1;
-                Log.e(TAG, "getFromChips: " + tags + index2);
-            } else {
-                tags.remove(tags.size() - 1);
-                Log.e(TAG, "getFromChips: " + tags + index6);
-            }
-
-        });
-
-        binding.chip3.setOnClickListener(v -> {
-            if (binding.chip3.isChecked()) {
-                tags.add(binding.chip3.getText().toString());
-                index3 = tags.size() - 1;
-                Log.e(TAG, "getFromChips: " + tags + index3);
-            } else {
-                tags.remove(tags.size() - 1);
-                Log.e(TAG, "getFromChips: " + tags + index6);
-            }
-        });
-
-        binding.chip4.setOnClickListener(v -> {
-            if (binding.chip4.isChecked()) {
-                tags.add(binding.chip4.getText().toString());
-                index4 = tags.size() - 1;
-                Log.e(TAG, "getFromChips: " + tags + index4);
-            } else {
-                tags.remove(tags.size() - 1);
-                Log.e(TAG, "getFromChips: " + tags + index6);
-            }
-        });
-
-        binding.chip5.setOnClickListener(v -> {
-            if (binding.chip5.isChecked()) {
-                tags.add(binding.chip5.getText().toString());
-                index5 = tags.size() - 1;
-                Log.e(TAG, "getFromChips: " + tags + index5);
-            } else {
-                tags.remove(tags.size() - 1);
-                Log.e(TAG, "getFromChips: " + tags + index6);
-            }
-        });
-
-        binding.chip6.setOnClickListener(v -> {
-            if (binding.chip6.isChecked()) {
-                tags.add(binding.chip6.getText().toString());
-                index6 = tags.size() - 1;
-                Log.e(TAG, "getFromChips: " + tags + index6);
-            } else {
-                tags.remove(tags.size() - 1);
-                Log.e(TAG, "getFromChips: " + tags + index6);
-            }
-
-        });
-    }//getFromChips
+//    //getting data from chip and setting in feedback edit text
+//    private void getFromChips() {
+//        binding.chip1.setOnClickListener(v -> {
+//            if (binding.chip1.isChecked()) {
+//                tags.add(binding.chip1.getText().toString());
+//                index1 = tags.size() - 1;
+//                Log.e(TAG, "getFromChips: " + String.valueOf(tags) + index1);
+//            } else {
+//                tags.remove(tags.size() - 1);
+//                Log.e(TAG, "getFromChips: " + String.valueOf(tags) + index6);
+//            }
+//        });
+//
+//        binding.chip2.setOnClickListener(v -> {
+//
+//            if (binding.chip2.isChecked()) {
+//                tags.add(binding.chip2.getText().toString());
+//                index2 = tags.size() - 1;
+//                Log.e(TAG, "getFromChips: " + tags + index2);
+//            } else {
+//                tags.remove(tags.size() - 1);
+//                Log.e(TAG, "getFromChips: " + tags + index6);
+//            }
+//
+//        });
+//
+//        binding.chip3.setOnClickListener(v -> {
+//            if (binding.chip3.isChecked()) {
+//                tags.add(binding.chip3.getText().toString());
+//                index3 = tags.size() - 1;
+//                Log.e(TAG, "getFromChips: " + tags + index3);
+//            } else {
+//                tags.remove(tags.size() - 1);
+//                Log.e(TAG, "getFromChips: " + tags + index6);
+//            }
+//        });
+//
+//        binding.chip4.setOnClickListener(v -> {
+//            if (binding.chip4.isChecked()) {
+//                tags.add(binding.chip4.getText().toString());
+//                index4 = tags.size() - 1;
+//                Log.e(TAG, "getFromChips: " + tags + index4);
+//            } else {
+//                tags.remove(tags.size() - 1);
+//                Log.e(TAG, "getFromChips: " + tags + index6);
+//            }
+//        });
+//
+//        binding.chip5.setOnClickListener(v -> {
+//            if (binding.chip5.isChecked()) {
+//                tags.add(binding.chip5.getText().toString());
+//                index5 = tags.size() - 1;
+//                Log.e(TAG, "getFromChips: " + tags + index5);
+//            } else {
+//                tags.remove(tags.size() - 1);
+//                Log.e(TAG, "getFromChips: " + tags + index6);
+//            }
+//        });
+//
+//        binding.chip6.setOnClickListener(v -> {
+//            if (binding.chip6.isChecked()) {
+//                tags.add(binding.chip6.getText().toString());
+//                index6 = tags.size() - 1;
+//                Log.e(TAG, "getFromChips: " + tags + index6);
+//            } else {
+//                tags.remove(tags.size() - 1);
+//                Log.e(TAG, "getFromChips: " + tags + index6);
+//            }
+//
+//        });
+//    }//getFromChips
 
 }

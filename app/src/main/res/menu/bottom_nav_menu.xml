@@ -4,29 +4,21 @@
     <item
         android:id="@+id/nav_home"
         android:enabled="true"
-        android:title="Orders"
-        android:iconTint="@color/theme_color"
         android:icon="@drawable/home"
-        />
+        android:title="@string/orders" />
     <item
         android:id="@+id/nav_process"
         android:enabled="true"
         android:icon="@drawable/ic_ellipsis"
-        android:title="Preparing"
-        android:iconTint="@color/theme_color"
-        />
+        android:title="@string/preparing" />
     <item
         android:id="@+id/nav_ready"
         android:enabled="true"
         android:icon="@drawable/icbasket"
-        android:title="Ready"
-        android:iconTint="@color/theme_color"
-        />
+        android:title="@string/ready" />
     <item
         android:id="@+id/nav_history"
         android:enabled="true"
         android:icon="@drawable/ic_history"
-        android:iconTint="@color/theme_color"
-        android:title="History"
-       />
+        android:title="@string/history" />
 </menu>

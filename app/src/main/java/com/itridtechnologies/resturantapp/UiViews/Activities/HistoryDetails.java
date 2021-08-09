@@ -6,6 +6,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import com.itridtechnologies.resturantapp.models.historyNew.NewHistoryWithTotals
 import com.itridtechnologies.resturantapp.models.historyagain.HistResponse;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
+import com.itridtechnologies.resturantapp.utils.Constants;
 import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
 import org.jetbrains.annotations.NotNull;
@@ -113,12 +115,13 @@ public class HistoryDetails extends AppCompatActivity {
 
 
 
+    @SuppressLint("SetTextI18n")
     public void totalFun(String totalAmount) {
         mRVTotals.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         AdapterTotal totalAdapter = new AdapterTotal(list, HistoryDetails.this);
         mRVTotals.setAdapter(totalAdapter);
         totalAdapter.notifyDataSetChanged();
-        mTotal.setText(totalAmount);
+        mTotal.setText(Constants.CURRENCY_SIGN + " " + totalAmount);
     }//end total function
 
 
@@ -214,6 +217,7 @@ public class HistoryDetails extends AppCompatActivity {
     }
 
     //Updating UI
+    @SuppressLint("SetTextI18n")
     private void UpdateHistUI(String fCustName, String lCustName
             , String RiderName, String orderAmount, String status) {
 
@@ -228,7 +232,7 @@ public class HistoryDetails extends AppCompatActivity {
         }
         //Amount
         if (orderAmount != null) {
-            mAmmount.setText(orderAmount);
+            mAmmount.setText(Constants.CURRENCY_SIGN + " " + orderAmount);
         }
         //Status
         if (status != null) {

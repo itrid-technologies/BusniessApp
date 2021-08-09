@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -314,10 +315,11 @@ public class ReadyDetails extends AppCompatActivity {
         mNSVReadyDetails.setVisibility(View.VISIBLE);
     }
 
+    @SuppressLint("SetTextI18n")
     public void UpdateUI(String bNote, String dNote
             , String fName, String lName, String pNo
             , String status, String Address
-            , Double tPrice,String partnerName, int pickup) {
+            , Double tPrice, String partnerName, int pickup) {
 
 
         //Setting Name of Customer
@@ -355,9 +357,9 @@ public class ReadyDetails extends AppCompatActivity {
         //Total and subtotal AMoutn
 
         if (tPrice != null) {
-            mTVSubTotalAmount.setText(String.valueOf(tPrice));
+            mTVSubTotalAmount.setText(Constants.CURRENCY_SIGN + " " + tPrice);
         } else {
-            mTVSubTotalAmount.setText("0");
+            mTVSubTotalAmount.setText(Constants.CURRENCY_SIGN + " " + "0");
         }
 
 

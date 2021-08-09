@@ -124,55 +124,53 @@
                     app:singleLine="false"
                     app:singleSelection="false">
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip1"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:text="@string/didn_t_come_inside" />
+<!--                    <com.google.android.material.chip.Chip-->
+<!--                        android:id="@+id/chip1"-->
+<!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_margin="5dp"-->
+<!--                        android:text="@string/didn_t_come_inside" />-->
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip2"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:text="@string/delivery_bag_unavailable" />
+<!--                    <com.google.android.material.chip.Chip-->
+<!--                        android:id="@+id/chip2"-->
+<!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_margin="5dp"-->
+<!--                        android:text="@string/delivery_bag_unavailable" />-->
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip3"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:text="@string/unprofessional_behavior" />
+<!--                    <com.google.android.material.chip.Chip-->
+<!--                        android:id="@+id/chip3"-->
+<!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_margin="5dp"-->
+<!--                        android:text="@string/unprofessional_behavior" />-->
+<!--                    -->
+<!--                    <com.google.android.material.chip.Chip-->
+<!--                        android:id="@+id/chip4"-->
+<!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_margin="5dp"-->
+<!--                        android:text="@string/late_pickup" />-->
+<!--                    -->
+<!--                    <com.google.android.material.chip.Chip-->
+<!--                        android:id="@+id/chip5"-->
+<!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_margin="5dp"-->
+<!--                        android:text="@string/late_dropoff" />-->
 
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip4"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:text="@string/late_pickup" />
-
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip5"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:text="@string/late_dropoff" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip6"
-                        style="@style/Widget.MaterialComponents.Chip.Choice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:text="@string/delivery_partner_using_someone_else_account" />
+<!--                    <com.google.android.material.chip.Chip-->
+<!--                        android:id="@+id/chip6"-->
+<!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_margin="5dp"-->
+<!--                        android:text="@string/delivery_partner_using_someone_else_account" />-->
 
                 </com.google.android.material.chip.ChipGroup>
 

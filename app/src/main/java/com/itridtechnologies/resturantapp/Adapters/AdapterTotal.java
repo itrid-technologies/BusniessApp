@@ -1,5 +1,6 @@
 package com.itridtechnologies.resturantapp.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.model.TotalModel;
+import com.itridtechnologies.resturantapp.utils.Constants;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -35,11 +37,12 @@ public class AdapterTotal extends RecyclerView.Adapter<AdapterTotal.detailHolder
         return new AdapterTotal.detailHolderr(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull @NotNull detailHolderr holder, int position) {
         TotalModel totalModel = totalModelList.get(position);
         holder.mSubTotalName.setText(totalModel.getmTotalName());
-        holder.mSubTotalAmount.setText(totalModel.getmTotalAmount());
+        holder.mSubTotalAmount.setText(Constants.CURRENCY_SIGN + " " + totalModel.getmTotalAmount());
 
     }
 

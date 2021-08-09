@@ -19,6 +19,7 @@ import com.itridtechnologies.resturantapp.models.RecieptOrder.RecieptResponse;
 import com.itridtechnologies.resturantapp.models.SetToReady.SetToReadyResponse;
 import com.itridtechnologies.resturantapp.models.Setting.SettingResponse;
 import com.itridtechnologies.resturantapp.models.UpdateSetting.UpdateSettingResponse;
+import com.itridtechnologies.resturantapp.models.feedbacktags.FeedbackTagsResponse;
 import com.itridtechnologies.resturantapp.models.historyNew.NewHistoryWithTotals;
 import com.itridtechnologies.resturantapp.models.historyagain.HistResponse;
 import com.itridtechnologies.resturantapp.models.login.LoginResponse;
@@ -243,6 +244,10 @@ public class RetrofitNetMan {
                 @Header("x-access-token") String token,
                 @Body JsonObject body
         );
+
+        //Feedback Tags
+        @GET("ratingtagsvalues?for_type=1&tag_type=0&by_type=0")
+        Call<FeedbackTagsResponse> getTags();
 
     }//interface
 }

@@ -109,8 +109,8 @@ public class FragmentDashboard extends Fragment {
 
     ///Variables for Opening and closing days and time
     private int mIsClosed = 0;
-    private String mOpenTime = "N/A";
-    private String mCloseTime = "N/A";
+    private String mOpenCloseTime = "N/A";
+    private String mOpenToday = "N/A";
     private String mOpenDay = "N/A";
     private int mCurrentDay = 0;
 
@@ -158,6 +158,8 @@ public class FragmentDashboard extends Fragment {
 
         pm = new PreferencesManager(requireContext());
 
+        //vibration context
+        mVibration = (Vibrator) requireContext().getSystemService(Context.VIBRATOR_SERVICE);
         Log.e(TAG, "onCreateView: i m created");
 
         anim_in = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
@@ -274,10 +276,6 @@ public class FragmentDashboard extends Fragment {
     @Override
     public void onViewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
-        //vibration context
-        mVibration = (Vibrator) requireContext().getSystemService(Context.VIBRATOR_SERVICE);
 
         i = 0;
         ///Variables when no orders
@@ -465,21 +463,38 @@ public class FragmentDashboard extends Fragment {
                     Log.e(TAG, "onResponse: Next day " + nextday);
                     try {
                         mIsClosed = response.body().getData().getBusinessHours().get(currentDay()).getIsClosed();
-                        if (mIsClosed == 1)
-                        {
-                            mIsClosed = response.body().getData().getBusinessHours().get(nextday).getIsClosed();
+                        Log.e(TAG, "onResponse:  Previous is closed " + mIsClosed);
+                        if (mIsClosed != 0) {
+                            for (int i = 0; i < response.body().getData().getBusinessHours().size(); i++) {
+                                mIsClosed = response.body().getData().getBusinessHours().get(nextday).getIsClosed();
+                                Log.e(TAG, "onResponse:  After is closed " + mIsClosed);
+                                if (mIsClosed == 0) {
+                                    mOpenDay = response.body().getData().getBusinessHours().get(nextday).getDay();
+                                    mOpenCloseTime = response.body().getData().getBusinessHours().get(nextday).getOpeningTime();
+                                    Log.e(TAG, "onResponse: open day " + mOpenDay);
+                                    break;
+                                } else {
+                                    nextday = nextday + 1;
+                                    if (nextday > 6) {
+                                        nextday = 0;
+                                    }
+                                    Log.e(TAG, "onResponse: open day " + nextday);
+                                }
+                            }//for loop
+                        }//For ends business is open
+                        else {
+                            mOpenCloseTime = response.body().getData().getBusinessHours().get(currentDay()).getClosingTime();
+                            mOpenCloseTime = "yes";
                         }
-                        mOpenTime = response.body().getData().getBusinessHours().get(nextday).getOpeningTime();
-                        mCloseTime = response.body().getData().getBusinessHours().get(currentDay()).getClosingTime();
-                        mOpenDay = response.body().getData().getBusinessHours().get(nextday).getDay();
+
                     } catch (Exception e) {
                         Log.e(TAG, "onResponse: " + e.getMessage());
                     }
 
-                    Log.e(TAG, "onResponse: " + mIsClosed + mOpenTime + mCloseTime);
+                    Log.e(TAG, "onResponse: " + mIsClosed + mOpenCloseTime);
 
                     //Passing values to function and setting layout
-                    setTimeLayout(mIsClosed, mOpenTime, mCloseTime, mOpenDay);
+                    setTimeLayout(mIsClosed, mOpenCloseTime, mOpenToday, mOpenDay);
 
                 } else {
                     Toast.makeText(requireContext(), "Token Expired", Toast.LENGTH_SHORT).show();
@@ -494,29 +509,29 @@ public class FragmentDashboard extends Fragment {
         });
     }
 
-    private void setTimeLayout(int isClosed, String openTimeWithSecond, String closeTimeWithSecond, String day) {
+    private void setTimeLayout(int isClosed, String openCloseTime, String openToday, String day) {
 
-        String openTime = openTimeWithSecond;
-        String closeTime = closeTimeWithSecond;
+        String openTime = openCloseTime;
+        String closeTime = openToday;
 
         if (closeTime.equals("N/A") && openTime.equals("N/A")) {
             String msg = "Business Hours are not Assigned";
             noOrders.setText(msg);
-        } else {
-            Log.e(TAG, "setTimeLayout: " + openTime.substring(0, openTime.length() - 3) + " close " + closeTime);
-
-            String closeMsg = "Closed - Opening " + day + " " + openTime.substring(0, openTime.length() - 3) + " AM";
-            String openMsg = "Open Now - Accepting Orders till " + closeTime.substring(0, closeTime.length() - 3) + " PM";
-
+        }
+        else if (openToday.equals("yes")){
+            Log.e(TAG, "setTimeLayout: " + openCloseTime.substring(0, openCloseTime.length() - 3) + " close " + closeTime);
+            String openMsg = "Open Now - Accepting Orders till " + openCloseTime.substring(0, openCloseTime.length() - 3) + " PM";
             if (isClosed == 0) {
                 imgNoOrder.setImageResource(R.drawable.ic_businessopen);
                 noOrders.setText(openMsg);
-            } else {
-                imgNoOrder.setImageResource(R.drawable.ic_businessclosed);
-                noOrders.setText(closeMsg);
             }
         }
-    }
+        else {
+            String closeMsg = "Closed - Opening " + day + " " + openTime.substring(0, openTime.length() - 3) + " AM";
+            imgNoOrder.setImageResource(R.drawable.ic_businessclosed);
+            noOrders.setText(closeMsg);
+        }
+    }//setTimeLayout
 
     ////Send to preparing order if autoaccept is on
     private void autoPreparing(String orderId) {
@@ -697,6 +712,7 @@ public class FragmentDashboard extends Fragment {
                                             }
                                         } else {
                                             Log.e(Oscillator.TAG, "onResponse: no info returning from live data");
+                                            Log.e(Oscillator.TAG, "onResponse: no info returning from live data");
                                         }
                                     });
 
@@ -740,7 +756,6 @@ public class FragmentDashboard extends Fragment {
         });
 
         if (internetButNoDatasbase == 0) {
-
 
             //getting current time from system
             SimpleDateFormat mdformat = new SimpleDateFormat("HH:mm:ss");

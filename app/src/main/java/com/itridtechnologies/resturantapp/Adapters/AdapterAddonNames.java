@@ -1,5 +1,6 @@
 package com.itridtechnologies.resturantapp.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.itridtechnologies.resturantapp.model.AddOnItemModel;
 import com.itridtechnologies.resturantapp.model.AddonModel;
 import com.itridtechnologies.resturantapp.model.ModiferModel;
 import com.itridtechnologies.resturantapp.models.HistoryOrderDetails.AddonItemsItem;
+import com.itridtechnologies.resturantapp.utils.Constants;
 
 import java.util.List;
 
@@ -35,11 +37,12 @@ public class AdapterAddonNames extends RecyclerView.Adapter<AdapterAddonNames.de
         return new AdapterAddonNames.detailHolderClass(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull detailHolderClass holder, int pos) {
         AddonItemsItem mAddonItems = addOnModelList.get(pos);
         holder.mAddonName.setText(mAddonItems.getAddonItemName());
-        holder.mAddonPrice.setText(mAddonItems.getAddonItemPrice());
+        holder.mAddonPrice.setText(Constants.CURRENCY_SIGN + " " + mAddonItems.getAddonItemPrice());
     }
 
     @Override

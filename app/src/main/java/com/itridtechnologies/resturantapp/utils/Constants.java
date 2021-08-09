@@ -46,6 +46,7 @@ public final class Constants {
     ///Order Id From Notification
     public static String orderIdFromNotification;
 
+    public static String CURRENCY_SIGN = "Rs.";
 
     public static String DEVICE_TOKEN = null;
 }

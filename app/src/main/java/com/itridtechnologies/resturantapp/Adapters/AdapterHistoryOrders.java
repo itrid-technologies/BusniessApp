@@ -1,5 +1,6 @@
 package com.itridtechnologies.resturantapp.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.itridtechnologies.resturantapp.models.HistoryOrderDetails.OrderAddons
 import com.itridtechnologies.resturantapp.models.orderHistory.AddonsItem;
 import com.itridtechnologies.resturantapp.models.orderHistory.ItemsItem;
 import com.itridtechnologies.resturantapp.models.orderHistory.OrdersItem;
+import com.itridtechnologies.resturantapp.utils.Constants;
 import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
 import java.util.ArrayList;
@@ -48,13 +50,14 @@ public class AdapterHistoryOrders extends RecyclerView.Adapter<AdapterHistoryOrd
         return new AdapterHistoryOrders.detailHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull detailHolder holder, int position) {
         DataItem orderItem = mHistoryOrders.get(position);
         //set data
 
         holder.itemName.setText(orderItem.getItemName());
-        holder.itemPrice.setText(orderItem.getItemPrice());
+        holder.itemPrice.setText(Constants.CURRENCY_SIGN + " " + orderItem.getItemPrice());
 
         //Assigning List
         mAddonItemName = mHistoryOrders.get(position).getOrderAddons();

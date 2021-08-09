@@ -362,7 +362,6 @@
                             android:layout_marginEnd="30dp"
                             android:layout_weight="1"
                             android:gravity="end"
-                            android:text="200.00"
                             android:textStyle="bold" />
 
                     </LinearLayout>
@@ -387,7 +386,7 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
+                        android:layout_height="1dp"
                         android:layout_marginTop="25dp"
                         android:background="@color/borderColor" />
                 </TableRow>
@@ -417,7 +416,7 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
+                        android:layout_height="1dp"
                         android:background="@color/borderColor" />
                 </TableRow>
 
@@ -447,7 +446,7 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
+                        android:layout_height="1dp"
                         android:background="@color/borderColor" />
                 </TableRow>
 
