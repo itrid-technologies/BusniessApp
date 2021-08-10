@@ -1,16 +1,14 @@
 package com.itridtechnologies.resturantapp.Adapters;
 
 import android.content.Context;
-import android.text.format.DateUtils;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.motion.utils.Oscillator;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,14 +17,8 @@ import com.itridtechnologies.resturantapp.ClassRoom.RoomDB;
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.models.Pagination.OrdersItem;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
-
-import android.graphics.Color;
-
 
 import static android.content.ContentValues.TAG;
 import static android.graphics.Color.BLACK;
@@ -40,6 +32,8 @@ public class RecyclerViewAdapterDashboard extends RecyclerView.Adapter<RecyclerV
 
     //Room Dataabase
     RoomDB databaseRoom;
+
+    private static final String TAG = "RecyclerViewAdapterDash";
 
 
     //object of listener

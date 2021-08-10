@@ -50,7 +50,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
 
 public class FragmentProcessing extends Fragment {
     //Variables here
@@ -72,6 +71,8 @@ public class FragmentProcessing extends Fragment {
     //Working Variables
     private int mCurrentPage = 1;
 
+    private static final String TAG = "FragmentProcessing";
+    
     //Preference Manager
     private PreferencesManager pm;
 

@@ -16,13 +16,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
 
 public class AllOrdersAddOnNames extends Worker {
 
     //Variables
     ///list for database
     RoomDB databaseRoom;
+    private static final String TAG = "AllOrdersAddOnNames";
 
     public AllOrdersAddOnNames(@NonNull @NotNull Context context, @NonNull @NotNull WorkerParameters workerParams) {
         super(context, workerParams);

@@ -116,7 +116,6 @@ public class HistoryDetails extends AppCompatActivity {
             startActivity(intent);
         });
 
-
         mCourierReview.setOnClickListener(v -> {
             list.clear();
             Intent intent = new Intent(HistoryDetails.this, FeedbackActivity.class);

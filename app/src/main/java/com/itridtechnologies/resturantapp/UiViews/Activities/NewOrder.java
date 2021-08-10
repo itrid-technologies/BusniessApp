@@ -1,13 +1,14 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities;
 
-import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TableRow;
@@ -54,8 +55,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
-
 public class NewOrder extends AppCompatActivity {
     private TableRow mPaymentStatusLayout;
     private TextView mTVDeliveryNote;
@@ -67,6 +66,7 @@ public class NewOrder extends AppCompatActivity {
     private TextView mCallCustomer;
     private TextView mCustName;
     private TextView mPrint;
+    private static final String TAG = "NewOrder";
     private TextView mPrepareTimeTV;
     private TextView mPartner;
     private ProgressBar mProgressNO;
@@ -90,7 +90,7 @@ public class NewOrder extends AppCompatActivity {
     RoomDB databaseRoom;
 
     //Database
-    private double mRemainTime = 50000.00;
+    private long mRemainTime;
     private String mSavingTime;
     private Date currentTime;
 
@@ -115,6 +115,11 @@ public class NewOrder extends AppCompatActivity {
 
     //Total amount of order
     private Double valueTotal;
+
+    //Flag to check if order is expired
+    private int mFlagRemaining = 1;
+    //Declare timer
+    CountDownTimer mCountTimer = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +147,6 @@ public class NewOrder extends AppCompatActivity {
         mSavingTime = "Current Time : " + mdformat.format(calendar.getTime());
         Log.e(TAG, "onCreateView: time" + mSavingTime);
 
-
         //Dialing fucntion
         callFun();
         ///Setting Action bar
@@ -159,6 +163,11 @@ public class NewOrder extends AppCompatActivity {
         });
         mToolbar.setTitle(" # " + or);
 
+        //getting remaining time
+        mRemainTime = Long.parseLong(getIntent().getStringExtra("remainingTime"));
+        Log.e(TAG, "onCreate: remain time " + mRemainTime);
+        timer();
+
         //Setting Totals
         totalFun();
         //Calling API for Order Details
@@ -169,58 +178,87 @@ public class NewOrder extends AppCompatActivity {
         clickListeners();
     }//oc
 
+    private void timer() {
+        mCountTimer = new CountDownTimer(mRemainTime,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                Log.e(TAG, "onTick: Order is not accepted and remaining time is " + millisUntilFinished);
+            }
+
+            @Override
+            public void onFinish() {
+                mFlagRemaining = 0;
+            }
+        };
+    }//timer
+
 
     public void clickListeners() {
         //Intent when order is Accepted
         mBtnAccept.setOnClickListener(v -> {
-            mAccepted = "1";
-            btnAccRejApi(or, mAccepted);
-            Constants.ORDER_ITEM = new OrdersItem(
-                    mOrderItem.getPickuptime(),
-                    String.valueOf(mRemainTime),
-                    mSavingTime,
-                    mOrderItem.getBusinessTax(),
-                    mOrderItem.getDateAdded(),
-                    mOrderItem.getMinPreTime(),
-                    mOrderItem.getMaxPreTime(),
-                    mOrderItem.getCourierNotes(),
-                    mOrderItem.getBusinessId(),
-                    mOrderItem.getId(),
-                    "Preparing",
-                    mOrderItem.getOrderType(),
-                    mOrderItem.getFirstName(),
-                    mOrderItem.getBusinessRevShare(),
-                    mOrderItem.getItemCount(),
-                    mOrderItem.getBusinessName(),
-                    mOrderItem.getBusinessNotes(),
-                    mOrderItem.getPaymentStatus(),
-                    mOrderItem.getLastName(),
-                    mOrderItem.getAction(),
-                    mOrderItem.getDateAdded(),
-                    mOrderItem.getPaymentType(),
-                    mOrderItem.getDelay(),
-                    mOrderItem.getDateModified(),
-                    mOrderItem.getPhoneNumber(),
-                    mOrderItem.getCustomerId(),
-                    mOrderItem.getBusinessId(),
-                    mOrderItem.getStatus()
-            );
 
-            bgWork = new OneTimeWorkRequest.Builder(OrderWorker.class)
-                    .build();
-            WorkManager.getInstance(NewOrder.this).enqueue(bgWork);
+            if (mFlagRemaining == 1)
+            {
 
-            WorkManager.getInstance(NewOrder.this).getWorkInfoByIdLiveData(bgWork.getId())
-                    .observe(this, info -> {
-                        if (info != null && info.getState().isFinished()) {
-                            Log.e(TAG, "clickListeners: " + Constants.ORDER_ITEM);
-                            Intent intent = new Intent(NewOrder.this, BasicActvity.class);
-                            intent.putExtra("AOR", "Accepted");
-                            startActivity(intent);
-                        } else {
-                            Log.e(TAG, "onResponse: no info returning from live data");
-                        }
-                    });
+                mAccepted = "1";
+                //hitting api
+                btnAccRejApi(or, mAccepted);
+                Constants.ORDER_ITEM = new OrdersItem(
+                        mOrderItem.getPickuptime(),
+                        String.valueOf(mRemainTime),
+                        mSavingTime,
+                        mOrderItem.getBusinessTax(),
+                        mOrderItem.getDateAdded(),
+                        mOrderItem.getMinPreTime(),
+                        mOrderItem.getMaxPreTime(),
+                        mOrderItem.getCourierNotes(),
+                        mOrderItem.getBusinessId(),
+                        mOrderItem.getId(),
+                        "Preparing",
+                        mOrderItem.getOrderType(),
+                        mOrderItem.getFirstName(),
+                        mOrderItem.getBusinessRevShare(),
+                        mOrderItem.getItemCount(),
+                        mOrderItem.getBusinessName(),
+                        mOrderItem.getBusinessNotes(),
+                        mOrderItem.getPaymentStatus(),
+                        mOrderItem.getLastName(),
+                        mOrderItem.getAction(),
+                        mOrderItem.getDateAdded(),
+                        mOrderItem.getPaymentType(),
+                        mOrderItem.getDelay(),
+                        mOrderItem.getDateModified(),
+                        mOrderItem.getPhoneNumber(),
+                        mOrderItem.getCustomerId(),
+                        mOrderItem.getBusinessId(),
+                        mOrderItem.getStatus()
+                );
+
+                bgWork = new OneTimeWorkRequest.Builder(OrderWorker.class)
+                        .build();
+                WorkManager.getInstance(NewOrder.this).enqueue(bgWork);
+
+                WorkManager.getInstance(NewOrder.this).getWorkInfoByIdLiveData(bgWork.getId())
+                        .observe(this, info -> {
+                            if (info != null && info.getState().isFinished()) {
+                                Log.e(TAG, "clickListeners: " + Constants.ORDER_ITEM);
+                                Intent intent = new Intent(NewOrder.this, BasicActvity.class);
+                                intent.putExtra("AOR", "Accepted");
+                                startActivity(intent);
+                            } else {
+                                Log.e(TAG, "onResponse: no info returning from live data");
+                            }
+                        });
+            }//remaining = 1
+            else {
+                new AlertDialog.Builder(NewOrder.this)
+                        .setTitle("Expired")
+                        .setMessage("This Order is Expired now")
+                        .setPositiveButton(android.R.string.yes, (dialog, which) -> finish())
+                        .setIcon(R.drawable.ic_fast_food)
+                        .show();
+            }//end else
+
         });
 
         // Intent when order is Rejected

@@ -1,21 +1,12 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities.Frags;
 
-import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.widget.NestedScrollView;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.os.Handler;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +19,16 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.archit.calendardaterangepicker.customviews.DateRangeCalendarView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.itridtechnologies.resturantapp.Adapters.AdapterHistoryFragment;
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.UiViews.Activities.HistoryDetails;
@@ -40,19 +38,14 @@ import com.itridtechnologies.resturantapp.UiViews.Activities.Settings;
 import com.itridtechnologies.resturantapp.UiViews.Activities.help;
 import com.itridtechnologies.resturantapp.model.NewHistory;
 import com.itridtechnologies.resturantapp.models.historyNew.NewHistoryWithTotals;
-import com.itridtechnologies.resturantapp.models.historyagain.HistResponse;
-import com.itridtechnologies.resturantapp.models.historyagain.OrdersItem;
 import com.itridtechnologies.resturantapp.models.orderHistory.ItemsItem;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 import com.itridtechnologies.resturantapp.utils.PreferencesManager;
-import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -127,7 +120,6 @@ public class FragmentHistory extends Fragment {
         mNoHistoryImage = root.findViewById(R.id.ic_noOrder_hist);
         mTVEmpty = root.findViewById(R.id.tv_no_order_hist);
 
-
         mShowAll.setChecked(true);
         //Swipe Refresh Layout
         mSwipeHistory = root.findViewById(R.id.srl_hist);
@@ -136,8 +128,6 @@ public class FragmentHistory extends Fragment {
 
         ///Header Name
         mToolbarHist.setTitle("History");
-
-
 
         //Setting Toolbar Navigation Bar
         mToolbarHist.setOnMenuItemClickListener(item -> {
@@ -202,12 +192,13 @@ public class FragmentHistory extends Fragment {
     public void onStart() {
         super.onStart();
 
-
         //date Range Picker
         MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.dateRangePicker();
+
         builder.setTitleText("Select a Range to get Orders");
         builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
 
+//        DatePickerDialog.
         final MaterialDatePicker materialDatePicker = builder.build();
 
         //////For taking date from calender

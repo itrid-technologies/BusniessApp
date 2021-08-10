@@ -28,7 +28,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.motion.utils.Oscillator;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -90,6 +89,7 @@ public class FragmentDashboard extends Fragment {
     private TextView noOrders;
     private ImageView imgNoOrder;
     private int i;
+    private static final String TAG = "FragmentDashboard";
 
     //Animation for busy card
     private Animation anim_in;
@@ -140,7 +140,6 @@ public class FragmentDashboard extends Fragment {
     private List<OrdersItem> mNewPageOrderItemList = new ArrayList<>();
 
     //Receiving Broadcast for notifications
-    private static final String TAG = "MainActivity";
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     private SwipeRefreshLayout mSwipeDash;
@@ -208,7 +207,8 @@ public class FragmentDashboard extends Fragment {
                     // gcm successfully registered
                     Log.e(TAG, "onCreate: " + FCM.deviceToken.getValue());
 
-                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
+                }
+                else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
                     // new push notification is received
                     mOrderId = intent.getStringExtra("idByNotification");
                     Log.e(TAG, "onReceive: Order id " + mOrderId);
@@ -612,19 +612,19 @@ public class FragmentDashboard extends Fragment {
                     WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(bgWork.getId())
                             .observe(getViewLifecycleOwner(), info -> {
                                 if (info != null && info.getState().isFinished()) {
-                                    Log.e(Oscillator.TAG, "onResponse: Information is returning on live data");
+                                    Log.e(TAG, "onResponse: Information is returning on live data");
                                     //if work is succeceded then we get data from DB
                                     final List<OrdersItem> orders = databaseRoom.mainDao().getAll();
                                     if (!orders.isEmpty()) {
-                                        Log.e(Oscillator.TAG, "onResponse: List in database");
+                                        Log.e(TAG, "onResponse: List in database");
                                         setUpRecView(mNewPageOrderItemList);
                                     } else {
-                                        Log.e(Oscillator.TAG, "onResponse: No list in Database");
+                                        Log.e(TAG, "onResponse: No list in Database");
                                         noOrders.setVisibility(View.VISIBLE);
                                         imgNoOrder.setVisibility(View.VISIBLE);
                                     }
                                 } else {
-                                    Log.e(Oscillator.TAG, "onResponse: no info returning from live data");
+                                    Log.e(TAG, "onResponse: no info returning from live data");
                                 }
                             });
 
@@ -689,7 +689,7 @@ public class FragmentDashboard extends Fragment {
 
                             ///Inserting data in database
                             Constants.ORDER_PAGE_LIST = response.body().getData().getOrders();
-                            Log.e(Oscillator.TAG, "onResponse: Processing" + Constants.ORDER_PAGE_LIST);
+                            Log.e(TAG, "onResponse: Processing" + Constants.ORDER_PAGE_LIST);
 
                             ///Saving in database
                             //////For Order Items (Saving in Database---Will execute one time)
@@ -702,20 +702,20 @@ public class FragmentDashboard extends Fragment {
                                     .observe(getViewLifecycleOwner(), info -> {
                                         if (info != null && info.getState().isFinished()) {
 
-                                            Log.e(Oscillator.TAG, "onResponse: Information is returning on live data");
+                                            Log.e(TAG, "onResponse: Information is returning on live data");
                                             //if work is succeceded then we get data from DB
                                             final List<OrdersItem> orders = databaseRoom.mainDao().getAll();
                                             if (!orders.isEmpty()) {
-                                                Log.e(Oscillator.TAG, "onResponse: List in database");
+                                                Log.e(TAG, "onResponse: List in database");
                                                 setUpRecView(mNewPageOrderItemList);
                                             } else {
-                                                Log.e(Oscillator.TAG, "onResponse: No list in Database");
+                                                Log.e(TAG, "onResponse: No list in Database");
                                                 noOrders.setVisibility(View.VISIBLE);
                                                 imgNoOrder.setVisibility(View.VISIBLE);
                                             }
                                         } else {
-                                            Log.e(Oscillator.TAG, "onResponse: no info returning from live data");
-                                            Log.e(Oscillator.TAG, "onResponse: no info returning from live data");
+                                            Log.e(TAG, "onResponse: no info returning from live data");
+                                            Log.e(TAG, "onResponse: no info returning from live data");
                                         }
                                     });
 
@@ -751,8 +751,8 @@ public class FragmentDashboard extends Fragment {
             if (type.equals("item_click")) {
                 mMediaPlayer.stop();
                 Intent intent = new Intent(requireContext(), NewOrder.class);
-                Log.e(TAG, "setUpRecView: " + paginationOrders.get(position).getId());
                 intent.putExtra("orderId", String.valueOf(paginationOrders.get(position).getId()));
+                intent.putExtra("remainingTime",mRemainTime);
                 intent.putExtra("detailType", "newOrder");
                 startActivity(intent);
             }
@@ -1174,19 +1174,19 @@ public class FragmentDashboard extends Fragment {
                             WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(bgWork.getId())
                                     .observe(getViewLifecycleOwner(), info -> {
                                         if (info != null && info.getState().isFinished()) {
-                                            Log.e(Oscillator.TAG, "onResponse: Information is returning on live data");
+                                            Log.e(TAG, "onResponse: Information is returning on live data");
                                             //if work is succeceded then we get data from DB
                                             final List<OrdersItem> orders = databaseRoom.mainDao().getAll();
                                             if (!orders.isEmpty()) {
-                                                Log.e(Oscillator.TAG, "onResponse: List in database");
+                                                Log.e(TAG, "onResponse: List in database");
                                                 setUpRecView(mNewPageOrderItemList);
                                             } else {
-                                                Log.e(Oscillator.TAG, "onResponse: No list in Database");
+                                                Log.e(TAG, "onResponse: No list in Database");
                                                 noOrders.setVisibility(View.VISIBLE);
                                                 imgNoOrder.setVisibility(View.VISIBLE);
                                             }
                                         } else {
-                                            Log.e(Oscillator.TAG, "onResponse: no info returning from live data");
+                                            Log.e(TAG, "onResponse: no info returning from live data");
                                         }
                                     });
                         } catch (Exception e) {
@@ -1251,19 +1251,19 @@ public class FragmentDashboard extends Fragment {
             WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(bgWork.getId())
                     .observe(getViewLifecycleOwner(), info -> {
                         if (info != null && info.getState().isFinished()) {
-                            Log.e(Oscillator.TAG, "onResponse: Information is returning on live data");
+                            Log.e(TAG, "onResponse: Information is returning on live data");
                             //if work is succeceded then we get data from DB
                             final List<OrdersItem> orders = databaseRoom.mainDao().getAll();
                             if (!orders.isEmpty()) {
-                                Log.e(Oscillator.TAG, "onResponse: List in database");
+                                Log.e(TAG, "onResponse: List in database");
                                 setUpRecView(mNewPageOrderItemList);
                             } else {
-                                Log.e(Oscillator.TAG, "onResponse: No list in Database");
+                                Log.e(TAG, "onResponse: No list in Database");
                                 noOrders.setVisibility(View.VISIBLE);
                                 imgNoOrder.setVisibility(View.VISIBLE);
                             }
                         } else {
-                            Log.e(Oscillator.TAG, "onResponse: no info returning from live data");
+                            Log.e(TAG, "onResponse: no info returning from live data");
                         }
                     });
         } catch (Exception e) {

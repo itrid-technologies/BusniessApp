@@ -34,19 +34,16 @@ android {
 
 dependencies {
 
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.work:work-runtime:2.3.4'
     implementation 'com.google.firebase:firebase-messaging:22.0.0'
     implementation 'com.google.firebase:firebase-core:19.0.0'
     testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-
-    //Material Design
-    implementation 'com.rengwuxian.materialedittext:library:2.1.4'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     //gson
     implementation 'com.google.code.gson:gson:2.8.6'
@@ -56,8 +53,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     //okHttp
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.5.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.5.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
 
     //volley
     implementation 'com.android.volley:volley:1.1.1'
@@ -95,7 +92,8 @@ dependencies {
     // Annotation processor
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 
-
+    //recyclerview
+    implementation 'com.android.support:recyclerview-v7:30.0.0'
 
     //Dependencies for Room Database
     def room_version = "2.3.0"
@@ -103,7 +101,6 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$room_version"
     // optional - Test helpers
     testImplementation "androidx.room:room-testing:$room_version"
-
 
     ///Workmanager
     def work_version = "2.5.0"
@@ -114,7 +111,7 @@ dependencies {
 
     //Printing
     implementation "com.itextpdf:itextg:5.5.10"
-    implementation "com.karumi:dexter:5.0.0"
+    implementation "com.karumi:dexter:6.2.2"
 
     //Pulse Animation
     implementation "com.gauravbhola.ripplepulsebackground:library:1.0.0"

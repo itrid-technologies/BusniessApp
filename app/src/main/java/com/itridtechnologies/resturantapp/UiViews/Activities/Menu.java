@@ -1,12 +1,5 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,18 +12,23 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.android.material.tabs.TabLayout;
 import com.itridtechnologies.resturantapp.Adapters.AdapterMenu;
 import com.itridtechnologies.resturantapp.Adapters.AdapterMenuContainer;
 import com.itridtechnologies.resturantapp.Adapters.AdapterModifer;
 import com.itridtechnologies.resturantapp.R;
+import com.itridtechnologies.resturantapp.UiViews.Activities.Frags.FragmentDashboard;
 import com.itridtechnologies.resturantapp.model.AddonModel;
 import com.itridtechnologies.resturantapp.model.MenuModel;
 import com.itridtechnologies.resturantapp.model.ModiferModel;
 import com.itridtechnologies.resturantapp.models.MenuAddOns.MenuAddOnResponse;
-import com.itridtechnologies.resturantapp.models.MenuCategories.ChildrenItem;
-import com.itridtechnologies.resturantapp.models.MenuCategories.DataItem;
-import com.itridtechnologies.resturantapp.models.MenuCategories.MenuCategoriesResponse;
 import com.itridtechnologies.resturantapp.models.MenuCats.MenuCatsResponse;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
@@ -65,7 +63,6 @@ public class Menu extends AppCompatActivity {
     Toolbar mToolbar;
     //Swipe Refresh Layout
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private String id;
     private final ArrayList<AddonModel> mMenuAddonsList = new ArrayList<>();
     private final List<ModiferModel> mModifiersList = new ArrayList<>();
     private final List<String> cats = new ArrayList<>();
@@ -80,15 +77,24 @@ public class Menu extends AppCompatActivity {
         //find views
         setVariables();
         getCategoriesApi();
+        Log.e(TAG, "onCreate: refreshed outside function ");
         toolbar();
         ///Categories Items
         getCatItems(tabPos);
         mSwipeRefreshLayout.setProgressViewOffset(true, 10, 250);
         //Pull to Swipe
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            finish();
-            startActivity(getIntent());
+
+            final Handler handler = new Handler();
+            handler.postDelayed(() -> mSwipeRefreshLayout.setRefreshing(false), 2000);
+            mMenuAddonsList.clear();
+            menuItemList.clear();
+            Log.e(TAG, "onCreate: refreshed ");
+            mModifiersList.clear();
+            cats.clear();
+            getCategoriesApi();
         });
+
         //hide status bar
         AppManager.hideStatusBar(this);
     }//oc
@@ -121,7 +127,7 @@ public class Menu extends AppCompatActivity {
                     startActivity(intent);
                     return false;
                 }
-                case R.id.over_flow_log_out:{
+                case R.id.over_flow_log_out: {
                     Intent intent = new Intent(Menu.this, MainActivity.class);
                     pm.clearSharedPref();
                     pm.saveMyDataBool("login", false);
@@ -212,6 +218,7 @@ public class Menu extends AppCompatActivity {
 
     //Hitting Api to get data
     public void getCategoriesApi() {
+        Log.e(TAG, "onCreate: refreshed inside function");
         menuItemList.clear();
         cats.clear();
         mTabLayout.removeAllTabs();
@@ -227,8 +234,8 @@ public class Menu extends AppCompatActivity {
                         Log.e(TAG, "onResponse: sucess");
                         for (int i = 0; i < response.body().getData().size(); i++) {
 
-                                ///Adding all categories with Active status in a string list
-                                cats.add(response.body().getData().get(i).getName());
+                            ///Adding all categories with Active status in a string list
+                            cats.add(response.body().getData().get(i).getName());
 
 //                            if (response.body().getData().get(i).getCategoryStatus().equals("Active")) {
 //                                ///Adding all categories with Active status in a string list
@@ -237,8 +244,7 @@ public class Menu extends AppCompatActivity {
                         }
                         ///Calling set Tabs Function to add all strings
                         setTabs();
-                    }
-                    else {
+                    } else {
                         Toast.makeText(getApplicationContext(), "Token Expired " + response.message(), Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     }
@@ -292,29 +298,29 @@ public class Menu extends AppCompatActivity {
 
     ///Getting Category Items from server
     public void getCatItems(int pos) {
+        Log.e(TAG, "getCatItems: refreshed in getCatItems");
         Call<MenuCatsResponse> call = RetrofitNetMan.getRestApiService().getCats(token);
         call.enqueue(new Callback<MenuCatsResponse>() {
             @Override
             public void onResponse(@NotNull Call<MenuCatsResponse> call, @NotNull Response<MenuCatsResponse> response) {
                 try {
-                    Log.e("Pos", "" + pos);
 
-                    //variables for handling null values
-                    String description = "";
+                    if (response.isSuccessful() && response.body().getData() != null) {
+                        Log.e("Pos", "" + pos);
+                        menuItemList.clear();
+                        //variables for handling null values
+                        String description = "";
 
-                    //checking size of children
-                    Log.e(TAG, "onResponse: getting chlidren of tab items " + response.body().getData().get(pos).getChildren().get(0).getAddonAvailable());
-                    id = String.valueOf(response.body().getData().get(pos).getChildren().get(0).getAddonAvailable());
-                    for (int i = 0; i < response.body().getData().get(pos).getChildren().size(); i++) {
+                        //checking size of children
+                        Log.e(TAG, "onResponse: getting chlidren of tab items " + response.body().getData().get(pos).getChildren().get(0).getAddonAvailable());
+                        for (int i = 0; i < response.body().getData().get(pos).getChildren().size(); i++) {
 
+                            if (response.body().getData().get(pos).getChildren().get(i).getDescription() == null) {
+                                Log.e(TAG, "onResponse: value is null");
+                                description = "";
+                            }
 
-                        if (response.body().getData().get(pos).getChildren().get(i).getDescription() == null) {
-                            Log.e(TAG, "onResponse: value is null");
-                            description = "";
-                        }
-
-                        Log.e(TAG, "onResponse: Item available" + response.body().getData().get(pos).getChildren().get(i).getAvailability());
-
+                            Log.e(TAG, "onResponse: Item available" + response.body().getData().get(pos).getChildren().get(i).getAvailability());
 
                             //Adding data in the list
                             menuItemList.add(new MenuModel(
@@ -327,8 +333,6 @@ public class Menu extends AppCompatActivity {
                                     mMenuAddonsList,
                                     response.body().getData().get(pos).getChildren().get(i).getStatus()
                             ));
-
-
 //                        if (response.body().getData().get(pos).getChildren().get(i).getStatus().equals("Active")) {
 //                            //Adding data in the list
 //                            menuItemList.add(new MenuModel(
@@ -342,11 +346,10 @@ public class Menu extends AppCompatActivity {
 //                                    response.body().getData().get(pos).getChildren().get(i).getStatus()
 //                            ));
 //                        }
-
-
+                        }
+                        //Adapter to show the addons
+                        adapter(String.valueOf(response.body().getData().get(pos).getChildren().get(0).getAddonAvailable()));
                     }
-                    //Adapter to show the addons
-                    adapter();
                 } catch (Exception e) {
                     Log.e("TAG", "onResponse: Exception" + e.getMessage());
                     mNotFound.setVisibility(View.VISIBLE);
@@ -358,13 +361,13 @@ public class Menu extends AppCompatActivity {
 
             @Override
             public void onFailure(@NotNull Call<MenuCatsResponse> call, @NotNull Throwable t) {
-                Log.e(TAG, "onFailure: " + t.getMessage() );
+                Log.e(TAG, "onFailure: " + t.getMessage());
             }
         });
     }
 
     //Setting Adapter
-    public void adapter() {
+    public void adapter(String id) {
         AdapterMenu menuAdapter;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         menuAdapter = new AdapterMenu(menuItemList, getApplicationContext());
@@ -388,23 +391,25 @@ public class Menu extends AppCompatActivity {
                 public void onResponse(@NotNull Call<MenuAddOnResponse> call, @NotNull Response<MenuAddOnResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         for (int i = 0; i < response.body().getData().size(); i++) {
+                            Log.e(TAG, "onResponse: addon respomse" + response.body().getData().size() );
                             mMenuAddonsList.add(new AddonModel(
                                     response.body().getData().get(i).getName(),
                                     response.body().getData().get(i).getAvailability(),
                                     response.body().getData().get(i).getChildren()
                             ));
                             for (int j = 0; j < response.body().getData().get(i).getChildren().size(); j++) {
+                                Log.e(TAG, "onResponse: modifier respomse" + response.body().getData().size() );
                                 mModifiersList.add(new ModiferModel(
                                         response.body().getData().get(i).getChildren().get(j).getName()
                                 ));
                             }
                             pm.saveMyData("itemId", String.valueOf(response.body().getData().get(i).getId()));
                         }
-
                     }
                     mTabLayout.setEnabled(true);
 
                     if (hasSubItems) {
+                        Log.e(TAG, "onResponse: i have data now ");
                         ////if we have data then we will show it
                         AdapterMenuContainer adapMenuContainer = new AdapterMenuContainer(mMenuAddonsList, getApplicationContext());
                         mParent1RV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));

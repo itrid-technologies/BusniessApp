@@ -26,7 +26,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
 
 public class AdapterHistoryFragment extends RecyclerView.Adapter<AdapterHistoryFragment.detailHolder> implements AdapterHistoryFragmentt {
 
@@ -40,6 +39,7 @@ public class AdapterHistoryFragment extends RecyclerView.Adapter<AdapterHistoryF
     private Calendar cal;
     private SimpleDateFormat sdf;
     private PreferencesManager pm;
+    private static final String TAG = "AdapterHistoryFragment";
 
 
     private final List<NewHistory> searchList;

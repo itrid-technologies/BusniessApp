@@ -52,7 +52,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
 
 public class ReadyDetails extends AppCompatActivity {
 
@@ -78,6 +77,8 @@ public class ReadyDetails extends AppCompatActivity {
     String token = AppManager.getBusinessDetails().getData().getToken();
     private int mIsPickUp;
 
+    private static final String TAG = "ReadyDetails";
+    
     //Table row
     private TableRow mRiderRow;
     private TableRow mOrderNoteTitle;

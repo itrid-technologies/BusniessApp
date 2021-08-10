@@ -51,7 +51,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
 
 public class FragmentReady extends Fragment {
 
@@ -60,6 +59,8 @@ public class FragmentReady extends Fragment {
     ///Room database
     RoomDB databaseRoom;
 
+    private static final String TAG = "FragmentReady";
+    
     ////For Order ID
     private String mOrderId;
     private List<OrdersItem> mNewPageOrderItemList = new ArrayList<>();
