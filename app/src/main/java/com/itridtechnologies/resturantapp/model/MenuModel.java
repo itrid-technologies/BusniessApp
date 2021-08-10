@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 
 public class MenuModel {
+    private String id;
     private String mItemName;
     private String mItemDescription;
     private String mPic=null;
@@ -14,8 +15,8 @@ public class MenuModel {
     ArrayList<AddonModel> parentList = new ArrayList<>();
     private String mAvailabilityStatus;
 
-
-    public MenuModel(String mItemName, String mItemDescription, String mPic, int mYesNo, int mMenuid, String mAddOnAvailable, ArrayList<AddonModel> parentList, String mAvailabilityStatus) {
+    public MenuModel(String id, String mItemName, String mItemDescription, String mPic, int mYesNo, int mMenuid, String mAddOnAvailable, ArrayList<AddonModel> parentList, String mAvailabilityStatus) {
+        this.id = id;
         this.mItemName = mItemName;
         this.mItemDescription = mItemDescription;
         this.mPic = mPic;
@@ -26,6 +27,9 @@ public class MenuModel {
         this.mAvailabilityStatus = mAvailabilityStatus;
     }
 
+    public String getId() {
+        return id;
+    }
 
     public String getmItemName() {
         return mItemName;

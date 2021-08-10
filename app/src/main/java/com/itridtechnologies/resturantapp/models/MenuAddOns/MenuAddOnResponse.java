@@ -12,7 +12,7 @@ public class MenuAddOnResponse{
 	private boolean success;
 
 	@SerializedName("message")
-	private Message message;
+	private String message;
 
 	public List<DataItem> getData(){
 		return data;
@@ -22,7 +22,7 @@ public class MenuAddOnResponse{
 		return success;
 	}
 
-	public Message getMessage(){
+	public String getMessage(){
 		return message;
 	}
 }

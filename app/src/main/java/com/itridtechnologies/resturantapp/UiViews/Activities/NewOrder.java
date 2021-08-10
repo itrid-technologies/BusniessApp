@@ -2,7 +2,6 @@ package com.itridtechnologies.resturantapp.UiViews.Activities;
 
 import android.app.AlertDialog;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -163,11 +162,6 @@ public class NewOrder extends AppCompatActivity {
         });
         mToolbar.setTitle(" # " + or);
 
-        //getting remaining time
-        mRemainTime = Long.parseLong(getIntent().getStringExtra("remainingTime"));
-        Log.e(TAG, "onCreate: remain time " + mRemainTime);
-        timer();
-
         //Setting Totals
         totalFun();
         //Calling API for Order Details
@@ -205,8 +199,8 @@ public class NewOrder extends AppCompatActivity {
                 btnAccRejApi(or, mAccepted);
                 Constants.ORDER_ITEM = new OrdersItem(
                         mOrderItem.getPickuptime(),
-                        String.valueOf(mRemainTime),
-                        mSavingTime,
+//                        String.valueOf(mRemainTime),
+//                        mSavingTime,
                         mOrderItem.getBusinessTax(),
                         mOrderItem.getDateAdded(),
                         mOrderItem.getMinPreTime(),
@@ -285,8 +279,8 @@ public class NewOrder extends AppCompatActivity {
             setOrderToReady(or);
             Constants.ORDER_ITEM = new OrdersItem(
                     mOrderItem.getPickuptime(),
-                    String.valueOf(mRemainTime),
-                    mSavingTime,
+//                    String.valueOf(mRemainTime),
+//                    mSavingTime,
                     mOrderItem.getBusinessTax(),
                     mOrderItem.getDateAdded(),
                     mOrderItem.getMinPreTime(),
@@ -395,6 +389,11 @@ public class NewOrder extends AppCompatActivity {
                 AppManager.intent(ReadyDetails.class);
             }
         } else {
+
+            //getting remaining time
+            mRemainTime = Long.parseLong(getIntent().getStringExtra("remainingTime"));
+            Log.e(TAG, "onCreate: remain time " + mRemainTime);
+            timer();
             mBtnReject.setVisibility(View.VISIBLE);
             mBtnAccept.setVisibility(View.VISIBLE);
             mPrepareTime.setVisibility(View.GONE);
@@ -619,8 +618,6 @@ public class NewOrder extends AppCompatActivity {
             public void onResponse(@NotNull Call<NewOrderResponse> call, @NotNull Response<NewOrderResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
 
-                    Log.e(TAG, "onResponse: item price" + response.body().getData().getOrderTotals().get(0).getValue());
-
                     //collect data & update ui
                     try {
                         Log.e(TAG, "onResponse: first and last name: " + response.body().getData().getOrder().get(0).getFirstName() +
@@ -650,8 +647,8 @@ public class NewOrder extends AppCompatActivity {
                         Log.e(TAG, "onResponse: Data inserting");
                         Constants.ORDER_ITEM = new OrdersItem(
                                 response.body().getData().getOrder().get(0).getPickuptime(),
-                                String.valueOf(mRemainTime),
-                                String.valueOf(currentTime),
+//                                String.valueOf(mRemainTime),
+//                                String.valueOf(currentTime),
                                 "200",
                                 response.body().getData().getOrder().get(0).getDateAdded(),
                                 response.body().getData().getOrder().get(0).getMinPreTime(),

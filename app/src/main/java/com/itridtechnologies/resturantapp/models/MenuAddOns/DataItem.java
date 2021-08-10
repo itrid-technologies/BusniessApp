@@ -5,11 +5,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class DataItem{
 
-	@SerializedName("max_label")
-	private int maxLabel;
-
-	@SerializedName("addonType")
-	private int addonType;
+	@SerializedName("addon")
+	private List<AddonItem> addon;
 
 	@SerializedName("availability")
 	private int availability;
@@ -23,8 +20,8 @@ public class DataItem{
 	@SerializedName("date_modified")
 	private String dateModified;
 
-	@SerializedName("children")
-	private List<ChildrenItem> children;
+	@SerializedName("min_items")
+	private int minItems;
 
 	@SerializedName("name")
 	private String name;
@@ -47,12 +44,8 @@ public class DataItem{
 	@SerializedName("status")
 	private String status;
 
-	public int getMaxLabel(){
-		return maxLabel;
-	}
-
-	public int getAddonType(){
-		return addonType;
+	public List<AddonItem> getAddon(){
+		return addon;
 	}
 
 	public int getAvailability(){
@@ -71,8 +64,8 @@ public class DataItem{
 		return dateModified;
 	}
 
-	public List<ChildrenItem> getChildren(){
-		return children;
+	public int getMinItems(){
+		return minItems;
 	}
 
 	public String getName(){

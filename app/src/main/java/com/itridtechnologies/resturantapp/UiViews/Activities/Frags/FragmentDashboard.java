@@ -134,10 +134,11 @@ public class FragmentDashboard extends Fragment {
     private OrdersItem mOrderItem = null;
 
     //Declare timer
-    CountDownTimer cTimer = null;
+    private CountDownTimer cTimer = null;
+    private int mFlagCounter = 0;
 
     ///list
-    private List<OrdersItem> mNewPageOrderItemList = new ArrayList<>();
+    private List<OrdersItem> mNewPageOrderItemList;
 
     //Receiving Broadcast for notifications
     private BroadcastReceiver mRegistrationBroadcastReceiver;
@@ -207,8 +208,7 @@ public class FragmentDashboard extends Fragment {
                     // gcm successfully registered
                     Log.e(TAG, "onCreate: " + FCM.deviceToken.getValue());
 
-                }
-                else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
+                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
                     // new push notification is received
                     mOrderId = intent.getStringExtra("idByNotification");
                     Log.e(TAG, "onReceive: Order id " + mOrderId);
@@ -360,7 +360,6 @@ public class FragmentDashboard extends Fragment {
             imgNoOrder.setVisibility(View.GONE);
             mNSVDash.setVisibility(View.VISIBLE);
         }
-
         subscribeToTest();
     }
 
@@ -515,21 +514,19 @@ public class FragmentDashboard extends Fragment {
         String openTime = openCloseTime;
         String closeTime = openToday;
 
-        Log.e(TAG, "setTimeLayout: open today " + openToday );
+        Log.e(TAG, "setTimeLayout: open today " + openToday);
 
         if (closeTime.equals("N/A") && openTime.equals("N/A")) {
             String msg = "Business Hours are not Assigned";
             noOrders.setText(msg);
-        }
-        else if (openToday.equals("yes")){
+        } else if (openToday.equals("yes")) {
             Log.e(TAG, "setTimeLayout: " + openCloseTime.substring(0, openTime.length() - 3) + " close " + closeTime);
             String openMsg = "Open Now - Accepting Orders till " + openTime.substring(0, openCloseTime.length() - 3) + " PM";
             if (isClosed == 0) {
                 imgNoOrder.setImageResource(R.drawable.ic_businessopen);
                 noOrders.setText(openMsg);
             }
-        }
-        else {
+        } else {
             String closeMsg = "Closed - Opening " + day + " " + openTime.substring(0, openTime.length() - 3) + " AM";
             imgNoOrder.setImageResource(R.drawable.ic_businessclosed);
             noOrders.setText(closeMsg);
@@ -566,17 +563,18 @@ public class FragmentDashboard extends Fragment {
     ///Api link with id
     //method to get business orders from server
     private void getNewBusinessOrders(String orderId) {
+        Log.e(TAG, "getNewBusinessOrders: push notification for  " + orderId);
 
         Call<NewOrderResponse> call = RetrofitNetMan.getRestApiService().getOrders(token, orderId);
         call.enqueue(new Callback<NewOrderResponse>() {
             @Override
             public void onResponse(@NotNull Call<NewOrderResponse> call, @NotNull Response<NewOrderResponse> response) {
-
                 try {
+                    Log.e(TAG, "onResponse: size of list" + mNewPageOrderItemList.size());
                     mNewPageOrderItemList.add(new OrdersItem(
                             response.body().getData().getOrder().get(0).getPickuptime(),
-                            String.valueOf(mRemainTime),
-                            String.valueOf(mSavingTime),
+//                            String.valueOf(mRemainTime),
+//                            String.valueOf(mSavingTime),
                             "200",
                             response.body().getData().getOrder().get(0).getDateAdded(),
                             response.body().getData().getOrder().get(0).getMinPreTime(),
@@ -604,36 +602,37 @@ public class FragmentDashboard extends Fragment {
                             response.body().getData().getOrder().get(0).getStatus()
                     ));
 
-
-                    bgWork = new OneTimeWorkRequest.Builder(OrderWorker.class)
-                            .build();
-                    WorkManager.getInstance(requireContext()).enqueue(bgWork);
-
-                    WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(bgWork.getId())
-                            .observe(getViewLifecycleOwner(), info -> {
-                                if (info != null && info.getState().isFinished()) {
-                                    Log.e(TAG, "onResponse: Information is returning on live data");
-                                    //if work is succeceded then we get data from DB
-                                    final List<OrdersItem> orders = databaseRoom.mainDao().getAll();
-                                    if (!orders.isEmpty()) {
-                                        Log.e(TAG, "onResponse: List in database");
-                                        setUpRecView(mNewPageOrderItemList);
-                                    } else {
-                                        Log.e(TAG, "onResponse: No list in Database");
-                                        noOrders.setVisibility(View.VISIBLE);
-                                        imgNoOrder.setVisibility(View.VISIBLE);
-                                    }
-                                } else {
-                                    Log.e(TAG, "onResponse: no info returning from live data");
-                                }
-                            });
-
+                    setUpRecView(mNewPageOrderItemList);
+//
+//
+//                    bgWork = new OneTimeWorkRequest.Builder(OrderWorker.class)
+//                            .build();
+//                    WorkManager.getInstance(requireContext()).enqueue(bgWork);
+//
+//                    WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(bgWork.getId())
+//                            .observe(getViewLifecycleOwner(), info -> {
+//                                if (info != null && info.getState().isFinished()) {
+//                                    Log.e(TAG, "onResponse: Information is returning on live data");
+//                                    //if work is succeceded then we get data from DB
+//                                    final List<OrdersItem> orders = databaseRoom.mainDao().getAll();
+//                                    if (!orders.isEmpty()) {
+//                                        Log.e(TAG, "onResponse: List in database");
+//                                        setUpRecView(mNewPageOrderItemList);
+//                                    } else {
+//                                        Log.e(TAG, "onResponse: No list in Database");
+//                                        noOrders.setVisibility(View.VISIBLE);
+//                                        imgNoOrder.setVisibility(View.VISIBLE);
+//                                    }
+//                                } else {
+//                                    Log.e(TAG, "onResponse: no info returning from live data");
+//                                }
+//                            });
+//
                 } catch (Exception e) {
                     Log.e(TAG, "onResponse: " + e.getMessage());
                 }
 
                 Log.e(TAG, "onResponse: get order from notifiication" + response.message());
-
             }
 
             @Override
@@ -749,10 +748,17 @@ public class FragmentDashboard extends Fragment {
         mOrderRecyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener((position, type) -> {
             if (type.equals("item_click")) {
+                mVibration.cancel();
                 mMediaPlayer.stop();
+                //Vibration and Sound Stops
+                if (mFlagCounter == 1) {
+                    Log.e(TAG, "setListener: canelling here");
+                    cTimer.cancel();
+                    cTimer.onFinish();
+                }
                 Intent intent = new Intent(requireContext(), NewOrder.class);
                 intent.putExtra("orderId", String.valueOf(paginationOrders.get(position).getId()));
-                intent.putExtra("remainingTime",mRemainTime);
+                intent.putExtra("remainingTime", mRemainTime);
                 intent.putExtra("detailType", "newOrder");
                 startActivity(intent);
             }
@@ -798,40 +804,41 @@ public class FragmentDashboard extends Fragment {
             //loop to check and get remaining time
             Log.e(TAG, "setUpRecView: pagination (order list) " + paginationOrders.size());
             for (int i = 0; i <= paginationOrders.size(); i++) {
-                remainingSeconds = paginationOrders.get(i).getRemainingtime();
+//                remainingSeconds = paginationOrders.get(i).getRemainingtime();
                 Log.e(TAG, "setUpRecView: Remainging Seconds " + remainingSeconds);
-                Log.e(TAG, "setUpRecView: Remainging Seconds " + paginationOrders.get(i).getSavingtime());
+//                Log.e(TAG, "setUpRecView: Remainging Seconds " + paginationOrders.get(i).getSavingtime());
 
                 //Split
-                String[] range = paginationOrders.get(i).getSavingtime().split(":");
-                savingHours = range[0];
-                savingMinutes = range[1];
-                savingSeconds = range[2];
+//                String[] range = paginationOrders.get(i).getSavingtime().split(":");
+//                savingHours = range[0];
+//                savingMinutes = range[1];
+//                savingSeconds = range[2];
 
-                savingTimeInSeconds = Double.parseDouble(savingHours) * 60 * 60; //hours converted in seconds
-                savingTimeInSeconds = savingTimeInSeconds + Double.parseDouble(savingMinutes) * 60; //Minutes converted in seconds
-                savingTimeInSeconds = savingTimeInSeconds + Double.parseDouble(savingSeconds); //full time converted in seconds
+//                savingTimeInSeconds = Double.parseDouble(savingHours) * 60 * 60; //hours converted in seconds
+//                savingTimeInSeconds = savingTimeInSeconds + Double.parseDouble(savingMinutes) * 60; //Minutes converted in seconds
+//                savingTimeInSeconds = savingTimeInSeconds + Double.parseDouble(savingSeconds); //full time converted in seconds
+//
+//                Log.e(TAG, "setUpRecView: savingTimeInSeconds time in seconds " + savingTimeInSeconds);
 
-                Log.e(TAG, "setUpRecView: savingTimeInSeconds time in seconds " + savingTimeInSeconds);
+//                int remain = Integer.parseInt(String.valueOf(currentTimeInSeconds)) - Integer.parseInt(String.valueOf(savingTimeInSeconds));
 
-                int remain = Integer.parseInt(String.valueOf(currentTimeInSeconds)) - Integer.parseInt(String.valueOf(savingTimeInSeconds));
-
-                Log.e(TAG, "setUpRecView: current time - savong time " + remain);
-                if (remain > 0) {
-                    mCountDown = remain;
-                    timer();
-                } else {
-                    if (mNewPageOrderItemList != null) {
-                        Log.e(TAG, "onconditioncheck: " + mNewPageOrderItemList);
-                        for (OrdersItem o : mNewPageOrderItemList) {
-                            //update data in database
-                            updateOrderStateOnServer(o);
-                        }//For Each Loop
-                    }//if (!mNewPageOrderItemList.isEmpty())
-                    else {
-                        Log.e(TAG, "onconditioncheck: Face changed with no list");
-                    }
+//                Log.e(TAG, "setUpRecView: current time - savong time " + remain);
+//                if (remain > 0) {
+//                    mCountDown = remain;
+//                    timer();
+//                }
+//            else {
+                if (mNewPageOrderItemList != null) {
+                    Log.e(TAG, "onconditioncheck: " + mNewPageOrderItemList);
+                    for (OrdersItem o : mNewPageOrderItemList) {
+                        //update data in database
+                        updateOrderStateOnServer(o);
+                    }//For Each Loop
+                }//if (!mNewPageOrderItemList.isEmpty())
+                else {
+                    Log.e(TAG, "onconditioncheck: Face changed with no list");
                 }
+//                }
 
             }
         }//internetButNoDatasbase
@@ -1077,10 +1084,9 @@ public class FragmentDashboard extends Fragment {
                 cTimer = new CountDownTimer(mCountDown, 1000) {
                     public void onTick(long millisUntilFinished) {
                         mRemainTime = millisUntilFinished;
+                        mFlagCounter = 1;
                         Log.e(TAG, "onTick: Remaining Time " + mRemainTime);
                         //Virbration Starts
-
-                        // Vibration
                         // Checking version
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             mVibration.vibrate(VibrationEffect.createOneShot(millisUntilFinished, VibrationEffect.DEFAULT_AMPLITUDE));
@@ -1095,6 +1101,7 @@ public class FragmentDashboard extends Fragment {
                     }
 
                     public void onFinish() {
+                        mFlagCounter = 0;
                         Log.e(TAG, "onFinish: Done");
 //                    mListener.onItemClick(position,"time_out");
                         Log.e(TAG, "timer: onfinish i " + i);
@@ -1137,8 +1144,8 @@ public class FragmentDashboard extends Fragment {
                             ///Inserting new order basic information data in database
                             Constants.ORDER_ITEM = new OrdersItem(
                                     mOrderItem.getPickuptime(),
-                                    String.valueOf(mRemainTime),
-                                    mSavingTime,
+//                                    String.valueOf(mRemainTime),
+//                                    mSavingTime,
                                     mOrderItem.getBusinessTax(),
                                     mOrderItem.getDateAdded(),
                                     mOrderItem.getMinPreTime(),
@@ -1214,8 +1221,8 @@ public class FragmentDashboard extends Fragment {
             ///Inserting new order basic information data in database
             Constants.ORDER_ITEM = new OrdersItem(
                     mOrderItem.getPickuptime(),
-                    String.valueOf(mRemainTime),
-                    mSavingTime,
+//                    String.valueOf(mRemainTime),
+//                    mSavingTime,
                     mOrderItem.getBusinessTax(),
                     mOrderItem.getDateAdded(),
                     mOrderItem.getMinPreTime(),
@@ -1276,24 +1283,50 @@ public class FragmentDashboard extends Fragment {
         super.onDetach();
         //Vibration and Sound Stops
         mVibration.cancel();
+        //Vibration and Sound Stops
+        if (mFlagCounter == 1) {
+            Log.e(TAG, "onDetach: canelling here");
+            cTimer.cancel();
+            cTimer.onFinish();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //Vibration and Sound Stops
+        mVibration.cancel();
+        //Vibration and Sound Stops
+        if (mFlagCounter == 1) {
+            Log.e(TAG, "onDestroy: canelling here");
+            cTimer.cancel();
+            cTimer.onFinish();
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
         //Vibration and Sound Stops
-        mVibration.cancel();
-        Log.e(TAG, "onStop: i m stopped");
-        if (mNewPageOrderItemList != null) {
-            Log.e(TAG, "onStop: " + mNewPageOrderItemList);
-            for (OrdersItem o : mNewPageOrderItemList) {
-                //update data in database
-                saveActiveOrders();
-            }//For Each Loop
-        }//if (!mNewPageOrderItemList.isEmpty())
-        else {
-            Log.e(TAG, "onStop: Face changed with no list");
+        if (mFlagCounter == 1) {
+            Log.e(TAG, "onStop: canelling here");
+            cTimer.cancel();
+            cTimer.onFinish();
         }
+        mVibration.cancel();
+
+        //code of timer algorithm by Daniyal Qamar
+//        Log.e(TAG, "onStop: i m stopped");
+//        if (mNewPageOrderItemList != null) {
+//            Log.e(TAG, "onStop: " + mNewPageOrderItemList);
+//            for (OrdersItem o : mNewPageOrderItemList) {
+//                //update data in database
+//                saveActiveOrders();
+//            }//For Each Loop
+//        }//if (!mNewPageOrderItemList.isEmpty())
+//        else {
+//            Log.e(TAG, "onStop: Face changed with no list");
+//        }
     }//super.onStop();
 
 }

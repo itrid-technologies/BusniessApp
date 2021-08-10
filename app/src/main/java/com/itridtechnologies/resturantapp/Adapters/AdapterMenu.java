@@ -139,7 +139,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
                 public void onResponse(@NotNull Call<MenuItemAvailableResponse> call, @NotNull Response<MenuItemAvailableResponse> response) {
                     Log.e("Id Number", pm.getMyDataString("itemId"));
                     if (response.isSuccessful() && response.body() != null) {
-                        Log.e(TAG, "onResponse: " + response.message() );
+                        Log.e(TAG, "onResponse: " + response.message());
                     }
                     holder.mSwitchItem.setEnabled(true);
                 }
@@ -159,7 +159,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
 
 
     public interface ItemClickListenerMenu {
-        void getMenuItems(boolean hasSubItems, RecyclerView mParent1RV);
+        void getMenuItems(boolean hasSubItems, RecyclerView mParent1RV, int position);
     }
 
     public static class detailHolder extends RecyclerView.ViewHolder {
@@ -199,8 +199,11 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
                     //rv visible
                     mAddons.setVisibility(View.VISIBLE);
                     isVisible = true;
-                    listenerMenu.getMenuItems(true, mParent1RV);
                     mShowDetails.setVisibility(View.INVISIBLE);
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        listenerMenu.getMenuItems(true, mParent1RV, position);
+                    }
                     view.setVisibility(View.VISIBLE);
                     mHideDetails.setVisibility(View.VISIBLE);
                 } else {

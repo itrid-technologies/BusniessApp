@@ -15,21 +15,17 @@ import com.itridtechnologies.resturantapp.models.MenuItemAvailable.MenuItemAvail
 import com.itridtechnologies.resturantapp.models.OrderDelivered.SetToDelivered;
 import com.itridtechnologies.resturantapp.models.OrderSubItems.SubItems;
 import com.itridtechnologies.resturantapp.models.Pagination.PaginationResponse;
-import com.itridtechnologies.resturantapp.models.RecieptOrder.RecieptResponse;
 import com.itridtechnologies.resturantapp.models.SetToReady.SetToReadyResponse;
 import com.itridtechnologies.resturantapp.models.Setting.SettingResponse;
 import com.itridtechnologies.resturantapp.models.UpdateSetting.UpdateSettingResponse;
 import com.itridtechnologies.resturantapp.models.feedbacktags.FeedbackTagsResponse;
 import com.itridtechnologies.resturantapp.models.historyNew.NewHistoryWithTotals;
-import com.itridtechnologies.resturantapp.models.historyagain.HistResponse;
 import com.itridtechnologies.resturantapp.models.login.LoginResponse;
 import com.itridtechnologies.resturantapp.models.newOrder.NewOrderResponse;
 import com.itridtechnologies.resturantapp.models.orderFeesSetting.FeeUpdateResponse;
 import com.itridtechnologies.resturantapp.models.receiptOrder.RecieptMainObject;
 import com.itridtechnologies.resturantapp.utils.Constants;
 import com.itridtechnologies.resturantapp.utils.StringConverterFactory;
-
-import org.json.JSONObject;
 
 import java.util.concurrent.TimeUnit;
 

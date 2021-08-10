@@ -115,21 +115,21 @@ public class OrdersItem {
 
 
     @SerializedName("pickuptime")
-    private String pickuptime;
+    private String pickuptime = "";
 
-
-    @SerializedName("remainingtime")
-    private String remainingtime = "";
-
-
-    @SerializedName("savingtime")
-    private String savingtime = "";
+//
+//    @SerializedName("remainingtime")
+//    private String remainingtime = "";
+//
+//
+//    @SerializedName("savingtime")
+//    private String savingtime = "";
 
     @SerializedName("business_tax")
-    private String businessTax;
+    private String businessTax = "";
 
     @SerializedName("action_date")
-    private String actionDate;
+    private String actionDate = "";
 
     @SerializedName("min_pre_time")
     private int minPreTime;
@@ -138,7 +138,7 @@ public class OrdersItem {
     private int maxPreTime;
 
     @SerializedName("courier_notes")
-    private String courierNotes;
+    private String courierNotes = "";
 
     @SerializedName("action")
     private int action;
@@ -148,38 +148,38 @@ public class OrdersItem {
     private int id;
 
     @SerializedName("state")
-    private String state;
+    private String state = "";
 
     @ColumnInfo(name = "order_type")
     @SerializedName("order_type")
     private int orderType;
 
     @SerializedName("first_name")
-    private String firstName;
+    private String firstName = "";
 
     @SerializedName("business_rev_share")
-    private String businessRevShare;
+    private String businessRevShare = "";
 
     @SerializedName("item_count")
     private int itemCount;
 
     @SerializedName("business_name")
-    private String businessName;
+    private String businessName = "";
 
     @SerializedName("business_notes")
-    private String businessNotes;
+    private String businessNotes = "";
 
     @SerializedName("payment_status")
     private int paymentStatus;
 
     @SerializedName("last_name")
-    private String lastName;
+    private String lastName = "";
 
     @SerializedName("otp")
     private int otp;
 
     @SerializedName("date_added")
-    private String dateAdded;
+    private String dateAdded = "";
 
     @SerializedName("payment_type")
     private int paymentType;
@@ -188,10 +188,10 @@ public class OrdersItem {
     private int delay;
 
     @SerializedName("date_modified")
-    private String dateModified;
+    private String dateModified = "";
 
     @SerializedName("phone_number")
-    private String phoneNumber;
+    private String phoneNumber = "";
 
     @SerializedName("customer_id")
     private int customerId;
@@ -200,7 +200,36 @@ public class OrdersItem {
     private int businessId;
 
     @SerializedName("status")
-    private String status;
+    private String status = "";
+
+    public OrdersItem(String pickuptime, String businessTax, String actionDate, int minPreTime, int maxPreTime, String courierNotes, int action, int id, String state, int orderType, String firstName, String businessRevShare, int itemCount, String businessName, String businessNotes, int paymentStatus, String lastName, int otp, String dateAdded, int paymentType, int delay, String dateModified, String phoneNumber, int customerId, int businessId, String status) {
+        this.pickuptime = pickuptime;
+        this.businessTax = businessTax;
+        this.actionDate = actionDate;
+        this.minPreTime = minPreTime;
+        this.maxPreTime = maxPreTime;
+        this.courierNotes = courierNotes;
+        this.action = action;
+        this.id = id;
+        this.state = state;
+        this.orderType = orderType;
+        this.firstName = firstName;
+        this.businessRevShare = businessRevShare;
+        this.itemCount = itemCount;
+        this.businessName = businessName;
+        this.businessNotes = businessNotes;
+        this.paymentStatus = paymentStatus;
+        this.lastName = lastName;
+        this.otp = otp;
+        this.dateAdded = dateAdded;
+        this.paymentType = paymentType;
+        this.delay = delay;
+        this.dateModified = dateModified;
+        this.phoneNumber = phoneNumber;
+        this.customerId = customerId;
+        this.businessId = businessId;
+        this.status = status;
+    }
 
     public String getPickuptime() {
         return pickuptime;
@@ -306,59 +335,11 @@ public class OrdersItem {
         return status;
     }
 
-    public String getRemainingtime() {
-        return remainingtime;
-    }
-
-    public void setRemainingtime(String remainingtime) {
-        this.remainingtime = remainingtime;
-    }
-
-    public String getSavingtime() {
-        return savingtime;
-    }
-
-    public void setSavingtime(String savingtime) {
-        this.savingtime = savingtime;
-    }
-
-    public OrdersItem(String pickuptime, String remainingtime, String savingtime, String businessTax, String actionDate, int minPreTime, int maxPreTime, String courierNotes, int action, int id, String state, int orderType, String firstName, String businessRevShare, int itemCount, String businessName, String businessNotes, int paymentStatus, String lastName, int otp, String dateAdded, int paymentType, int delay, String dateModified, String phoneNumber, int customerId, int businessId, String status) {
-        this.pickuptime = pickuptime;
-        this.remainingtime = remainingtime;
-        this.savingtime = savingtime;
-        this.businessTax = businessTax;
-        this.actionDate = actionDate;
-        this.minPreTime = minPreTime;
-        this.maxPreTime = maxPreTime;
-        this.courierNotes = courierNotes;
-        this.action = action;
-        this.id = id;
-        this.state = state;
-        this.orderType = orderType;
-        this.firstName = firstName;
-        this.businessRevShare = businessRevShare;
-        this.itemCount = itemCount;
-        this.businessName = businessName;
-        this.businessNotes = businessNotes;
-        this.paymentStatus = paymentStatus;
-        this.lastName = lastName;
-        this.otp = otp;
-        this.dateAdded = dateAdded;
-        this.paymentType = paymentType;
-        this.delay = delay;
-        this.dateModified = dateModified;
-        this.phoneNumber = phoneNumber;
-        this.customerId = customerId;
-        this.businessId = businessId;
-        this.status = status;
-    }
 
     @Override
     public String toString() {
         return "OrdersItem{" +
                 "pickuptime='" + pickuptime + '\'' +
-                ", remainingtime='" + remainingtime + '\'' +
-                ", savingtime='" + savingtime + '\'' +
                 ", businessTax='" + businessTax + '\'' +
                 ", actionDate='" + actionDate + '\'' +
                 ", minPreTime=" + minPreTime +

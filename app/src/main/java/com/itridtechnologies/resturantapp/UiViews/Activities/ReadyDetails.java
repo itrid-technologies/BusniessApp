@@ -197,8 +197,8 @@ public class ReadyDetails extends AppCompatActivity {
 
         Constants.ORDER_ITEM = new OrdersItem(
                 mOrderItem.getPickuptime(),
-                String.valueOf(mRemainTime),
-                mSavingTime,
+//                String.valueOf(mRemainTime),
+//                mSavingTime,
                 mOrderItem.getBusinessTax(),
                 mOrderItem.getDateAdded(),
                 mOrderItem.getMinPreTime(),

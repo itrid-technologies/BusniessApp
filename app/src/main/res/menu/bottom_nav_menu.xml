@@ -5,20 +5,20 @@
         android:id="@+id/nav_home"
         android:enabled="true"
         android:icon="@drawable/home"
-        android:title="@string/orders" />
+        android:title="" />
     <item
         android:id="@+id/nav_process"
         android:enabled="true"
         android:icon="@drawable/ic_ellipsis"
-        android:title="@string/preparing" />
+        android:title="" />
     <item
         android:id="@+id/nav_ready"
         android:enabled="true"
         android:icon="@drawable/icbasket"
-        android:title="@string/ready" />
+        android:title="" />
     <item
         android:id="@+id/nav_history"
         android:enabled="true"
         android:icon="@drawable/ic_history"
-        android:title="@string/history" />
+        android:title="" />
 </menu>

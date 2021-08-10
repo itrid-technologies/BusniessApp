@@ -2,7 +2,7 @@ package com.itridtechnologies.resturantapp.models.MenuAddOns;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ChildrenItem{
+public class AddonItem{
 
 	@SerializedName("date_added")
 	private String dateAdded;

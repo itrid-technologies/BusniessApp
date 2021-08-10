@@ -24,7 +24,6 @@ import com.itridtechnologies.resturantapp.Adapters.AdapterMenu;
 import com.itridtechnologies.resturantapp.Adapters.AdapterMenuContainer;
 import com.itridtechnologies.resturantapp.Adapters.AdapterModifer;
 import com.itridtechnologies.resturantapp.R;
-import com.itridtechnologies.resturantapp.UiViews.Activities.Frags.FragmentDashboard;
 import com.itridtechnologies.resturantapp.model.AddonModel;
 import com.itridtechnologies.resturantapp.model.MenuModel;
 import com.itridtechnologies.resturantapp.model.ModiferModel;
@@ -305,7 +304,7 @@ public class Menu extends AppCompatActivity {
             public void onResponse(@NotNull Call<MenuCatsResponse> call, @NotNull Response<MenuCatsResponse> response) {
                 try {
 
-                    if (response.isSuccessful() && response.body().getData() != null) {
+                    if (response.isSuccessful() && response.body() != null) {
                         Log.e("Pos", "" + pos);
                         menuItemList.clear();
                         //variables for handling null values
@@ -324,6 +323,7 @@ public class Menu extends AppCompatActivity {
 
                             //Adding data in the list
                             menuItemList.add(new MenuModel(
+                                    String.valueOf(response.body().getData().get(pos).getChildren().get(i).getId()),
                                     response.body().getData().get(pos).getChildren().get(i).getName(),
                                     description,
                                     Helper.IMAGEURL + response.body().getData().get(pos).getChildren().get(i).getPhoto(),
@@ -348,7 +348,7 @@ public class Menu extends AppCompatActivity {
 //                        }
                         }
                         //Adapter to show the addons
-                        adapter(String.valueOf(response.body().getData().get(pos).getChildren().get(0).getAddonAvailable()));
+                        adapter();
                     }
                 } catch (Exception e) {
                     Log.e("TAG", "onResponse: Exception" + e.getMessage());
@@ -364,10 +364,10 @@ public class Menu extends AppCompatActivity {
                 Log.e(TAG, "onFailure: " + t.getMessage());
             }
         });
-    }
+    }//getCatItems
 
     //Setting Adapter
-    public void adapter(String id) {
+    public void adapter() {
         AdapterMenu menuAdapter;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         menuAdapter = new AdapterMenu(menuItemList, getApplicationContext());
@@ -379,57 +379,69 @@ public class Menu extends AppCompatActivity {
         mPbCenter.setVisibility(View.GONE);
 
         ///Again hitting api for menu addons on onClick
-        menuAdapter.setOnItemClickListener(((hasSubItems, mParent1RV) -> {
+        menuAdapter.setOnItemClickListener(((hasSubItems, mParent1RV, position) -> {
             mMenuAddonsList.clear();
             mModifiersList.clear();
             mTabLayout.setEnabled(false);
-            //mModifiersList.clear();
-            Log.e("Id", "id is " + id);
-            Call<MenuAddOnResponse> call = RetrofitNetMan.getRestApiService().getAddons(token, id);
-            call.enqueue(new Callback<MenuAddOnResponse>() {
-                @Override
-                public void onResponse(@NotNull Call<MenuAddOnResponse> call, @NotNull Response<MenuAddOnResponse> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        for (int i = 0; i < response.body().getData().size(); i++) {
-                            Log.e(TAG, "onResponse: addon respomse" + response.body().getData().size() );
-                            mMenuAddonsList.add(new AddonModel(
-                                    response.body().getData().get(i).getName(),
-                                    response.body().getData().get(i).getAvailability(),
-                                    response.body().getData().get(i).getChildren()
-                            ));
-                            for (int j = 0; j < response.body().getData().get(i).getChildren().size(); j++) {
-                                Log.e(TAG, "onResponse: modifier respomse" + response.body().getData().size() );
-                                mModifiersList.add(new ModiferModel(
-                                        response.body().getData().get(i).getChildren().get(j).getName()
+            //mModifiersList.clear();MenuAddOnResponse
+            Log.e("Id", "id is " + menuItemList.get(position).getmAddOnAvailable());
+            String id = menuItemList.get(position).getmAddOnAvailable();
+            if (id != null)
+            {
+                Call<MenuAddOnResponse> call = RetrofitNetMan.getRestApiService().getAddons(token, menuItemList.get(position).getmAddOnAvailable());
+                call.enqueue(new Callback<MenuAddOnResponse>() {
+                    @Override
+                    public void onResponse(@NotNull Call<MenuAddOnResponse> call, @NotNull Response<MenuAddOnResponse> response) {
+                        Log.e(TAG, "onResponse called for addons ");
+                        if (response.isSuccessful() && response.body() != null) {
+                            for (int i = 0; i < response.body().getData().size(); i++) {
+                                Log.e(TAG, "onResponse: addon respomse" + response.body().getData().size() );
+                                mMenuAddonsList.add(new AddonModel(
+                                        response.body().getData().get(i).getName(),
+                                        response.body().getData().get(i).getAvailability(),
+                                        response.body().getData().get(i).getAddon()
                                 ));
+                                for (int j = 0; j < response.body().getData().get(i).getAddon().size(); j++) {
+                                    Log.e(TAG, "onResponse: modifier respomse" + response.body().getData().size() );
+                                    mModifiersList.add(new ModiferModel(
+                                            response.body().getData().get(i).getAddon().get(j).getName()
+                                    ));
+                                }
+                                pm.saveMyData("itemId", String.valueOf(response.body().getData().get(i).getId()));
                             }
-                            pm.saveMyData("itemId", String.valueOf(response.body().getData().get(i).getId()));
+                        }
+                        else if (!response.isSuccessful()){
+                            Log.e(TAG, "onResponse: not success " + response.message() );
+                            AppManager.SnackBar(Menu.this,"No Data Found");
+                        }
+                        mTabLayout.setEnabled(true);
+
+                        if (hasSubItems) {
+                            Log.e(TAG, "onResponse: i have data now ");
+                            ////if we have data then we will show it
+                            AdapterMenuContainer adapMenuContainer = new AdapterMenuContainer(mMenuAddonsList, getApplicationContext());
+                            mParent1RV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                            mParent1RV.setHasFixedSize(true);
+                            mParent1RV.setAdapter(adapMenuContainer);
+
+                            adapMenuContainer.setOnItemClickListener(((hasSubItems1, mRVAddon) -> {
+                                AdapterModifer adapterModifer = new AdapterModifer(mModifiersList, getApplicationContext());
+                                mRVAddon.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                                mRVAddon.setHasFixedSize(true);
+                                mRVAddon.setAdapter(adapterModifer);
+                            }));
                         }
                     }
-                    mTabLayout.setEnabled(true);
 
-                    if (hasSubItems) {
-                        Log.e(TAG, "onResponse: i have data now ");
-                        ////if we have data then we will show it
-                        AdapterMenuContainer adapMenuContainer = new AdapterMenuContainer(mMenuAddonsList, getApplicationContext());
-                        mParent1RV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                        mParent1RV.setHasFixedSize(true);
-                        mParent1RV.setAdapter(adapMenuContainer);
-
-                        adapMenuContainer.setOnItemClickListener(((hasSubItems1, mRVAddon) -> {
-                            AdapterModifer adapterModifer = new AdapterModifer(mModifiersList, getApplicationContext());
-                            mRVAddon.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                            mRVAddon.setHasFixedSize(true);
-                            mRVAddon.setAdapter(adapterModifer);
-                        }));
+                    @Override
+                    public void onFailure(@NotNull Call<MenuAddOnResponse> call, @NotNull Throwable t) {
+                        Log.e("TAG", "onFailure: i m failed" + t.getMessage());
                     }
-                }
-
-                @Override
-                public void onFailure(@NotNull Call<MenuAddOnResponse> call, @NotNull Throwable t) {
-                    Log.e("TAG", "onFailure: " + t.getMessage());
-                }
-            });
+                });
+            }
+            else {
+                AppManager.SnackBar(Menu.this,"No Data Found");
+            }
         }));
     }
 

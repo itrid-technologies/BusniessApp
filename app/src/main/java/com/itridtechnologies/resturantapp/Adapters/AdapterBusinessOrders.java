@@ -66,6 +66,7 @@ public class AdapterBusinessOrders extends RecyclerView.Adapter<AdapterBusinessO
         private final TextView itemQty;
         private final TextView itemName;
         private final TextView itemPrice;
+        private final View itemViewAddon;
         private final RecyclerView rvSubItems;
 //        private boolean isVisible = true;
 
@@ -76,6 +77,7 @@ public class AdapterBusinessOrders extends RecyclerView.Adapter<AdapterBusinessO
             itemQty = itemView.findViewById(R.id.tv_order_item_qty);
             itemName = itemView.findViewById(R.id.tv_order_item_name);
             itemPrice = itemView.findViewById(R.id.tv_order_item_price);
+            itemViewAddon = itemView.findViewById(R.id.viewAddon);
             rvSubItems = itemView.findViewById(R.id.rv_order_sub_items);
             rvSubItems.setVisibility(View.VISIBLE);
 //            listener.getSubItems(true, rvSubItems);

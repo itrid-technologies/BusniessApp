@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.model.ModiferModel;
-import com.itridtechnologies.resturantapp.models.MenuAddOns.ChildrenItem;
 
 import java.util.List;
 
