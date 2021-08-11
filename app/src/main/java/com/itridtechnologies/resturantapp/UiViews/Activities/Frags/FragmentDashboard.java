@@ -70,6 +70,7 @@ import org.jetbrains.annotations.NotNull;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -106,6 +107,11 @@ public class FragmentDashboard extends Fragment {
     //autoaccept
     private int mAutoAccept;
 
+    //Current Time
+    private Calendar calendar1;
+    private SimpleDateFormat formatter1;
+    private String currentTime;
+
 
     ///Variables for Opening and closing days and time
     private int mIsClosed = 0;
@@ -138,7 +144,7 @@ public class FragmentDashboard extends Fragment {
     private int mFlagCounter = 0;
 
     ///list
-    private List<OrdersItem> mNewPageOrderItemList;
+    private List<OrdersItem> mNewPageOrderItemList = new ArrayList<>();
 
     //Receiving Broadcast for notifications
     private BroadcastReceiver mRegistrationBroadcastReceiver;
@@ -164,6 +170,7 @@ public class FragmentDashboard extends Fragment {
 
         anim_in = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
         anim_out = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_down);
+
 
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
@@ -283,20 +290,89 @@ public class FragmentDashboard extends Fragment {
         noOrders = view.findViewById(R.id.tv_no_order);
         imgNoOrder = view.findViewById(R.id.ic_noOrder);
 
-        ////Setting no orders
-        openCloseFun();
-
         //Sound
         mMediaPlayer = MediaPlayer.create(requireContext(), R.raw.tune);
 
         mSwipeDash.setProgressViewOffset(true, 10, 180);
+
         //Pull to Swipe
         mSwipeDash.setOnRefreshListener(() -> {
+            Log.e(TAG, "onViewCreated: i m refreshed");
             final Handler handler = new Handler();
             handler.postDelayed(() -> mSwipeDash.setRefreshing(false), 2000);
-            getFragmentManager().beginTransaction().detach(FragmentDashboard.this)
-                    .attach(FragmentDashboard.this).commit();
+            Log.e(TAG, "onViewCreated: refreshed superb");
+            ////Setting no orders
+            openCloseFun();
+
+            getBusyMode();
+
+            ///PickUp Orders
+            mBusyMode.setOnClickListener(v -> {
+                busyMode();
+            });
+
+            ///First Time (Internet Available No Database)
+            if (Internet.isAvailable(requireContext())) {
+                internetButNoDatasbase = 1;
+                Log.e(TAG, "onResponse: internet but No database available");
+                //net available but no database
+                getOrdersViaState(token);
+                mNSVDash.setVisibility(View.VISIBLE);
+                mPBFull.setVisibility(View.GONE);
+            }
+            //(Internet Available With Database)
+            else if (Internet.isAvailable(requireContext()) && !databaseRoom.mainDao().getAll().isEmpty()) {
+                Log.e(TAG, "onResponse: internet with database available");
+                ///get data from DB
+                //if work is succeceded then we get data from DB
+                final List<OrdersItem> orders = databaseRoom.mainDao().getAll();
+                if (!orders.isEmpty()) {
+                    Log.e(TAG, "onResponse: List in database");
+                    setUpRecView(orders);
+                } else {
+                    Log.e(TAG, "onResponse: No list in Database");
+                }
+                mPBFull.setVisibility(View.GONE);
+                mNSVDash.setVisibility(View.VISIBLE);
+                noOrders.setVisibility(View.GONE);
+                imgNoOrder.setVisibility(View.GONE);
+            }
+            ///(No Internet Available)
+            else if (!Internet.isAvailable(requireContext())) {
+                Log.e(TAG, "onResponse: No internet No database available");
+
+                ////no net no database
+                ////no net no daadpttabase
+                noOrders.setText("Internet is not available");
+                noOrders.setVisibility(View.VISIBLE);
+                imgNoOrder.setVisibility(View.VISIBLE);
+                mPBFull.setVisibility(View.GONE);
+                mNSVDash.setVisibility(View.VISIBLE);
+
+            }
+//        /(No Internet Available But Database Available)
+            else if (!Internet.isAvailable(requireContext()) && !databaseRoom.mainDao().getAll().isEmpty()) {
+                ///get data from DB
+                Log.e(TAG, "onResponse: No internet but database available");
+                //if work is succeceded then we get data from DB
+                final List<OrdersItem> orders = databaseRoom.mainDao().getAll();
+                if (!orders.isEmpty()) {
+                    Log.e(TAG, "onResponse: List in database");
+                    setUpRecView(orders);
+                } else {
+                    Log.e(TAG, "onResponse: No list in Database");
+                }
+                mPBFull.setVisibility(View.GONE);
+                noOrders.setVisibility(View.GONE);
+                imgNoOrder.setVisibility(View.GONE);
+                mNSVDash.setVisibility(View.VISIBLE);
+            }
+            subscribeToTest();
         });
+
+        ////Setting no orders
+        openCloseFun();
+
         getBusyMode();
 
         ///PickUp Orders
@@ -361,7 +437,7 @@ public class FragmentDashboard extends Fragment {
             mNSVDash.setVisibility(View.VISIBLE);
         }
         subscribeToTest();
-    }
+    }//onViewCreated
 
 
     private void subscribeToTest() {
@@ -483,8 +559,24 @@ public class FragmentDashboard extends Fragment {
                             }//for loop
                         }//For ends business is open
                         else {
+//
+//                            formatter1 = new SimpleDateFormat("hh:mm");
+//                            currentTime = formatter1.format(calendar1.getTime());
+//                            calendar1 = Calendar.getInstance();
+//                            Log.e(TAG, "onResponse: getting time " + currentTime);
+//
+//                            String openTime = response.body().getData().getBusinessHours().get(currentDay()).getOpeningTime();
+
+//                            if (currentTime.compareTo(openTime) < 0)
+//                            {
+//                                mOpenCloseTime = openTime;
+//                                mOpenToday = "no";
+//                            }
+//                            else {
                             mOpenCloseTime = response.body().getData().getBusinessHours().get(currentDay()).getClosingTime();
                             mOpenToday = "yes";
+//                        }
+
                         }
 
                     } catch (Exception e) {
@@ -497,7 +589,6 @@ public class FragmentDashboard extends Fragment {
                     setTimeLayout(mIsClosed, mOpenCloseTime, mOpenToday, mOpenDay);
 
                 } else {
-                    Toast.makeText(requireContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(requireContext(), MainActivity.class));
                 }
             }
@@ -517,8 +608,10 @@ public class FragmentDashboard extends Fragment {
         Log.e(TAG, "setTimeLayout: open today " + openToday);
 
         if (closeTime.equals("N/A") && openTime.equals("N/A")) {
-            String msg = "Business Hours are not Assigned";
+            String msg = "Business Is Closed";
+            imgNoOrder.setImageResource(R.drawable.ic_businessclosed);
             noOrders.setText(msg);
+
         } else if (openToday.equals("yes")) {
             Log.e(TAG, "setTimeLayout: " + openCloseTime.substring(0, openTime.length() - 3) + " close " + closeTime);
             String openMsg = "Open Now - Accepting Orders till " + openTime.substring(0, openCloseTime.length() - 3) + " PM";
@@ -548,7 +641,6 @@ public class FragmentDashboard extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     AppManager.saveActionDetails(response.body());
                 } else {
-                    Toast.makeText(requireContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(requireContext(), MainActivity.class));
                 }
             }
@@ -569,6 +661,10 @@ public class FragmentDashboard extends Fragment {
         call.enqueue(new Callback<NewOrderResponse>() {
             @Override
             public void onResponse(@NotNull Call<NewOrderResponse> call, @NotNull Response<NewOrderResponse> response) {
+
+                Log.e(TAG, "onResponse: api success fromj notification " + response.message());
+
+
                 try {
                     Log.e(TAG, "onResponse: size of list" + mNewPageOrderItemList.size());
                     mNewPageOrderItemList.add(new OrdersItem(
@@ -604,30 +700,30 @@ public class FragmentDashboard extends Fragment {
 
                     setUpRecView(mNewPageOrderItemList);
 //
-//
-//                    bgWork = new OneTimeWorkRequest.Builder(OrderWorker.class)
-//                            .build();
-//                    WorkManager.getInstance(requireContext()).enqueue(bgWork);
-//
-//                    WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(bgWork.getId())
-//                            .observe(getViewLifecycleOwner(), info -> {
-//                                if (info != null && info.getState().isFinished()) {
-//                                    Log.e(TAG, "onResponse: Information is returning on live data");
-//                                    //if work is succeceded then we get data from DB
-//                                    final List<OrdersItem> orders = databaseRoom.mainDao().getAll();
-//                                    if (!orders.isEmpty()) {
-//                                        Log.e(TAG, "onResponse: List in database");
-//                                        setUpRecView(mNewPageOrderItemList);
-//                                    } else {
-//                                        Log.e(TAG, "onResponse: No list in Database");
-//                                        noOrders.setVisibility(View.VISIBLE);
-//                                        imgNoOrder.setVisibility(View.VISIBLE);
-//                                    }
-//                                } else {
-//                                    Log.e(TAG, "onResponse: no info returning from live data");
-//                                }
-//                            });
-//
+////
+////                    bgWork = new OneTimeWorkRequest.Builder(OrderWorker.class)
+////                            .build();
+////                    WorkManager.getInstance(requireContext()).enqueue(bgWork);
+////
+////                    WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(bgWork.getId())
+////                            .observe(getViewLifecycleOwner(), info -> {
+////                                if (info != null && info.getState().isFinished()) {
+////                                    Log.e(TAG, "onResponse: Information is returning on live data");
+////                                    //if work is succeceded then we get data from DB
+////                                    final List<OrdersItem> orders = databaseRoom.mainDao().getAll();
+////                                    if (!orders.isEmpty()) {
+////                                        Log.e(TAG, "onResponse: List in database");
+////                                        setUpRecView(mNewPageOrderItemList);
+////                                    } else {
+////                                        Log.e(TAG, "onResponse: No list in Database");
+////                                        noOrders.setVisibility(View.VISIBLE);
+////                                        imgNoOrder.setVisibility(View.VISIBLE);
+////                                    }
+////                                } else {
+////                                    Log.e(TAG, "onResponse: no info returning from live data");
+////                                }
+////                            });
+////
                 } catch (Exception e) {
                     Log.e(TAG, "onResponse: " + e.getMessage());
                 }
@@ -727,7 +823,6 @@ public class FragmentDashboard extends Fragment {
                     }
 
                 } else {
-                    Toast.makeText(requireContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(requireContext(), MainActivity.class));
                 }
 
@@ -748,18 +843,22 @@ public class FragmentDashboard extends Fragment {
         mOrderRecyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener((position, type) -> {
             if (type.equals("item_click")) {
+
+                Intent intent = new Intent(requireContext(), NewOrder.class);
+                intent.putExtra("orderId", String.valueOf(paginationOrders.get(position).getId()));
+                intent.putExtra("detailType", "newOrder");
+
                 mVibration.cancel();
                 mMediaPlayer.stop();
                 //Vibration and Sound Stops
                 if (mFlagCounter == 1) {
+                    Log.e(TAG, "setUpRecView: " + mRemainTime);
+                    intent.putExtra("remainingTime", mRemainTime);
                     Log.e(TAG, "setListener: canelling here");
                     cTimer.cancel();
                     cTimer.onFinish();
                 }
-                Intent intent = new Intent(requireContext(), NewOrder.class);
-                intent.putExtra("orderId", String.valueOf(paginationOrders.get(position).getId()));
-                intent.putExtra("remainingTime", mRemainTime);
-                intent.putExtra("detailType", "newOrder");
+
                 startActivity(intent);
             }
         });
@@ -857,7 +956,6 @@ public class FragmentDashboard extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     setBusy(response.body().getMessage().get(0).getBusyMode());
                 } else {
-                    Toast.makeText(requireContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(requireContext(), MainActivity.class));
                 }
             }
@@ -988,7 +1086,6 @@ public class FragmentDashboard extends Fragment {
                     AppManager.toast(response.message());
                     Log.e(TAG, "onResponse: " + response.message());
                 } else if (!response.isSuccessful()) {
-                    Toast.makeText(requireContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(requireContext(), MainActivity.class));
                 } else {
                     AppManager.toast("Delivery or Pickup order mode must be enable. " + response.message());
@@ -1201,7 +1298,6 @@ public class FragmentDashboard extends Fragment {
                         }
                     }
                 } else {
-                    Toast.makeText(requireContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(requireContext(), MainActivity.class));
                 }
             }

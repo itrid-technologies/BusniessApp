@@ -131,7 +131,6 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv_reciept"
-                style="@style/fieldsBg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
@@ -141,7 +140,6 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_order_totals_reciept"
                 android:paddingTop="20dp"
-                style="@style/fieldsBg"
                 tools:listitem="@layout/total_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -156,7 +154,6 @@
 
                 <TextView
                     android:id="@+id/tv_total"
-                    style="@style/FontMediumBlack"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
@@ -166,7 +163,6 @@
 
                 <TextView
                     android:id="@+id/tv_total_reciept"
-                    style="@style/FontMediumBlack"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="30dp"

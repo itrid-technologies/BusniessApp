@@ -97,11 +97,11 @@ public class MainActivity extends AppCompatActivity {
         mLoginBtn.setOnClickListener(v -> {
             if (validations.isEmailValid(mEmailId.getText().toString())) {
 //                mProgress.setVisibility(View.VISIBLE);
+                mLoginBtn.setEnabled(false);
                 mLoginTV.setVisibility(View.GONE);
                 mPBLogin.setVisibility(View.VISIBLE);
                 postDetails();
-            }
-            else {
+            } else {
                 mEnterEmail.setText("Enter a Valid Email Address");
                 mEnterEmail.setVisibility(View.VISIBLE);
                 textWatcher();
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }//oc
 
-    public void textWatcher(){
+    public void textWatcher() {
         mTextWatcherForValidation = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -168,8 +168,9 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     mEnterEmail.setText("Email or Password Doesn't Match");
                     mEnterEmail.setVisibility(View.VISIBLE);
+                    mLoginBtn.setEnabled(true);
                     textWatcher();
-                    AppManager.SnackBar(MainActivity.this,"Email or Password Doesn't Match");
+                    AppManager.SnackBar(MainActivity.this, "Email or Password Doesn't Match");
                     mPBLogin.setVisibility(View.GONE);
                     mLoginTV.setVisibility(View.VISIBLE);
                 }
@@ -177,15 +178,16 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NotNull Call<LoginResponse> call, @NotNull Throwable t) {
-                AppManager.SnackBar(MainActivity.this,"Sorry :( Unable To Login!! We have Faced an Internet or Server Issue");
+                AppManager.SnackBar(MainActivity.this, "Sorry :( Unable To Login!! We have Faced an Internet or Server Issue");
                 mLoginTV.setVisibility(View.VISIBLE);
                 mPBLogin.setVisibility(View.GONE);
 //                ///Handling Color of button if able and disable
 //                mLoginBtn.setBackgroundColor(getResources().getColor(R.color.theme_color));
-//                mLoginBtn.setEnabled(true);
+                mLoginBtn.setEnabled(true);
                 try {
                     mProgress.setVisibility(View.GONE);
-                }catch (Exception ignored){}
+                } catch (Exception ignored) {
+                }
             }
         });
     }

@@ -467,7 +467,6 @@ public class FragmentHistory extends Fragment {
                     adapter();
                 }
                 else {
-                    Toast.makeText(requireContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(requireContext(), MainActivity.class));
                 }
                 mProgressBarHistFull.setVisibility(View.GONE);
@@ -533,7 +532,6 @@ public class FragmentHistory extends Fragment {
                     }
                 }
                 else {
-                    Toast.makeText(requireContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(requireContext(), MainActivity.class));
                 }
                 mProgressBarHistFull.setVisibility(View.GONE);

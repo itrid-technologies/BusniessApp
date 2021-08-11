@@ -79,7 +79,7 @@ public class OrderIssues extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(OrderIssues.this,NewOrder.class);
+        Intent intent = new Intent(OrderIssues.this,BasicActvity.class);
         intent.putExtra("orderId",OrderNo);
         startActivity(intent);
     }
@@ -119,6 +119,6 @@ public class OrderIssues extends AppCompatActivity {
             winParams.flags &= bit;
         }
         win.setAttributes(winParams);
-    }
+    }//setstatus
 
 }

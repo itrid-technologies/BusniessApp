@@ -99,9 +99,9 @@ public class BasicActvity extends AppCompatActivity {
 
         //Getting if of bottom navigation
         BottomNavigationView mBottomNavigationView = findViewById(R.id.bottom_nav);
-        mBottomNavigationView.setItemTextColor(getResources().getColorStateList(R.color.black));
-        mBottomNavigationView.setItemIconTintList(getResources().getColorStateList(R.color.black));
-        mBottomNavigationView.setItemRippleColor(getResources().getColorStateList(R.color.theme_color));
+//        mBottomNavigationView.setItemTextColor(getResources().getColorStateList(R.color.black));
+//        mBottomNavigationView.setItemIconTintList(getResources().getColorStateList(R.color.black));
+//        mBottomNavigationView.setItemRippleColor(getResources().getColorStateList(R.color.theme_color));
 
         //setting click listener
         mBottomNavigationView.setOnNavigationItemSelectedListener(item -> {

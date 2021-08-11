@@ -193,7 +193,6 @@ public class NewOrder extends AppCompatActivity {
 
             if (mFlagRemaining == 1)
             {
-
                 mAccepted = "1";
                 //hitting api
                 btnAccRejApi(or, mAccepted);
@@ -347,7 +346,6 @@ public class NewOrder extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     AppManager.saveActionDetails(response.body());
                 } else {
-                    Toast.makeText(getApplicationContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }
             }
@@ -391,9 +389,14 @@ public class NewOrder extends AppCompatActivity {
         } else {
 
             //getting remaining time
-            mRemainTime = Long.parseLong(getIntent().getStringExtra("remainingTime"));
-            Log.e(TAG, "onCreate: remain time " + mRemainTime);
-            timer();
+            String time = getIntent().getStringExtra("remainingTime");
+            if (time!=null)
+            {
+                mRemainTime = Long.parseLong(getIntent().getStringExtra("remainingTime"));
+                Log.e(TAG, "onCreate: remain time " + mRemainTime);
+                timer();
+            }
+
             mBtnReject.setVisibility(View.VISIBLE);
             mBtnAccept.setVisibility(View.VISIBLE);
             mPrepareTime.setVisibility(View.GONE);
@@ -491,7 +494,6 @@ public class NewOrder extends AppCompatActivity {
 
 
                 } else {
-                    Toast.makeText(getApplicationContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }
                 UpdateOrders();
@@ -680,7 +682,6 @@ public class NewOrder extends AppCompatActivity {
                     } catch (Exception ignored) {
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }//not null
 

@@ -462,7 +462,6 @@ public class Settings extends AppCompatActivity {
 
     }
 
-
     ////setting buttons to increase and decrease no of recipts
     public void incDecReciepts() {
 
@@ -487,7 +486,6 @@ public class Settings extends AppCompatActivity {
                 mSubAcceptOrder.setImageResource(R.drawable.ic_remove_gray);
             }
         });
-
 
         //Setting Increasing reject order button
         mAddRejectOrder.setOnClickListener(v -> {
@@ -514,7 +512,6 @@ public class Settings extends AppCompatActivity {
 
     }
 
-
     //Check for text fields for data
     private void checkFieldsForEmptyValues() {
 
@@ -529,7 +526,6 @@ public class Settings extends AppCompatActivity {
             saveBtn.setEnabled(true);
         }
     }
-
 
     ///setting Variables
     public void setVariables() {
@@ -571,7 +567,6 @@ public class Settings extends AppCompatActivity {
                 + " (" + AppManager.getBusinessDetails().getData().getResults().getId() + ")");
 
     }
-
 
     ////Toolbar
     public void toolbar() {
@@ -619,5 +614,10 @@ public class Settings extends AppCompatActivity {
         });
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(Settings.this, BasicActvity.class);
+        startActivity(intent);
+    }//onBackPressed
 }

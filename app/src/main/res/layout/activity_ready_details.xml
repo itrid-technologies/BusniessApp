@@ -276,7 +276,7 @@
                     android:weightSum="100">
 
                     <TextView
-                        style="@style/FontSmallGrey"
+                        style="@style/FontSmallBlack"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -407,7 +407,7 @@
                     android:padding="12dp">
 
                     <TextView
-                        style="@style/textColor"
+                        style="@style/HeadingOrderDelivery"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="98"
@@ -430,7 +430,7 @@
 
                     <TextView
                         android:id="@+id/et_order_note_RO"
-                        style="@style/fieldsBg"
+                        style="@style/DeliveryOrderNote"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
@@ -446,12 +446,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    tools:visibility="visible"
                     android:padding="12dp"
                     android:visibility="gone">
 
                     <TextView
                         android:id="@+id/tv_delNote"
-                        style="@style/textColor"
+                        style="@style/HeadingOrderDelivery"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="98"
@@ -465,6 +466,7 @@
                     android:layout_marginBottom="10dp"
                     android:paddingHorizontal="12dp"
                     android:visibility="gone"
+                    tools:visibility="visible"
                     android:weightSum="100">
 
                     <View
@@ -475,7 +477,7 @@
 
                     <TextView
                         android:id="@+id/et_delivery_note_RO"
-                        style="@style/fieldsBg"
+                        style="@style/DeliveryOrderNote"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="99"
@@ -492,7 +494,7 @@
         android:id="@+id/btn_delivered_ll"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@color/white"
+        style="@style/ButtonBg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">

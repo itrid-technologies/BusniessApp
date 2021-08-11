@@ -2,141 +2,142 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/appBack"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/appBack"
     tools:context=".UiViews.Activities.DelayOrder">
 
     <include
-        layout="@layout/nav_bar_issues_page"
-        app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/nav_bar_DO"
+        layout="@layout/nav_bar_issues_page"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="25dp"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nested_view_RO"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/nested_view_RO"
-        app:layout_constraintTop_toBottomOf="@id/nav_bar_DO"
-        >
+        app:layout_constraintTop_toBottomOf="@id/nav_bar_DO">
+
         <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/frame_container_RO"
-            >
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
 
                 <TableLayout
+                    android:id="@+id/table_layout_cancel_order"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="24dp"
                     android:scrollbars="vertical"
-                    android:id="@+id/table_layout_cancel_order"
-                    android:layout_marginTop="10dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:stretchColumns="0">
+                    android:stretchColumns="0"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <TableRow
+                        android:id="@+id/payment_status_layout_RO"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/payment_status_layout_RO">
+                        android:layout_height="wrap_content">
+
                         <TextView
+                            style="@style/textColor"
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
-                            style="@style/textColor"
-                            android:text="@string/delay_message"
-                            android:textAllCaps="false"
-                            android:padding="20dp"
                             android:gravity="center_vertical"
-                            />
+                            android:padding="20dp"
+                            android:text="@string/delay_message"
+                            android:textAllCaps="false" />
                     </TableRow>
 
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <TextView
+                            style="@style/textColor"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Delay Order By:"
-                            android:textAllCaps="false"
                             android:layout_marginTop="10dp"
-                            style="@style/textColor"
                             android:paddingLeft="20dp"
-                            />
+                            android:text="Delay Order By:"
+                            android:textAllCaps="false" />
                     </TableRow>
 
                     <TableRow
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:weightSum="100"
-                        android:gravity="center_vertical">
+                        android:gravity="center_vertical"
+                        android:weightSum="100">
+
                         <androidx.constraintlayout.widget.ConstraintLayout>
+
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="10 Min"
                                 android:id="@+id/ten_min"
                                 style="@style/delayBox"
-                                android:textAllCaps="false"
-                                android:gravity="top"
-                                android:padding="15dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_margin="20dp"
+                                android:gravity="top"
+                                android:padding="15dp"
+                                android:text="10 Min"
+                                android:textAllCaps="false"
+                                app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                />
+                                app:layout_constraintTop_toTopOf="parent" />
+
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="15 Min"
-                                style="@style/delayBox"
-                                android:layout_margin="10dp"
                                 android:id="@+id/fifteen_min"
+                                style="@style/delayBox"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:layout_weight="20"
+                                android:gravity="top"
+                                android:padding="15dp"
+                                android:text="15 Min"
+                                android:textAllCaps="false"
+                                app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toEndOf="@id/ten_min"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                android:textAllCaps="false"
-                                android:gravity="top"
-                                android:layout_weight="20"
-                                android:padding="15dp"
-                                />
+                                app:layout_constraintTop_toTopOf="parent" />
+
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="20 Min"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                style="@style/delayBox"
-                                app:layout_constraintStart_toEndOf="@id/fifteen_min"
                                 android:id="@+id/twenty_min"
-                                android:textAllCaps="false"
-                                android:layout_margin="10dp"
-                                android:layout_weight="20"
-                                android:gravity="top"
-                                android:padding="15dp"
-                                />
-                            <TextView
+                                style="@style/delayBox"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="30 Min"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                style="@style/delayBox"
-                                app:layout_constraintStart_toEndOf="@id/twenty_min"
-                                android:id="@+id/thirty_min"
-                                android:textAllCaps="false"
                                 android:layout_margin="10dp"
                                 android:layout_weight="20"
                                 android:gravity="top"
                                 android:padding="15dp"
-                                />
+                                android:text="20 Min"
+                                android:textAllCaps="false"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/fifteen_min"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/thirty_min"
+                                style="@style/delayBox"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:layout_weight="20"
+                                android:gravity="top"
+                                android:padding="15dp"
+                                android:text="30 Min"
+                                android:textAllCaps="false"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/twenty_min"
+                                app:layout_constraintTop_toTopOf="parent" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
                     </TableRow>
                 </TableLayout>
@@ -147,30 +148,29 @@
     </androidx.core.widget.NestedScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cancel_layout"
+        style="@style/ButtonBg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/cancel_layout"
         android:layout_marginTop="160dp"
-        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        >
+        app:layout_constraintStart_toStartOf="parent">
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/update_btn_DO"
             android:layout_width="330dp"
+            android:layout_height="45dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
             android:background="@color/disable_grey"
-            android:layout_height="45dp"
+            android:enabled="false"
             android:text="@string/delayBTN"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:enabled="false"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

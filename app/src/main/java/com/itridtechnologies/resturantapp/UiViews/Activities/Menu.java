@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -176,6 +175,7 @@ public class Menu extends AppCompatActivity {
                 //Setting categories one by one
                 mTabLayout.addTab(mTabLayout.newTab().setText(cats.get(i)));
                 mTabLayout.setTabGravity(TabLayout.GRAVITY_START);
+                mTabLayout.setTabRippleColor(null);
                 Log.e("tag", "fun com 2");
             }//for
             //loading different views on click on tabs
@@ -244,7 +244,6 @@ public class Menu extends AppCompatActivity {
                         ///Calling set Tabs Function to add all strings
                         setTabs();
                     } else {
-                        Toast.makeText(getApplicationContext(), "Token Expired " + response.message(), Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     }
 
@@ -384,11 +383,13 @@ public class Menu extends AppCompatActivity {
             mModifiersList.clear();
             mTabLayout.setEnabled(false);
             //mModifiersList.clear();MenuAddOnResponse
-            Log.e("Id", "id is " + menuItemList.get(position).getmAddOnAvailable());
-            String id = menuItemList.get(position).getmAddOnAvailable();
+            Log.e("Id", "id is " + menuItemList.get(position).getId());
+            String id = menuItemList.get(position).getId();
             if (id != null)
             {
-                Call<MenuAddOnResponse> call = RetrofitNetMan.getRestApiService().getAddons(token, menuItemList.get(position).getmAddOnAvailable());
+                //Changing the
+//                Call<MenuAddOnResponse> call = RetrofitNetMan.getRestApiService().getAddons(token, menuItemList.get(position).getmAddOnAvailable());
+                Call<MenuAddOnResponse> call = RetrofitNetMan.getRestApiService().getAddons(token, menuItemList.get(position).getId());
                 call.enqueue(new Callback<MenuAddOnResponse>() {
                     @Override
                     public void onResponse(@NotNull Call<MenuAddOnResponse> call, @NotNull Response<MenuAddOnResponse> response) {

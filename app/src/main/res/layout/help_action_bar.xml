@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.Toolbar
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="?actionBarSize"
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/action_bar_order_number"
     style="@style/NavBarColor"
-    app:title="Help Center"
+    android:layout_width="match_parent"
+    android:layout_height="?actionBarSize"
     android:gravity="center"
     app:menu="@menu/action_bar_items"
-    app:navigationIcon="@drawable/ic_left_arrow" />
+    app:navigationIcon="@drawable/ic_left_arrow"
+    app:title="Help Center" />

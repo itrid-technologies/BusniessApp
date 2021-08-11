@@ -335,7 +335,7 @@
                     android:weightSum="100">
 
                     <TextView
-                        style="@style/FontSmallGrey"
+                        style="@style/HeadingOrderDelivery"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
@@ -454,6 +454,7 @@
                     android:padding="12dp">
 
                     <TextView
+                        style="@style/HeadingOrderDelivery"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="98"
@@ -476,10 +477,11 @@
 
                     <TextView
                         android:id="@+id/edt_business_note"
-                        style="@style/FontMediumBlack"
+                        style="@style/DeliveryOrderNote"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="99"
+                        android:text="dfgdfgdfg"
                         android:gravity="top"
                         android:hint="@string/BussinessOrderNote"
                         android:padding="20dp" />
@@ -487,16 +489,16 @@
 
                 <TableRow
                     android:id="@+id/deliveryTitle"
-                    style="@style/FontSmallBlack"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:padding="12dp"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    android:padding="12dp">
 
                     <TextView
                         android:id="@+id/tv_delivery_note"
-                        style="@style/FontSmallBlack"
+                        style="@style/HeadingOrderDelivery"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="98"
@@ -510,6 +512,7 @@
                     android:layout_marginTop="12dp"
                     android:paddingHorizontal="12dp"
                     android:visibility="gone"
+                    tools:visibility="visible"
                     android:weightSum="100">
 
                     <View
@@ -520,7 +523,7 @@
 
                     <TextView
                         android:id="@+id/TV_deliveryNoteHere"
-                        style="@style/FontMediumBlack"
+                        style="@style/DeliveryOrderNote"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="99"
@@ -542,11 +545,11 @@
         android:id="@+id/ll_btns"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        style="@style/ButtonBg"
         android:orientation="vertical"
+        android:visibility="gone"
         android:paddingTop="20dp"
         android:paddingBottom="30dp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -586,11 +589,12 @@
         android:id="@+id/ll_ready_btns"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:orientation="vertical"
         android:paddingTop="20dp"
         android:paddingBottom="30dp"
         android:visibility="gone"
+        style="@style/ButtonBg"
+        tools:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"

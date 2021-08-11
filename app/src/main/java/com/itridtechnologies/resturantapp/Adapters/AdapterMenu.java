@@ -66,7 +66,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
     @Override
     public detailHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_container, parent, false);
-        return new AdapterMenu.detailHolder(view, mListenerMenu);
+        return new AdapterMenu.detailHolder(view, mListenerMenu, menuItems);
     }
 
     @Override
@@ -76,6 +76,14 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
         holder.mItemName.setText(mMenuItem.getmItemName());
 
         try {
+
+            //validatyin chevron
+            if (!mMenuItem.getmAddOnAvailable().equals("null")) {
+                holder.mShowDetails.setVisibility(View.VISIBLE);
+            } else {
+                holder.mShowDetails.setVisibility(View.GONE);
+            }
+
             ////Validating Description
             if (!mMenuItem.getmItemDescription().equals("")) {
                 holder.mItemDescription.setText(mMenuItem.getmItemDescription());
@@ -84,6 +92,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
                 holder.mItemDescription.setVisibility(View.GONE);
             }
         } catch (Exception ignored) {
+            Log.e(TAG, "onBindViewHolder: Menu add on ");
         }
 
         Log.e(TAG, "onBindViewHolder: Menu availablitiy status" + mMenuItem.getmYesNo());
@@ -95,7 +104,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
         } else {
             holder.itemView.setEnabled(true);
             holder.mSwitchItem.setChecked(true);
-            holder.mShowDetails.setVisibility(View.GONE);
+//            holder.mShowDetails.setVisibility(View.GONE);
         }
 
         /////Hiding If Not Available
@@ -178,7 +187,8 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
         private boolean isVisible = false;
         private String token = AppManager.getBusinessDetails().getData().getToken();
 
-        public detailHolder(@NonNull View itemView, ItemClickListenerMenu listenerMenu) {
+
+        public detailHolder(@NonNull View itemView, ItemClickListenerMenu listenerMenu, List<MenuModel> menuItems) {
             super(itemView);
             mItemName = itemView.findViewById(R.id.tv_itemName);
             mItemDescription = itemView.findViewById(R.id.tv_description);
@@ -190,29 +200,33 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
             mHideDetails = itemView.findViewById(R.id.iv_close_details);
             view = itemView.findViewById(R.id.view);
 
-
-////            //listener
+            //listener
             itemView.setOnClickListener(v -> {
-
-//            handle rv visibility
-                if (!isVisible) {
-                    //rv visible
-                    mAddons.setVisibility(View.VISIBLE);
-                    isVisible = true;
-                    mShowDetails.setVisibility(View.INVISIBLE);
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        listenerMenu.getMenuItems(true, mParent1RV, position);
+                MenuModel mMenuItem = menuItems.get(getAdapterPosition());
+                Log.e(TAG, "detailHolder: menu id " + mMenuItem.getmAddOnAvailable());
+                if (!mMenuItem.getmAddOnAvailable().equals("null")) {
+                    //handle rv visibility
+                    if (!isVisible) {
+                        //rv visible
+                        mAddons.setVisibility(View.VISIBLE);
+                        isVisible = true;
+                        mShowDetails.setVisibility(View.INVISIBLE);
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listenerMenu.getMenuItems(true, mParent1RV, position);
+                        }
+                        view.setVisibility(View.VISIBLE);
+                        mHideDetails.setVisibility(View.VISIBLE);
+                    } else {
+                        //rv gone
+                        mAddons.setVisibility(View.GONE);
+                        view.setVisibility(View.GONE);
+                        mShowDetails.setVisibility(View.VISIBLE);
+                        mHideDetails.setVisibility(View.GONE);
+                        isVisible = false;
                     }
-                    view.setVisibility(View.VISIBLE);
-                    mHideDetails.setVisibility(View.VISIBLE);
                 } else {
-                    //rv gone
-                    mAddons.setVisibility(View.GONE);
-                    view.setVisibility(View.GONE);
-                    mShowDetails.setVisibility(View.VISIBLE);
-                    mHideDetails.setVisibility(View.GONE);
-                    isVisible = false;
+                    Log.e(TAG, "detailHolder: i m f***android:stateListAnimator=\"@null\"ed ");
                 }
             });
         }

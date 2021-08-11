@@ -9,7 +9,7 @@
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
+
         <!-- Status bar color. -->
         <!--        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>-->
         <!-- Customize your theme here. -->
@@ -19,7 +19,7 @@
     </style>
 
     <style name="ToolbarColored" parent="Theme.ResturantApp">
-        <item name="android:textColorSecondary">@color/colorAccent</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
 
     <style name="Theme.ResturantApp.NoActionBar">
@@ -37,6 +37,29 @@
         <item name="fontFamily">@font/regular</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:background">@color/darkHeader</item>
+    </style>
+
+    <style name="DeliveryOrderNote">
+        <item name="android:textSize">18sp</item>
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:background">#AFAFAF</item>
+    </style>
+
+
+    <style name="FontMediumBlackMenuAddon">
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_marginTop">15dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+    </style>
+
+    <style name="ButtonBg">
+        <item name="android:textSize">18sp</item>
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">#AFAFAF</item>
     </style>
 
     <style name="FontSmallGrey">
@@ -83,9 +106,22 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="HeadingOrderDelivery">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:background">@color/darkHeader</item>
+        <item name="fontFamily">@font/regular</item>
+    </style>
+
 
     <style name="fieldsBg">
         <item name="android:background">@color/darkHeader</item>
+        <item name="fontFamily">@font/regular</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="fieldsBgCancek">
+        <item name="android:background">@color/icon_grey</item>
         <item name="fontFamily">@font/regular</item>
         <item name="android:textColor">@color/white</item>
     </style>
@@ -119,12 +155,19 @@
         <item name="fontFamily">@font/regular</item>
     </style>
 
-    <style name="AppTheme.transparent" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/darkHeader</item>
         <item name="colorPrimaryDark">@color/darkHeader</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
         <!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
+    </style>
+
+    <style name="NavBar">
+        <item name="itemIconTint">@drawable/tab_color_night</item>
+        <item name="itemTextColor">@drawable/tab_color</item>
     </style>
 
     ///styling for unpaid button
@@ -138,6 +181,11 @@
         <item name="android:gravity">center</item>
         <item name="backgroundColor">@color/red</item>
         <item name="background">@drawable/paid_unpaid_background</item>
+    </style>
+
+    <style name="BottomNavBar" parent="Widget.MaterialComponents.BottomNavigationView.PrimarySurface">
+        <item name="itemIconTint">@drawable/tab_color</item>
+        <item name="itemTextColor">@drawable/tab_color</item>b
     </style>
 
 </resources>

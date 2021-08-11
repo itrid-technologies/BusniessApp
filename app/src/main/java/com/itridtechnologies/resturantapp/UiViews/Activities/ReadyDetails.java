@@ -180,7 +180,6 @@ public class ReadyDetails extends AppCompatActivity {
                 } else if (response.code() == 400) {
                     Log.e("TAG", "onResponse: " + response.message());
                 } else {
-                    Toast.makeText(getApplicationContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }
 
@@ -285,7 +284,6 @@ public class ReadyDetails extends AppCompatActivity {
                             );
 
                 } else {
-                    Toast.makeText(getApplicationContext(), "Token Expired " + response.message(), Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }
                 UpdateOrders();
@@ -538,7 +536,6 @@ public class ReadyDetails extends AppCompatActivity {
 
                 }//not null
                 else {
-                    Toast.makeText(getApplicationContext(), "Token Expired", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }
             }
