@@ -20,6 +20,7 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.model.AddonModel;
@@ -33,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -133,6 +135,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
 //        Hitting PUT API
 //        Setting Switch
         holder.mSwitchItem.setOnClickListener(v -> {
+
             JsonObject obj = new JsonObject();
             holder.mSwitchItem.setEnabled(false);
             if (holder.mSwitchItem.isChecked()) {
@@ -147,14 +150,20 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
                 @Override
                 public void onResponse(@NotNull Call<MenuItemAvailableResponse> call, @NotNull Response<MenuItemAvailableResponse> response) {
                     Log.e("Id Number", pm.getMyDataString("itemId"));
+
                     if (response.isSuccessful() && response.body() != null) {
+                        Snackbar.make(holder.view,response.message() + " " + response.body().getMessage(),2000).show();
                         Log.e(TAG, "onResponse: " + response.message());
+                    }
+                    else {
+                        Snackbar.make(holder.view,response.message(),2000).show();
                     }
                     holder.mSwitchItem.setEnabled(true);
                 }
 
                 @Override
                 public void onFailure(@NotNull Call<MenuItemAvailableResponse> call, @NotNull Throwable t) {
+                    Snackbar.make(holder.view, Objects.requireNonNull(t.getMessage()),2000).show();
                     Log.e(TAG, "onFailure: " + t.getMessage());
                 }
             });

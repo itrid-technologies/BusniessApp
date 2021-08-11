@@ -1,6 +1,7 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities.Frags;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -25,11 +26,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,6 +41,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.JsonObject;
 import com.itridtechnologies.resturantapp.Adapters.RecyclerViewAdapterDashboard;
@@ -91,6 +96,10 @@ public class FragmentDashboard extends Fragment {
     private ImageView imgNoOrder;
     private int i;
     private static final String TAG = "FragmentDashboard";
+
+    //For Snackbar
+
+    private FragmentActivity mActivity;
 
     //Animation for busy card
     private Animation anim_in;
@@ -284,6 +293,7 @@ public class FragmentDashboard extends Fragment {
     public void onViewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mActivity = getActivity();
         i = 0;
         ///Variables when no orders
         ///When No Orders
@@ -438,7 +448,6 @@ public class FragmentDashboard extends Fragment {
         }
         subscribeToTest();
     }//onViewCreated
-
 
     private void subscribeToTest() {
         FirebaseMessaging.getInstance().subscribeToTopic("test")
@@ -986,10 +995,8 @@ public class FragmentDashboard extends Fragment {
             @Override
             public void onResponse(@NotNull Call<UpdateSettingResponse> call1, @NotNull Response<UpdateSettingResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-
-
+                    AppManager.SnackBar((AppCompatActivity) mActivity , response.body().getMessage());
                     if (mBusyMode.isChecked()) {
-
 
                         anim_in.setAnimationListener(new Animation.AnimationListener() {
                             @Override
@@ -1084,10 +1091,9 @@ public class FragmentDashboard extends Fragment {
                     }
                     AppManager.toast(response.message());
                     Log.e(TAG, "onResponse: " + response.message());
-                } else if (!response.isSuccessful()) {
-                    startActivity(new Intent(requireContext(), MainActivity.class));
-                } else {
-                    AppManager.toast("Delivery or Pickup order mode must be enable. " + response.message());
+                }
+                else {
+                    AppManager.SnackBar((AppCompatActivity) mActivity , response.message());
                     mBusyMode.setChecked(false);
 
                     anim_out.setAnimationListener(new Animation.AnimationListener() {
