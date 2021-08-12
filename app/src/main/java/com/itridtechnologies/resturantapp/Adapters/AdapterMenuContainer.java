@@ -58,27 +58,33 @@ public class AdapterMenuContainer extends RecyclerView.Adapter<AdapterMenuContai
     public void onBindViewHolder(@NonNull detailHolderr holder, int position) {
         AddonModel mAddonItem = addonItems.get(position);
         holder.mAddOnTitle.setText(mAddonItem.getmAddonName());
-        holder.mSwitch.setChecked(mAddonItem.getmAvailibility() == 1);
 
-        holder.mSwitch.setChecked(false);
+        Log.e("TAG", "onBindViewHolder: mAddonItem.getAddOnParent().get(0).getAddonId()" + mAddonItem.getmAvailibility());
+
+        holder.mSwitch.setChecked(mAddonItem.getmAvailibility() == 1);
 
         ///Hitting Put Api
         holder.mSwitch.setOnClickListener(v -> {
             JsonObject obj = new JsonObject();
             holder.mSwitch.setEnabled(false);
-            obj.addProperty("action","0");
-            obj.addProperty("actionType","item");
-            Call<MenuItemAvailableResponse> call = RetrofitNetMan.getRestApiService().itemAvailable(token,String.valueOf(mAddonItem.getmAvailibility()),obj);
+            if (holder.mSwitch.isChecked()) {
+                obj.addProperty("action", "0");
+                obj.addProperty("actionType", "item");
+            } else {
+                obj.addProperty("action", "1");
+                obj.addProperty("actionType", "item");
+            }
+
+            Call<MenuItemAvailableResponse> call = RetrofitNetMan.getRestApiService().itemAvailable(token, String.valueOf(mAddonItem.getAddOnParent().get(0).getAddonId()), obj);
             call.enqueue(new Callback<MenuItemAvailableResponse>() {
                 @Override
                 public void onResponse(@NotNull Call<MenuItemAvailableResponse> call, @NotNull Response<MenuItemAvailableResponse> response) {
 //                    Log.e("Id Number", pm.getMyDataString("itemId"));
-                    if (response.isSuccessful() && response.body() != null)
-                    {
+                    if (response.isSuccessful()) {
+                        Log.e("TAG", "onResponse: " + response.message() + response.code());
                         AppManager.toast(response.message());
-                        holder.mSwitch.setChecked(true);
-                    }
-                    else if (response.code() == 400) {
+                    } else if (response.code() == 400) {
+                        Log.e("TAG", "onResponse:hs " + response.message() + response.code());
                         AppManager.toast(response.message());
                         holder.mSwitch.setChecked(false);
                     }
@@ -86,7 +92,7 @@ public class AdapterMenuContainer extends RecyclerView.Adapter<AdapterMenuContai
                 }
 
                 @Override
-                public void onFailure(@NotNull Call<MenuItemAvailableResponse> call, Throwable t) {
+                public void onFailure(@NotNull Call<MenuItemAvailableResponse> call, @NotNull Throwable t) {
                     AppManager.toast("No Internet Connection");
                 }
             });
@@ -119,7 +125,7 @@ public class AdapterMenuContainer extends RecyclerView.Adapter<AdapterMenuContai
             mRVAddon = itemView.findViewById(R.id.rv_addon);
             mSwitch = itemView.findViewById(R.id.switch_rv3_addon);
             mRVAddon.setVisibility(View.VISIBLE);
-            listener.getMenuAddons(true,mRVAddon);
+            listener.getMenuAddons(true, mRVAddon);
 //            mShowDet = itemView.findViewById(R.id.iv_open_details_addon);
 //            mHideDet = itemView.findViewById(R.id.iv_close_details_addon);
 //

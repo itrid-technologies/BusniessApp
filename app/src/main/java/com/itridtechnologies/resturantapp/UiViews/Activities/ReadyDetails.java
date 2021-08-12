@@ -74,11 +74,17 @@ public class ReadyDetails extends AppCompatActivity {
     private String mCellNumber;
     private RecyclerView mReadyOrderRV;
     private ProgressBar mPBReadyOrder;
+    private double orderTotal = 0;
     String token = AppManager.getBusinessDetails().getData().getToken();
     private int mIsPickUp;
+    private List<TotalModel> mTotalList = new ArrayList<>();
 
     private static final String TAG = "ReadyDetails";
-    
+    //Data Item (Order Items 1)
+    private List<DataItem> mOrdersDetail = new ArrayList<>();
+    //Total amount of order
+    private double valueTotal;
+
     //Table row
     private TableRow mRiderRow;
     private TableRow mOrderNoteTitle;
@@ -110,9 +116,6 @@ public class ReadyDetails extends AppCompatActivity {
     //Addons details
     private List<AddonItemsItem> mOrderAddonDetails = new ArrayList<>();
 
-    //Calculating Totals
-    private Double mTotalAmount = 00.00;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,7 +142,12 @@ public class ReadyDetails extends AppCompatActivity {
         or = String.valueOf(getIntent().getStringExtra("orderId"));
         mToolbar.setTitle("#" + or);
         //Calling API for Order Details
+
+        //Calling API for Order Details
+
+
         getOrderDetails(or);
+
         totalFun();
         Listener();
     }
@@ -147,8 +155,6 @@ public class ReadyDetails extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        //getDetails();
-
         //Printing Recipt
 
         //Setting Click listener and print intent
@@ -173,20 +179,20 @@ public class ReadyDetails extends AppCompatActivity {
             @Override
             public void onResponse(@NotNull Call<SetToDelivered> call12, @NotNull Response<SetToDelivered> response) {
                 if (response.isSuccessful() && response.body() != null) {
-
                     ///Update Database
                     updateDatabase();
-
                 } else if (response.code() == 400) {
+                    mDelivered.setEnabled(true);
                     Log.e("TAG", "onResponse: " + response.message());
                 } else {
+                    mDelivered.setEnabled(true);
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }
-
             }
 
             @Override
-            public void onFailure(Call<SetToDelivered> call12, Throwable t) {
+            public void onFailure(@NotNull Call<SetToDelivered> call12, @NotNull Throwable t) {
+                mDelivered.setEnabled(true);
                 Log.e("TAG", "onResponse: " + t.getMessage());
             }
         });
@@ -232,6 +238,7 @@ public class ReadyDetails extends AppCompatActivity {
         WorkManager.getInstance(ReadyDetails.this).getWorkInfoByIdLiveData(bgWork.getId())
                 .observe(this, info -> {
                     if (info != null && info.getState().isFinished()) {
+                        mDelivered.setEnabled(true);
                         Intent intent = new Intent(ReadyDetails.this, BasicActvity.class);
                         intent.putExtra("AOR", "History");
                         startActivity(intent);
@@ -239,49 +246,30 @@ public class ReadyDetails extends AppCompatActivity {
                         Log.e(TAG, "onResponse: no info returning from live data");
                     }
                 });
-    }
+    }//update Database
 
+
+    //Getting order details from api
     private void getOrderDetails(String orderId) {
+        Log.e(TAG, "getOrderDetails: order details" );
         Call<SubItems> call = RetrofitNetMan.getRestApiService().getOrderDetail(token, orderId);
         call.enqueue(new Callback<SubItems>() {
             @Override
             public void onResponse(@NotNull Call<SubItems> call, @NotNull Response<SubItems> response) {
                 if (response.isSuccessful() && response.body() != null) {
+//                    //List 1 (Orders Names)
+//                    mOrdersDetail = response.body().getData().subList(0, response.body().getData().size());
                     //List 1 (Orders Names)
                     mOrdersReady = response.body().getData().subList(0, response.body().getData().size());
 
+                    valueTotal = 0.0;
+                    //Saving and calculating total amount of order
+                    Log.e(TAG, "onResponse: Total Amount" + response.body().getData().size());
                     for (int i = 0; i < response.body().getData().size(); i++) {
-                        mTotalAmount = mTotalAmount + Double.parseDouble(response.body().getData().get(i).getItemPrice());
+                        valueTotal = valueTotal + Double.parseDouble(response.body().getData().get(i).getItemPrice());
                     }
-                    Constants.ORDER_NAMES = mOrdersReady;
-                    if (response.body().getData().get(0).getOrderAddons().size() >= 1) {
-                        //List 2 (Order Addon Names)
-                        mOrderAddons = response.body().getData().get(0).getOrderAddons();
-                        Constants.ORDER_ADDON_NAME = mOrderAddons;
-                        if (response.body().getData().get(0).getOrderAddons().size() >= 1) {
-                            //List 3 (Order Addon Items_
-                            mOrderAddonDetails = response.body().getData().get(0).getOrderAddons().get(0).getAddonItems();
-                            Constants.ORDER_ADDON_ITEMS = response.body().getData().get(0).getOrderAddons().get(0).getAddonItems();
-                        } else {
-                            AppManager.toast("No Addons Available");
-                        }
-                    }
+                    Log.e(TAG, "onResponse: Total Amount" + valueTotal);
 
-                    Log.e(TAG, "onResponse: delivery note " + mOrderItem.getOrderType());
-
-                    UpdateUI
-                            (
-                                    mOrderItem.getBusinessNotes(),
-                                    mOrderItem.getCourierNotes(),
-                                    mOrderItem.getOrderType(),
-                                    mOrderItem.getFirstName(),
-                                    mOrderItem.getLastName(),
-                                    mOrderItem.getPhoneNumber(),
-                                    String.valueOf(mOrderItem.getPaymentStatus()),
-                                    "Not Available",
-                                    mTotalAmount,
-                                    "Not Available"
-                            );
 
                 } else {
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -291,9 +279,71 @@ public class ReadyDetails extends AppCompatActivity {
 
             @Override
             public void onFailure(@NotNull Call<SubItems> call, @NotNull Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage());
             }
         });
     }
+
+
+//    private void getOrderDetails(String orderId) {
+//        Call<SubItems> call = RetrofitNetMan.getRestApiService().getOrderDetail(token, orderId);
+//        call.enqueue(new Callback<SubItems>() {
+//            @Override
+//            public void onResponse(@NotNull Call<SubItems> call, @NotNull Response<SubItems> response) {
+//                if (response.isSuccessful() && response.body() != null) {
+//                    //List 1 (Orders Names)
+//                    mOrdersReady = response.body().getData().subList(0, response.body().getData().size());
+//
+//                    for (int i = 0; i < response.body().getData().size(); i++) {
+//                        mTotalAmount = mTotalAmount + Double.parseDouble(response.body().getData().get(i).getItemPrice());
+//                    }
+//                    Constants.ORDER_NAMES = mOrdersReady;
+//                    if (response.body().getData().get(0).getOrderAddons().size() >= 1) {
+//                        //List 2 (Order Addon Names)
+//                        mOrderAddons = response.body().getData().get(0).getOrderAddons();
+//                        Constants.ORDER_ADDON_NAME = mOrderAddons;
+//                        if (response.body().getData().get(0).getOrderAddons().size() >= 1) {
+//                            //List 3 (Order Addon Items_
+//                            mOrderAddonDetails = response.body().getData().get(0).getOrderAddons().get(0).getAddonItems();
+//                            Constants.ORDER_ADDON_ITEMS = response.body().getData().get(0).getOrderAddons().get(0).getAddonItems();
+//                        } else {
+//                            AppManager.toast("No Addons Available");
+//                        }
+//                    }
+//
+//
+//                    mTotalList.add(new TotalModel(
+//                            response.body().getData().
+//                    ))
+//
+//
+//                    Log.e(TAG, "onResponse: delivery note " + mOrderItem.getOrderType());
+//
+//                    UpdateUI
+//                            (
+//                                    mOrderItem.getBusinessNotes(),
+//                                    mOrderItem.getCourierNotes(),
+//                                    mOrderItem.getOrderType(),
+//                                    mOrderItem.getFirstName(),
+//                                    mOrderItem.getLastName(),
+//                                    mOrderItem.getPhoneNumber(),
+//                                    String.valueOf(mOrderItem.getPaymentStatus()),
+//                                    "Not Available",
+//                                    mTotalAmount,
+//                                    "Not Available"
+//                            );
+//
+//                } else {
+//                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//                }
+//                UpdateOrders();
+//            }
+//
+//            @Override
+//            public void onFailure(@NotNull Call<SubItems> call, @NotNull Throwable t) {
+//            }
+//        });
+//    }
 
     public void UpdateOrders() {
         //Setting Adapter
@@ -303,15 +353,16 @@ public class ReadyDetails extends AppCompatActivity {
         mReadyOrderRV.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
-        mPBReadyOrder.setVisibility(View.GONE);
-        mNSVReadyDetails.setVisibility(View.VISIBLE);
+        //Hitting api here to calculate totals
+        getDetails(or);
+
     }
 
     @SuppressLint("SetTextI18n")
     public void UpdateUI(String bNote, String dNote
             , int orderType, String fName, String lName, String pNo
             , String status, String Address
-            , Double tPrice, String partnerName) {
+            , Double tPrice, String partnerName, List<TotalModel> totalList) {
 
         //Setting Name of Customer
         Log.e(TAG, "UpdateUI: " + fName + " " + lName);
@@ -382,6 +433,15 @@ public class ReadyDetails extends AppCompatActivity {
             AppManager.SnackBar(ReadyDetails.this, "Order Type DoesNot Exist");
         }
 
+        mRCVTotals.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        AdapterTotal totalAdapter = new AdapterTotal(totalList, ReadyDetails.this);
+        mRCVTotals.setAdapter(totalAdapter);
+        totalAdapter.notifyDataSetChanged();
+
+        //Making the view visible
+        mPBReadyOrder.setVisibility(View.GONE);
+        mNSVReadyDetails.setVisibility(View.VISIBLE);
+
     }//UpdateUI
 
     //Setting Onclich Listener to make real call
@@ -417,22 +477,8 @@ public class ReadyDetails extends AppCompatActivity {
     }
 
     public void totalFun() {
-        mRCVTotals.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        AdapterTotal totalAdapter = new AdapterTotal(dummySubTotals(), ReadyDetails.this);
-        mRCVTotals.setAdapter(totalAdapter);
-        totalAdapter.notifyDataSetChanged();
+
     }//end total function
-
-    //////dummy data for recycler
-    public List<TotalModel> dummySubTotals() {
-        //Adding Dummy Data in list
-        List<TotalModel> list = new ArrayList<>();
-        list.add(new TotalModel("Subtotal", "200.00"));
-        list.add(new TotalModel("Delivery Fee", "50.00"));
-        list.add(new TotalModel("Service Fee", "256.00"));
-
-        return list;
-    }
 
     //Setting Variables
     public void setVariables() {
@@ -463,6 +509,7 @@ public class ReadyDetails extends AppCompatActivity {
     ///Click Listener
     public void Listener() {
         mDelivered.setOnClickListener(v -> {
+            mDelivered.setEnabled(false);
             setToDelivered(or);
         });
 
@@ -486,11 +533,12 @@ public class ReadyDetails extends AppCompatActivity {
     }
 
     //method to get business orders from server
-    private void getDetails() {
+    private void getDetails(String orderId) {
+        Log.e(TAG, "getDetails: persoal details" );
         //retrieve token from pref
         String token = AppManager.getBusinessDetails().getData().getToken();
 
-        Call<NewOrderResponse> call = RetrofitNetMan.getRestApiService().getOrders(token, or);
+        Call<NewOrderResponse> call = RetrofitNetMan.getRestApiService().getOrders(token, orderId);
         call.enqueue(new Callback<NewOrderResponse>() {
             @Override
             public void onResponse(@NotNull Call<NewOrderResponse> call, @NotNull Response<NewOrderResponse> response) {
@@ -500,39 +548,102 @@ public class ReadyDetails extends AppCompatActivity {
                     ///Commenting temporily
                     mOrderItemList = response.body().getData().getOrderItems();
 
-                    if (!mOrderItemList.isEmpty()) {
-//                        mAddonItemList = response.body().getData().getOrderItems();
-                        double orderTotal = 0;
-                        int orderSize = response.body().getData().getOrderItems().size();
-                        //Calculating Total Amount
-                        for (int i = 0; i < orderSize; i++) {
-                            orderTotal = orderTotal + Double.parseDouble(response.body().getData().getOrderItems().get(i).getItemPrice());
-                        }
+
+                    Log.e(TAG, "onResponse: first and last name: " + response.body().getData().getOrder().get(0).getFirstName() +
+                            response.body().getData().getOrder().get(0).getLastName());
+
+                    //Calculating Total Amount
+                    for (int i = 0; i < response.body().getData().getOrderTotals().size(); i++) {
+                        mTotalList.add(new TotalModel(
+                                response.body().getData().getOrderTotals().get(i).getLabel(),
+                                response.body().getData().getOrderTotals().get(i).getValue()
+                        ));
+                        orderTotal = orderTotal + Double.parseDouble(response.body().getData().getOrderTotals().get(i).getValue());
+                        Log.e(TAG, "onResponse: order total " + orderTotal);
+                    }
+
+                    //Adding order values
+                    orderTotal = orderTotal + valueTotal;
+                    Log.e(TAG, "onResponse: totAT + " + orderTotal);
+
+                    String address = response.body().getData().getOrderAddress().get(0).getAddressLine1() + " "
+                            + response.body().getData().getOrderAddress().get(0).getAddressLine2() + " "
+                            + response.body().getData().getOrderAddress().get(0).getCity() + " "
+                            + response.body().getData().getOrderAddress().get(0).getState() + " "
+                            + response.body().getData().getOrderAddress().get(0).getCountry() + " "
+                            + response.body().getData().getOrderAddress().get(0).getPostCode();
+
+                    Log.e(TAG, "onResponse: address" +
+                            "" + address );
+
+                    UpdateUI
+                            (
+                                    response.body().getData().getOrder().get(0).getBusinessNotes(),
+                                    response.body().getData().getOrder().get(0).getCourierNotes(),
+                                    response.body().getData().getOrder().get(0).getOrderType(),
+                                    response.body().getData().getOrder().get(0).getFirstName(),
+                                    response.body().getData().getOrder().get(0).getLastName(),
+                                    response.body().getData().getOrder().get(0).getPhoneNumber(),
+                                    String.valueOf(mOrderItem.getPaymentStatus()),
+                                    address,
+                                    orderTotal,
+                                    "Not Available",
+                                    mTotalList
+                            );
+//                    if (!mOrderItemList.isEmpty()) {
+////                        mAddonItemList = response.body().getData().getOrderItems();
+//                        double orderTotal = 0;
+//                        int orderSize = response.body().getData().getOrderItems().size();
+//                        //Calculating Total Amount
+//                        for (int i = 0; i < orderSize; i++) {
+//                            orderTotal = orderTotal + Double.parseDouble(response.body().getData().getOrderItems().get(i).getItemPrice());
+//                        }
+////
+//
+//                        //Calculating Total Amount
+//                        for (int i = 0; i < response.body().getData().getOrderTotals().size(); i++) {
+//                            mTotalList.add(new TotalModel(
+//                                    response.body().getData().getOrderTotals().get(i).getLabel(),
+//                                    response.body().getData().getOrderTotals().get(i).getValue()
+//                            ));
+//                            orderTotal = orderTotal + Double.parseDouble(response.body().getData().getOrder().get(0).getOrderTotalPrice());
+//                            Log.e(TAG, "onResponse: order total " + orderTotal);
+//                        }
+//
+//                        String address = response.body().getData().getOrderAddress().get(0).getAddressLine1() + " "
+//                                + response.body().getData().getOrderAddress().get(0).getAddressLine2() + " "
+//                                + response.body().getData().getOrderAddress().get(0).getCity() + " "
+//                                + response.body().getData().getOrderAddress().get(0).getState() + " "
+//                                + response.body().getData().getOrderAddress().get(0).getCountry() + " "
+//                                + response.body().getData().getOrderAddress().get(0).getPostCode();
 //
 //                        UpdateUI
 //                                (
 //                                        response.body().getData().getOrder().get(0).getBusinessNotes(),
 //                                        response.body().getData().getOrder().get(0).getCourierNotes(),
+//                                        response.body().getData().getOrder().get(0).getOrderType(),
 //                                        response.body().getData().getOrder().get(0).getFirstName(),
 //                                        response.body().getData().getOrder().get(0).getLastName(),
 //                                        response.body().getData().getOrder().get(0).getPhoneNumber(),
-//                                        String.valueOf(response.body().getData().getOrder().get(0).getPaymentStatus()),
-//                                        response.body().getData().getOrderAddress().get(0).getAddress(),
-//                                        String.valueOf(orderTotal)
+//                                        String.valueOf(mOrderItem.getPaymentStatus()),
+//                                        address,
+//                                        mTotalAmount,
+//                                        "Not Available",
+//                                        mTotalList
 //                                );
-                        Log.d("API", "Adding Data 2");
-                    }
+//                        Log.d("API", "Adding Data 2");
+//                    }
 
                     ///Getting Order Details
-                    for (int i = 0; i < response.body().getData().getOrderItems().size(); i++) {
-                        Log.e("Name", response.body().getData().getOrderItems().get(i).getItemName());
-                        mOrders.add(new OrderDetailModel(
-                                String.valueOf(response.body().getData().getOrderItems().get(i).getItemQty()),
-                                response.body().getData().getOrderItems().get(i).getItemName(),
-                                response.body().getData().getOrderItems().get(i).getItemPrice()
-                        ));
-
-                    }
+//                    for (int i = 0; i < response.body().getData().getOrderItems().size(); i++) {
+//                        Log.e("Name", response.body().getData().getOrderItems().get(i).getItemName());
+//                        mOrders.add(new OrderDetailModel(
+//                                String.valueOf(response.body().getData().getOrderItems().get(i).getItemQty()),
+//                                response.body().getData().getOrderItems().get(i).getItemName(),
+//                                response.body().getData().getOrderItems().get(i).getItemPrice()
+//                        ));
+//
+//                    }
 
                 }//not null
                 else {

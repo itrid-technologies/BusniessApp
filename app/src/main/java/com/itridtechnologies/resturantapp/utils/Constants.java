@@ -35,6 +35,8 @@ public final class Constants {
     //List for storing Addon Names
     public static List<AddonItemsItem> ORDER_ADDON_ITEMS = new ArrayList<>();
 
+    public static String REMAINTIME = "";
+
     //Orderitem object
     //Pagination API
     public static OrdersItem ORDER_ITEM = null;

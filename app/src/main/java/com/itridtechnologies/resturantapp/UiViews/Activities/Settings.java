@@ -1,5 +1,20 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TableRow;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
@@ -7,24 +22,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import android.app.UiModeManager;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.TableRow;
-import android.widget.TextView;
 
 import com.google.gson.JsonObject;
 import com.itridtechnologies.resturantapp.R;
@@ -47,10 +44,10 @@ public class Settings extends AppCompatActivity {
 
     private TextView mAcceptOrder;
     private TextView mRejectOrder;
-    private ImageButton mAddAcceptOrder;
-    private ImageButton mAddRejectOrder;
-    private ImageButton mSubAcceptOrder;
-    private ImageButton mSubRejectOrder;
+    private ImageView mAddAcceptOrder;
+    private ImageView mAddRejectOrder;
+    private ImageView mSubAcceptOrder;
+    private ImageView mSubRejectOrder;
     private SwitchCompat mDarkmode;
     private SwitchCompat mDeliverOrders;
     private SwitchCompat mNewOrders;
@@ -65,7 +62,7 @@ public class Settings extends AppCompatActivity {
     private int autoAcceptStatus;
     private int deliveryStatus;
     private int mAcceptNumber = 1;
-    private int mRejectNumber = 0;
+    private int mRejectNumber;
     ////Edit Texts in case of delivery type = 2
     private EditText delFee;
     private View delFeeView;
@@ -106,7 +103,6 @@ public class Settings extends AppCompatActivity {
         mAcceptOrderCopies = pm.getMyDataString("acceptedCopies");
         mRejectOrderCopies = pm.getMyDataString("rejectedCopies");
 
-
         mRejectOrder.setText(mRejectOrderCopies);
         mAcceptOrder.setText(mAcceptOrderCopies);
 
@@ -136,7 +132,7 @@ public class Settings extends AppCompatActivity {
                 pm.saveMyDataBool("darkSwitch", true);
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             } else {
-                Log.e(TAG, "onCheckedChanged: light + isNotChecked" );
+                Log.e(TAG, "onCheckedChanged: light + isNotChecked");
                 mDarkmode.setChecked(false);
                 pm.saveMyDataBool("darkSwitch", false);
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
@@ -251,6 +247,9 @@ public class Settings extends AppCompatActivity {
                 checkFieldsForEmptyValues();
                 saveBtn.setOnClickListener(v -> {
 
+                    saveBtn.setEnabled(false);
+                    saveBtn.setBackgroundColor(getResources().getColor(R.color.disable_grey));
+
                     delFeeObj.addProperty("deliveryFee", delFee.getText().toString().trim());
                     delFeeObj.addProperty("minOrderPrice", minOrder.getText().toString().trim());
 
@@ -259,10 +258,16 @@ public class Settings extends AppCompatActivity {
                     Call<FeeUpdateResponse> feeUpdate = RetrofitNetMan.getRestApiService().setFeeAndOrders(token, delFeeObj);
                     feeUpdate.enqueue(new Callback<FeeUpdateResponse>() {
                         @Override
-                        public void onResponse(Call<FeeUpdateResponse> call12, Response<FeeUpdateResponse> response1) {
+                        public void onResponse(@NotNull Call<FeeUpdateResponse> call12, @NotNull Response<FeeUpdateResponse> response1) {
                             if (response.isSuccessful() && response.body() != null) {
 
+                                AppManager.SnackBar(Settings.this,response.message() + " " + response.body().getMessage());
+                                saveBtn.setEnabled(true);
+                                saveBtn.setBackgroundColor(getResources().getColor(R.color.theme_color));
                             } else if (response.code() == 400) {
+                                AppManager.SnackBar(Settings.this,response.message());
+                                saveBtn.setEnabled(true);
+                                saveBtn.setBackgroundColor(getResources().getColor(R.color.theme_color));
                                 Log.e("TAG", "onResponse: " + response.message());
                             }
                             mSaveTv.setVisibility(View.VISIBLE);
@@ -270,7 +275,10 @@ public class Settings extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onFailure(Call<FeeUpdateResponse> call12, Throwable t) {
+                        public void onFailure(@NotNull Call<FeeUpdateResponse> call12, @NotNull Throwable t) {
+                            saveBtn.setEnabled(true);
+                            AppManager.SnackBar(Settings.this,t.getMessage());
+                            saveBtn.setBackgroundColor(getResources().getColor(R.color.theme_color));
                             Log.e("TAG", "onResponse: " + t.getMessage());
                         }
                     });
@@ -292,6 +300,9 @@ public class Settings extends AppCompatActivity {
 
         ///Delivery Orders
         mDeliverOrders.setOnClickListener(v -> {
+
+            mDeliverOrders.setEnabled(false);
+
             //Changing Value for Switches
             if (deliveryStatus == 0) {
                 obj.addProperty("mode", "2");
@@ -301,16 +312,20 @@ public class Settings extends AppCompatActivity {
                 obj.addProperty("status", "0");
             }
 
-
             Call<UpdateSettingResponse> callUpdate = RetrofitNetMan.getRestApiService().setSetting(token, obj);
             callUpdate.enqueue(new Callback<UpdateSettingResponse>() {
                 @Override
                 public void onResponse(@NotNull Call<UpdateSettingResponse> call1, @NotNull Response<UpdateSettingResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
+                        mDeliverOrders.setEnabled(true);
+                        AppManager.SnackBar(Settings.this, response.message() + " " + response.body().getMessage());
                         Log.e("TAG", "onResponse: " + response.message());
                     } else if (response.code() == 400) {
+                        mDeliverOrders.setEnabled(true);
+                        AppManager.SnackBar(Settings.this, response.message() + " " + response.body().getMessage());
                         Log.e("TAG", "onResponse: " + response.message());
                     } else if (response.code() == 500) {
+                        mDeliverOrders.setEnabled(true);
                         Log.e("TAG", "onResponse: b1" + response.message());
                         mDeliverOrders.setChecked(false);
                         AppManager.SnackBar(Settings.this, "Business mode can only be switched between business operation hours.");
@@ -323,6 +338,8 @@ public class Settings extends AppCompatActivity {
 
                 @Override
                 public void onFailure(@NotNull Call<UpdateSettingResponse> call1, @NotNull Throwable t) {
+                    mDeliverOrders.setEnabled(true);
+                    AppManager.SnackBar(Settings.this, t.getMessage());
                     Log.e("TAG", "onResponse: " + t.getMessage());
                 }
             });
@@ -331,6 +348,7 @@ public class Settings extends AppCompatActivity {
 
         ///PickUp Orders
         mPickupOrders.setOnClickListener(v -> {
+            mPickupOrders.setEnabled(false);
             //Changing Value for Switches
             if (pickUpStatus == 0) {
                 obj.addProperty("mode", "3");
@@ -340,16 +358,21 @@ public class Settings extends AppCompatActivity {
                 obj.addProperty("status", "0");
             }
 
-
             Call<UpdateSettingResponse> callUpdate = RetrofitNetMan.getRestApiService().setSetting(token, obj);
             callUpdate.enqueue(new Callback<UpdateSettingResponse>() {
                 @Override
                 public void onResponse(@NotNull Call<UpdateSettingResponse> call1, @NotNull Response<UpdateSettingResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
+                        mPickupOrders.setEnabled(true);
+                        AppManager.SnackBar(Settings.this, response.message() + " " + response.body().getMessage());
                         Log.e("TAG", "onResponse: " + response.message());
                     } else if (response.code() == 400) {
+                        mPickupOrders.setEnabled(true);
+                        AppManager.SnackBar(Settings.this, response.message() + " " + response.body().getMessage());
                         Log.e("TAG", "onResponse: " + response.message());
                     } else if (response.code() == 500) {
+                        mPickupOrders.setEnabled(true);
+                        AppManager.SnackBar(Settings.this, response.message() + " " + response.body().getMessage());
                         Log.e("TAG", "onResponse: b2" + response.message());
                         mPickupOrders.setChecked(false);
                         AppManager.SnackBar(Settings.this, "Business mode can only be switched between business operation hours.");
@@ -361,6 +384,8 @@ public class Settings extends AppCompatActivity {
 
                 @Override
                 public void onFailure(@NotNull Call<UpdateSettingResponse> call1, @NotNull Throwable t) {
+                    mPickupOrders.setEnabled(true);
+                    AppManager.SnackBar(Settings.this, t.getMessage());
                     Log.e("TAG", "onResponse: " + t.getMessage());
                 }
             });
@@ -369,6 +394,7 @@ public class Settings extends AppCompatActivity {
 
         ///AUtoAccept Orders
         mNewOrders.setOnClickListener(v -> {
+            mNewOrders.setEnabled(false);
             //Changing Value for Switches
             if (autoAcceptStatus == 0) {
                 obj.addProperty("mode", "4");
@@ -384,10 +410,16 @@ public class Settings extends AppCompatActivity {
                 @Override
                 public void onResponse(@NotNull Call<UpdateSettingResponse> call1, @NotNull Response<UpdateSettingResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
+                        mNewOrders.setEnabled(true);
+                        AppManager.SnackBar(Settings.this, response.message() + " " + response.body().getMessage());
                         Log.e("TAG", "onResponse: " + response.message());
                     } else if (response.code() == 400) {
+                        mNewOrders.setEnabled(true);
+                        AppManager.SnackBar(Settings.this, response.message() + " " + response.body().getMessage());
                         Log.e("TAG", "onResponse: " + response.message());
                     } else if (response.code() == 500) {
+                        mNewOrders.setEnabled(true);
+                        AppManager.SnackBar(Settings.this, response.message() + " " + response.body().getMessage());
                         Log.e("TAG", "onResponse: b3" + response.message());
                         mNewOrders.setChecked(false);
                         AppManager.SnackBar(Settings.this, "Business mode can only be switched between business operation hours.");
@@ -399,6 +431,8 @@ public class Settings extends AppCompatActivity {
 
                 @Override
                 public void onFailure(@NotNull Call<UpdateSettingResponse> call1, @NotNull Throwable t) {
+                    mNewOrders.setEnabled(true);
+                    AppManager.SnackBar(Settings.this, t.getMessage());
                     Log.e("TAG", "onResponse: " + t.getMessage());
                 }
             });
@@ -463,26 +497,25 @@ public class Settings extends AppCompatActivity {
     }
 
     ////setting buttons to increase and decrease no of recipts
+    @SuppressLint("SetTextI18n")
     public void incDecReciepts() {
 
         //Setting Increasing accept button
         mAddAcceptOrder.setOnClickListener(v -> {
             mAcceptNumber = mAcceptNumber + 1;
             mAcceptOrder.setText(Integer.toString(mAcceptNumber));
-            pm.saveMyData("acceptedCopies", Integer.toString(mAcceptNumber));
-            mSubAcceptOrder.setImageResource(R.drawable.ic_remove);
-            mSubAcceptOrder.setClickable(true);
+            mSubAcceptOrder.setImageResource(R.drawable.ic_remove_gray);
+            mSubAcceptOrder.setEnabled(true);
         });
         //Setting Decreasing accept order button
         mSubAcceptOrder.setOnClickListener(v -> {
             mAcceptNumber = mAcceptNumber - 1;
             mAcceptOrder.setText(Integer.toString(mAcceptNumber));
-            pm.saveMyData("acceptedCopies", Integer.toString(mAcceptNumber));
             if (mAcceptNumber > 1) {
-                mSubAcceptOrder.setClickable(true);
-                mSubAcceptOrder.setImageResource(R.drawable.ic_remove);
-            } else if (mAcceptNumber < 2) {
-                mSubAcceptOrder.setClickable(false);
+                mSubAcceptOrder.setEnabled(true);
+                mSubAcceptOrder.setImageResource(R.drawable.ic_remove_gray);
+            } else {
+                mSubAcceptOrder.setEnabled(false);
                 mSubAcceptOrder.setImageResource(R.drawable.ic_remove_gray);
             }
         });
@@ -491,21 +524,20 @@ public class Settings extends AppCompatActivity {
         mAddRejectOrder.setOnClickListener(v -> {
             mRejectNumber = mRejectNumber + 1;
             mRejectOrder.setText(Integer.toString(mRejectNumber));
-            pm.saveMyData("rejectedCopies", Integer.toString(mRejectNumber));
-            mSubRejectOrder.setImageResource(R.drawable.ic_remove);
-            mSubRejectOrder.setClickable(true);
+            mSubRejectOrder.setImageResource(R.drawable.ic_remove_gray);
+            mSubRejectOrder.setEnabled(true);
         });
 
         //Setting Decreasing reject order button
         mSubRejectOrder.setOnClickListener(v -> {
             mRejectNumber = mRejectNumber - 1;
-            pm.saveMyData("rejectedCopies", Integer.toString(mRejectNumber));
-            pm.getMyDataString("rejectedCopies");
+            mRejectOrder.setText(Integer.toString(mRejectNumber));
+
             if (mRejectNumber > 1) {
-                mSubRejectOrder.setClickable(true);
-                mSubRejectOrder.setImageResource(R.drawable.ic_remove);
-            } else if (mRejectNumber < 2) {
-                mSubRejectOrder.setClickable(false);
+                mSubRejectOrder.setEnabled(true);
+                mSubRejectOrder.setImageResource(R.drawable.ic_remove_gray);
+            } else if (mRejectNumber < 1) {
+                mSubRejectOrder.setEnabled(false);
                 mSubRejectOrder.setImageResource(R.drawable.ic_remove_gray);
             }
         });
@@ -593,7 +625,7 @@ public class Settings extends AppCompatActivity {
                     startActivity(intent);
                     return false;
                 }
-                case R.id.over_flow_log_out:{
+                case R.id.over_flow_log_out: {
                     Intent intent = new Intent(Settings.this, MainActivity.class);
                     pm.clearSharedPref();
                     pm.saveMyDataBool("login", false);
@@ -615,8 +647,17 @@ public class Settings extends AppCompatActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        pm.saveMyData("acceptedCopies", Integer.toString(mAcceptNumber));
+        pm.saveMyData("rejectedCopies", Integer.toString(mRejectNumber));
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
+        pm.saveMyData("acceptedCopies", Integer.toString(mAcceptNumber));
+        pm.saveMyData("rejectedCopies", Integer.toString(mRejectNumber));
         Intent intent = new Intent(Settings.this, BasicActvity.class);
         startActivity(intent);
     }//onBackPressed

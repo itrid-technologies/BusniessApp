@@ -34,6 +34,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -133,7 +135,7 @@ public class FragmentDashboard extends Fragment {
     Calendar calendar = Calendar.getInstance();
 
     //countdown time for order to stay alive
-    private int mCountDown = 50000;
+    private int mCountDown = 10000;
     private double mRemainTime = 50000.00;
     private String mSavingTime = "00:00:00";
 
@@ -212,7 +214,6 @@ public class FragmentDashboard extends Fragment {
 
         ///Checking AutoAccept
         autoAcceptApi();
-
 
         //Broadcasted order id Recieving from notification
 
@@ -311,6 +312,10 @@ public class FragmentDashboard extends Fragment {
             final Handler handler = new Handler();
             handler.postDelayed(() -> mSwipeDash.setRefreshing(false), 2000);
             Log.e(TAG, "onViewCreated: refreshed superb");
+
+            noOrders.setVisibility(View.GONE);
+            imgNoOrder.setVisibility(View.GONE);
+
             ////Setting no orders
             openCloseFun();
 
@@ -673,39 +678,40 @@ public class FragmentDashboard extends Fragment {
 
                 Log.e(TAG, "onResponse: api success fromj notification " + response.message());
 
-
                 try {
                     Log.e(TAG, "onResponse: size of list" + mNewPageOrderItemList.size());
-                    mNewPageOrderItemList.add(new OrdersItem(
-                            response.body().getData().getOrder().get(0).getPickuptime(),
-//                            String.valueOf(mRemainTime),
-//                            String.valueOf(mSavingTime),
-                            "200",
-                            response.body().getData().getOrder().get(0).getDateAdded(),
-                            response.body().getData().getOrder().get(0).getMinPreTime(),
-                            response.body().getData().getOrder().get(0).getMaxPreTime(),
-                            response.body().getData().getOrder().get(0).getCourierNotes(),
-                            response.body().getData().getOrder().get(0).getBusinessId(),
-                            response.body().getData().getOrder().get(0).getId(),
-                            "Active",
-                            response.body().getData().getOrder().get(0).getOrderType(),
-                            response.body().getData().getOrder().get(0).getFirstName(),
-                            response.body().getData().getOrder().get(0).getBusinessRevShare(),
-                            response.body().getData().getOrder().get(0).getItemCount(),
-                            response.body().getData().getOrder().get(0).getBusinessName(),
-                            response.body().getData().getOrder().get(0).getBusinessNotes(),
-                            response.body().getData().getOrder().get(0).getPaymentStatus(),
-                            response.body().getData().getOrder().get(0).getLastName(),
-                            response.body().getData().getOrder().get(0).getAction(),
-                            response.body().getData().getOrder().get(0).getDateAdded(),
-                            response.body().getData().getOrder().get(0).getPaymentType(),
-                            response.body().getData().getOrder().get(0).getDelay(),
-                            response.body().getData().getOrder().get(0).getDateModified(),
-                            response.body().getData().getOrder().get(0).getPhoneNumber(),
-                            response.body().getData().getOrder().get(0).getCustomerId(),
-                            response.body().getData().getOrder().get(0).getBusinessId(),
-                            response.body().getData().getOrder().get(0).getStatus()
-                    ));
+                    if (response.body() != null && response.isSuccessful()) {
+                        mNewPageOrderItemList.add(new OrdersItem(
+                                response.body().getData().getOrder().get(0).getPickuptime(),
+                                //                            String.valueOf(mRemainTime),
+                                //                            String.valueOf(mSavingTime),
+                                "200",
+                                response.body().getData().getOrder().get(0).getDateAdded(),
+                                response.body().getData().getOrder().get(0).getMinPreTime(),
+                                response.body().getData().getOrder().get(0).getMaxPreTime(),
+                                response.body().getData().getOrder().get(0).getCourierNotes(),
+                                response.body().getData().getOrder().get(0).getBusinessId(),
+                                response.body().getData().getOrder().get(0).getId(),
+                                "Active",
+                                response.body().getData().getOrder().get(0).getOrderType(),
+                                response.body().getData().getOrder().get(0).getFirstName(),
+                                response.body().getData().getOrder().get(0).getBusinessRevShare(),
+                                response.body().getData().getOrder().get(0).getItemCount(),
+                                response.body().getData().getOrder().get(0).getBusinessName(),
+                                response.body().getData().getOrder().get(0).getBusinessNotes(),
+                                response.body().getData().getOrder().get(0).getPaymentStatus(),
+                                response.body().getData().getOrder().get(0).getLastName(),
+                                response.body().getData().getOrder().get(0).getAction(),
+                                response.body().getData().getOrder().get(0).getDateAdded(),
+                                response.body().getData().getOrder().get(0).getPaymentType(),
+                                response.body().getData().getOrder().get(0).getDelay(),
+                                response.body().getData().getOrder().get(0).getDateModified(),
+                                response.body().getData().getOrder().get(0).getPhoneNumber(),
+                                response.body().getData().getOrder().get(0).getCustomerId(),
+                                response.body().getData().getOrder().get(0).getBusinessId(),
+                                response.body().getData().getOrder().get(0).getStatus()
+                        ));
+                    }
 
                     setUpRecView(mNewPageOrderItemList);
 
@@ -846,11 +852,19 @@ public class FragmentDashboard extends Fragment {
     //Recycler View
     private void setUpRecView(List<OrdersItem> paginationOrders) {
 
+        FragmentManager manager = (this).getFragmentManager();
+        FragmentTransaction trans = manager.beginTransaction();
+
         mOrderRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext().getApplicationContext()));
         adapter = new RecyclerViewAdapterDashboard(requireContext().getApplicationContext(), paginationOrders);
         mOrderRecyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener((position, type) -> {
             if (type.equals("item_click")) {
+
+                //removing the fragment
+                trans.remove(this).commit();
+                Log.e(TAG, "setUpRecView: removed");
+
 
                 Intent intent = new Intent(requireContext(), NewOrder.class);
                 intent.putExtra("orderId", String.valueOf(paginationOrders.get(position).getId()));
@@ -861,12 +875,12 @@ public class FragmentDashboard extends Fragment {
                 //Vibration and Sound Stops
                 if (mFlagCounter == 1) {
                     Log.e(TAG, "setUpRecView: " + mRemainTime);
+                    Constants.REMAINTIME = String.valueOf(mRemainTime);
                     intent.putExtra("remainingTime", mRemainTime);
                     Log.e(TAG, "setListener: canelling here");
                     cTimer.cancel();
                     cTimer.onFinish();
                 }
-
                 startActivity(intent);
             }
         });
@@ -995,7 +1009,7 @@ public class FragmentDashboard extends Fragment {
             @Override
             public void onResponse(@NotNull Call<UpdateSettingResponse> call1, @NotNull Response<UpdateSettingResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    AppManager.SnackBar((AppCompatActivity) mActivity , response.body().getMessage());
+                    AppManager.SnackBar((AppCompatActivity) mActivity, response.body().getMessage());
                     if (mBusyMode.isChecked()) {
 
                         anim_in.setAnimationListener(new Animation.AnimationListener() {
@@ -1091,9 +1105,8 @@ public class FragmentDashboard extends Fragment {
                     }
                     AppManager.toast(response.message());
                     Log.e(TAG, "onResponse: " + response.message());
-                }
-                else {
-                    AppManager.SnackBar((AppCompatActivity) mActivity , response.message());
+                } else {
+                    AppManager.SnackBar((AppCompatActivity) mActivity, response.message());
                     mBusyMode.setChecked(false);
 
                     anim_out.setAnimationListener(new Animation.AnimationListener() {
@@ -1190,12 +1203,12 @@ public class FragmentDashboard extends Fragment {
                         Log.e(TAG, "onTick: Remaining Time " + mRemainTime);
                         //Virbration Starts
                         // Checking version
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            mVibration.vibrate(VibrationEffect.createOneShot(millisUntilFinished, VibrationEffect.DEFAULT_AMPLITUDE));
-                        } else {
-                            //deprecated in API 26 (Before Oreo)
-                            mVibration.vibrate(millisUntilFinished);
-                        }
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                            mVibration.vibrate(VibrationEffect.createOneShot(millisUntilFinished, VibrationEffect.DEFAULT_AMPLITUDE));
+//                        } else {
+//                            //deprecated in API 26 (Before Oreo)
+//                            mVibration.vibrate(millisUntilFinished);
+//                        }
                         //Starting tune
                         //Sound Starts
                         mMediaPlayer.start();
@@ -1204,9 +1217,6 @@ public class FragmentDashboard extends Fragment {
 
                     public void onFinish() {
                         mFlagCounter = 0;
-                        Log.e(TAG, "onFinish: Done");
-//                    mListener.onItemClick(position,"time_out");
-                        Log.e(TAG, "timer: onfinish i " + i);
                         //Vibration and Sound Stops
                         mVibration.cancel();
                         mMediaPlayer.stop();
@@ -1240,7 +1250,12 @@ public class FragmentDashboard extends Fragment {
                     if (response.body().isSuccess()) {
                         mNewPageOrderItemList.remove(o);
                         adapter.notifyDataSetChanged();
-
+                        if (mNewPageOrderItemList.isEmpty())
+                        {
+                            noOrders.setVisibility(View.VISIBLE);
+                            imgNoOrder.setVisibility(View.VISIBLE);
+                            openCloseFun();
+                        }
                         try {
                             //Update Database
                             ///Inserting new order basic information data in database
@@ -1298,9 +1313,11 @@ public class FragmentDashboard extends Fragment {
                                             Log.e(TAG, "onResponse: no info returning from live data");
                                         }
                                     });
-                        } catch (Exception e) {
+                        }
+                        catch (Exception e) {
                             Log.e(TAG, "onResponse: " + e.getMessage());
                         }
+
                     }
                 } else {
                     startActivity(new Intent(requireContext(), MainActivity.class));

@@ -18,7 +18,7 @@ import com.itridtechnologies.resturantapp.models.newOrder.OrderTotalsItem;
 @Database(entities = {OrdersItem.class, OrderAddressItem.class, OrderItemsItem.class,
         OrderTotalsItem.class},
 //        OrderTotalsItem.class, DataItem.class, OrderAddonsItem.class, AddonItemsItem.class},
-        version = 4,
+        version = 5,
         exportSchema = false
 )
 public abstract class RoomDB extends RoomDatabase {

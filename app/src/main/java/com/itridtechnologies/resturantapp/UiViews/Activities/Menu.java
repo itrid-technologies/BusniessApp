@@ -388,7 +388,7 @@ public class Menu extends AppCompatActivity {
             if (id != null)
             {
                 //Changing the
-//                Call<MenuAddOnResponse> call = RetrofitNetMan.getRestApiService().getAddons(token, menuItemList.get(position).getmAddOnAvailable());
+                //Call<MenuAddOnResponse> call = RetrofitNetMan.getRestApiService().getAddons(token, menuItemList.get(position).getmAddOnAvailable());
                 Call<MenuAddOnResponse> call = RetrofitNetMan.getRestApiService().getAddons(token, menuItemList.get(position).getId());
                 call.enqueue(new Callback<MenuAddOnResponse>() {
                     @Override
