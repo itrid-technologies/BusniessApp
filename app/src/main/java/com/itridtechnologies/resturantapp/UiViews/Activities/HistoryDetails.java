@@ -79,6 +79,11 @@ public class HistoryDetails extends AppCompatActivity {
 
     List<TotalModel> list = new ArrayList<>();
 
+    //Views For Reviews
+    private View mTopView;
+    private View mMiddleView;
+    private View mBottomView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,31 +118,32 @@ public class HistoryDetails extends AppCompatActivity {
     }
 
     private void checkFeedbackGiven(String orderId) {
-        Call<FeedbackReviewGivenResponse> call = RetrofitNetMan.getRestApiService().getFeedbackReviewGiven(token,orderId);
+        Call<FeedbackReviewGivenResponse> call = RetrofitNetMan.getRestApiService().getFeedbackReviewGiven(token, orderId);
         call.enqueue(new Callback<FeedbackReviewGivenResponse>() {
             @Override
             public void onResponse(@NotNull Call<FeedbackReviewGivenResponse> call, @NotNull Response<FeedbackReviewGivenResponse> response) {
-                if (response.isSuccessful() && response.body() != null)
-                {
-                    if (!response.body().getData().isCustomerReview())
-                    {
+                if (response.isSuccessful() && response.body() != null) {
+                    if (!response.body().getData().isCustomerReview()) {
+                        mTopView.setVisibility(View.VISIBLE);
+                        mMiddleView.setVisibility(View.VISIBLE);
+                        mBottomView.setVisibility(View.VISIBLE);
                         mCustomerReview.setVisibility(View.VISIBLE);
                     }
 
-                    if (!response.body().getData().isPartnerReview())
-                    {
+                    if (!response.body().getData().isPartnerReview()) {
+                        mTopView.setVisibility(View.VISIBLE);
+                        mMiddleView.setVisibility(View.VISIBLE);
+                        mBottomView.setVisibility(View.VISIBLE);
                         mCourierReview.setVisibility(View.VISIBLE);
                     }
-                }
-                else
-                {
-                    AppManager.SnackBar(HistoryDetails.this,response.message());
+                } else {
+                    AppManager.SnackBar(HistoryDetails.this, response.message());
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<FeedbackReviewGivenResponse> call, @NotNull Throwable t) {
-                AppManager.SnackBar(HistoryDetails.this,t.getMessage());
+                AppManager.SnackBar(HistoryDetails.this, t.getMessage());
             }
         });
     }//checkFeedbackGiven
@@ -170,6 +176,12 @@ public class HistoryDetails extends AppCompatActivity {
         mRVTotals = findViewById(R.id.rv_totals_history);
         mCourierReview = findViewById(R.id.tv_review_for_courier);
         mCustomerReview = findViewById(R.id.tv_review_for_customer);
+
+        //Views For Reviews
+        mTopView = findViewById(R.id.viewTopReview);
+        mMiddleView = findViewById(R.id.viewMiddleReview);
+        mBottomView = findViewById(R.id.viewBottomReview);
+
     }
 
     @SuppressLint("SetTextI18n")

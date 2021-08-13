@@ -93,6 +93,7 @@ update the customer.</string>
     <string name="your_business_is_busy">Your Business is Busy</string>
     <string name="logout">Logout</string>
     <string name="leave_for_a_customer_review">Leave for a customer Review</string>
+    <string name="leave_for_a_courier_review">Leave for a courier Review</string>
     <string name="orders">Orders</string>
     <string name="preparing">Preparing</string>
     <string name="ready">Ready</string>
