@@ -23,6 +23,7 @@ import com.itridtechnologies.resturantapp.Adapters.AdapterHistorySubItems;
 import com.itridtechnologies.resturantapp.Adapters.AdapterTotal;
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.model.TotalModel;
+import com.itridtechnologies.resturantapp.models.FeedbackReviewGiven.FeedbackReviewGivenResponse;
 import com.itridtechnologies.resturantapp.models.HistoryOrderDetails.AddonItemsItem;
 import com.itridtechnologies.resturantapp.models.HistoryOrderDetails.DataItem;
 import com.itridtechnologies.resturantapp.models.HistoryOrderDetails.HistOrderDetailResponse;
@@ -106,7 +107,40 @@ public class HistoryDetails extends AppCompatActivity {
         //setting listeners on Review Fields
         reviewListeners();
 
+        //checking if feedback is given or not
+        checkFeedbackGiven(or);
+
     }
+
+    private void checkFeedbackGiven(String orderId) {
+        Call<FeedbackReviewGivenResponse> call = RetrofitNetMan.getRestApiService().getFeedbackReviewGiven(token,orderId);
+        call.enqueue(new Callback<FeedbackReviewGivenResponse>() {
+            @Override
+            public void onResponse(@NotNull Call<FeedbackReviewGivenResponse> call, @NotNull Response<FeedbackReviewGivenResponse> response) {
+                if (response.isSuccessful() && response.body() != null)
+                {
+                    if (!response.body().getData().isCustomerReview())
+                    {
+                        mCustomerReview.setVisibility(View.VISIBLE);
+                    }
+
+                    if (!response.body().getData().isPartnerReview())
+                    {
+                        mCourierReview.setVisibility(View.VISIBLE);
+                    }
+                }
+                else
+                {
+                    AppManager.SnackBar(HistoryDetails.this,response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull Call<FeedbackReviewGivenResponse> call, @NotNull Throwable t) {
+                AppManager.SnackBar(HistoryDetails.this,t.getMessage());
+            }
+        });
+    }//checkFeedbackGiven
 
     private void reviewListeners() {
         mCustomerReview.setOnClickListener(v -> {
@@ -138,7 +172,6 @@ public class HistoryDetails extends AppCompatActivity {
         mCustomerReview = findViewById(R.id.tv_review_for_customer);
     }
 
-
     @SuppressLint("SetTextI18n")
     public void totalFun(String totalAmount) {
         mRVTotals.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -148,10 +181,8 @@ public class HistoryDetails extends AppCompatActivity {
         mTotal.setText(Constants.CURRENCY_SIGN + " " + totalAmount);
     }//end total function
 
-
     //Getting Details from Server
     private void getDetails(String position) {
-
         int pos = Integer.parseInt(position);
         Call<NewHistoryWithTotals> call = RetrofitNetMan.getRestApiService().getFullHistory(token);
         call.enqueue(new Callback<NewHistoryWithTotals>() {
@@ -165,7 +196,7 @@ public class HistoryDetails extends AppCompatActivity {
                         mTotalValue = mTotalValue + Double.parseDouble(response.body().getData().getResults().get(pos).getOrderTotal().get(i).getValue());
                         list.add(new TotalModel(
                                 response.body().getData().getResults().get(pos).getOrderTotal().get(i).getLabel(),
-                                response.body().getData().getResults().get(pos).getOrderTotal().get(i).getValue()
+                                format.format(response.body().getData().getResults().get(pos).getOrderTotal().get(i).getValue())
                         ));
                     }
 
@@ -255,7 +286,6 @@ public class HistoryDetails extends AppCompatActivity {
             mOrderStatus.setText(status);
         }
     }
-
 
     //Setting Toolbar
     public void toolbarFun() {

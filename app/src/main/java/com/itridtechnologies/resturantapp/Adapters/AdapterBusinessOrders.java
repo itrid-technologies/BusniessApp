@@ -16,6 +16,7 @@ import com.itridtechnologies.resturantapp.models.OrderSubItems.OrderAddonsItem;
 import com.itridtechnologies.resturantapp.utils.Constants;
 
 
+import java.text.DecimalFormat;
 import java.util.List;
 public class AdapterBusinessOrders extends RecyclerView.Adapter<AdapterBusinessOrders.detailHolder> {
 
@@ -43,6 +44,8 @@ public class AdapterBusinessOrders extends RecyclerView.Adapter<AdapterBusinessO
     public void onBindViewHolder(@NonNull detailHolder holder, int position) {
         DataItem orderitem = mOrderItemListt.get(position);
 
+        DecimalFormat format = new DecimalFormat("0.00");
+
         mOrderAddons = mOrderItemListt.get(position).getOrderAddons();
         //if we have order sub-items
         //then we populate inner rv sub-items
@@ -51,7 +54,7 @@ public class AdapterBusinessOrders extends RecyclerView.Adapter<AdapterBusinessO
         holder.rvSubItems.setAdapter(adapterSubItems);
 
         holder.itemName.setText(orderitem.getItemName());
-        holder.itemPrice.setText(Constants.CURRENCY_SIGN + " " + orderitem.getItemPrice());
+        holder.itemPrice.setText(Constants.CURRENCY_SIGN + " " + format.format(Double.parseDouble(orderitem.getItemPrice())));
         holder.itemQty.setText(String.valueOf(orderitem.getItemQty()));
 
     }

@@ -17,6 +17,7 @@ import com.itridtechnologies.resturantapp.model.ModiferModel;
 import com.itridtechnologies.resturantapp.models.HistoryOrderDetails.AddonItemsItem;
 import com.itridtechnologies.resturantapp.utils.Constants;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class AdapterAddonNames extends RecyclerView.Adapter<AdapterAddonNames.detailHolderClass>{
@@ -41,8 +42,9 @@ public class AdapterAddonNames extends RecyclerView.Adapter<AdapterAddonNames.de
     @Override
     public void onBindViewHolder(@NonNull detailHolderClass holder, int pos) {
         AddonItemsItem mAddonItems = addOnModelList.get(pos);
+        DecimalFormat format = new DecimalFormat("0.00");
         holder.mAddonName.setText(mAddonItems.getAddonItemName());
-        holder.mAddonPrice.setText(Constants.CURRENCY_SIGN + " " + mAddonItems.getAddonItemPrice());
+        holder.mAddonPrice.setText(Constants.CURRENCY_SIGN + " " + format.format(Double.parseDouble(mAddonItems.getAddonItemPrice())));
     }
 
     @Override

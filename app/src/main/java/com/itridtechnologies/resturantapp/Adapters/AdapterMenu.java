@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -23,8 +24,11 @@ import com.bumptech.glide.request.target.Target;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 import com.itridtechnologies.resturantapp.R;
+import com.itridtechnologies.resturantapp.UiViews.Activities.Menu;
 import com.itridtechnologies.resturantapp.model.AddonModel;
 import com.itridtechnologies.resturantapp.model.MenuModel;
+import com.itridtechnologies.resturantapp.model.ModiferModel;
+import com.itridtechnologies.resturantapp.models.MenuAddOns.MenuAddOnResponse;
 import com.itridtechnologies.resturantapp.models.MenuItemAvailable.MenuItemAvailableResponse;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
@@ -48,11 +52,10 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
     private final List<MenuModel> menuItems;
     private final Context mCtx;
     private final boolean haveSubItems = false;
-    private boolean flag = false;
     private PreferencesManager pm;
-    private int pos;
     private final String token = AppManager.getBusinessDetails().getData().getToken();
     private ItemClickListenerMenu mListenerMenu;
+    private boolean isVisibleFlag = false;
 
     public AdapterMenu(List<MenuModel> menuItems, Context mCtx) {
         this.menuItems = menuItems;
@@ -76,6 +79,97 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
 
         MenuModel mMenuItem = menuItems.get(position);
         holder.mItemName.setText(mMenuItem.getmItemName());
+        List<AddonModel> mOrderAddon = new ArrayList<>();
+
+
+
+
+
+        if (mMenuItem.getId() != null)
+        {
+            //Setting on click listener
+            holder.itemView.setOnClickListener(v->{
+                mOrderAddon.clear();
+
+
+                if (!mMenuItem.getmAddOnAvailable().equals("null")) {
+                    //handle rv visibility
+                    if (!isVisibleFlag) {
+                        //rv visible
+                        //Changing the
+                        //Call<MenuAddOnResponse> call = RetrofitNetMan.getRestApiService().getAddons(token, menuItemList.get(position).getmAddOnAvailable());
+                        Call<MenuAddOnResponse> call = RetrofitNetMan.getRestApiService().getAddons(token, mMenuItem.getId());
+                        call.enqueue(new Callback<MenuAddOnResponse>() {
+                            @Override
+                            public void onResponse(@NotNull Call<MenuAddOnResponse> call, @NotNull Response<MenuAddOnResponse> response) {
+                                Log.e(TAG, "onResponse called for addons ");
+                                if (response.isSuccessful() && response.body() != null) {
+                                    for (int i = 0; i < response.body().getData().size(); i++) {
+                                        Log.e(TAG, "onResponse: addon respomse" + response.body().getData().size() );
+                                        mOrderAddon.add(new AddonModel(
+                                                response.body().getData().get(i).getName(),
+                                                response.body().getData().get(i).getAvailability(),
+                                                response.body().getData().get(i).getAddon()
+                                        ));
+                                        pm.saveMyData("itemId", String.valueOf(response.body().getData().get(i).getId()));
+                                    }//for
+
+                                    //setting adapter
+                                    holder.mParent1RV.setLayoutManager(new LinearLayoutManager(mCtx));
+                                    AdapterMenuContainer adapterMenuContainer = new AdapterMenuContainer(mOrderAddon, mCtx);
+                                    holder.mParent1RV.setHasFixedSize(true);
+                                    holder.mParent1RV.setAdapter(adapterMenuContainer);
+
+                                }
+                                else if (!response.isSuccessful()){
+                                    Log.e(TAG, "onResponse: not success " + response.message() );
+                                    Snackbar.make(holder.view, "No Data Found",2000).show();
+                                }
+//                        if (hasSubItems) {
+//                            Log.e(TAG, "onResponse: i have data now ");
+//                            ////if we have data then we will show it
+//                            AdapterMenuContainer adapMenuContainer = new AdapterMenuContainer(mMenuAddonsList, getApplicationContext());
+//                            mParent1RV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+//                            mParent1RV.setHasFixedSize(true);
+//                            mParent1RV.setAdapter(adapMenuContainer);
+//
+//                            adapMenuContainer.setOnItemClickListener(((hasSubItems1, mRVAddon) -> {
+////                                AdapterModifer adapterModifer = new AdapterModifer(mModifiersList, getApplicationContext());
+////                                mRVAddon.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+////                                mRVAddon.setHasFixedSize(true);
+////                                mRVAddon.setAdapter(adapterModifer);
+//                            }));
+//                        }
+                            }
+
+                            @Override
+                            public void onFailure(@NotNull Call<MenuAddOnResponse> call, @NotNull Throwable t) {
+                                Log.e("TAG", "onFailure: i m failed" + t.getMessage());
+                            }
+                        });
+
+                        holder.mAddons.setVisibility(View.VISIBLE);
+                        isVisibleFlag = true;
+                        holder.mShowDetails.setVisibility(View.INVISIBLE);
+                        holder.view.setVisibility(View.VISIBLE);
+                        holder.mHideDetails.setVisibility(View.VISIBLE);
+                    } else {
+                        //rv gone
+                        holder.mAddons.setVisibility(View.GONE);
+                        holder.view.setVisibility(View.GONE);
+                        holder.mShowDetails.setVisibility(View.VISIBLE);
+                        holder.mHideDetails.setVisibility(View.GONE);
+                        isVisibleFlag = false;
+                    }
+                } else {
+                    Log.e(TAG, "detailHolder: i m f***android:stateListAnimator=\"@null\"ed ");
+                }
+
+            });
+        }
+        else {
+            Snackbar.make(holder.view,"No Data Found", 2000).show();
+        }
 
         try {
 
@@ -93,7 +187,8 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
             } else {
                 holder.mItemDescription.setVisibility(View.GONE);
             }
-        } catch (Exception ignored) {
+        }
+        catch (Exception ignored) {
             Log.e(TAG, "onBindViewHolder: Menu add on ");
         }
 
@@ -103,7 +198,8 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
             holder.itemView.setEnabled(false);
             holder.mSwitchItem.setChecked(false);
             holder.mShowDetails.setVisibility(View.GONE);
-        } else {
+        }
+        else {
             holder.itemView.setEnabled(true);
             holder.mSwitchItem.setChecked(true);
 //            holder.mShowDetails.setVisibility(View.GONE);
@@ -130,7 +226,6 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
                 return false;
             }
         }).into(holder.mPhoto);
-
 
 //        Hitting PUT API
 //        Setting Switch
@@ -180,6 +275,10 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
         void getMenuItems(boolean hasSubItems, RecyclerView mParent1RV, int position);
     }
 
+    private void adapter(){
+
+    }//adapter
+
     public static class detailHolder extends RecyclerView.ViewHolder {
         private final TextView mItemName;
         private final TextView mItemDescription;
@@ -210,34 +309,34 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
             view = itemView.findViewById(R.id.view);
 
             //listener
-            itemView.setOnClickListener(v -> {
-                MenuModel mMenuItem = menuItems.get(getAdapterPosition());
-                Log.e(TAG, "detailHolder: menu id " + mMenuItem.getmAddOnAvailable());
-                if (!mMenuItem.getmAddOnAvailable().equals("null")) {
-                    //handle rv visibility
-                    if (!isVisible) {
-                        //rv visible
-                        mAddons.setVisibility(View.VISIBLE);
-                        isVisible = true;
-                        mShowDetails.setVisibility(View.INVISIBLE);
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            listenerMenu.getMenuItems(true, mParent1RV, position);
-                        }
-                        view.setVisibility(View.VISIBLE);
-                        mHideDetails.setVisibility(View.VISIBLE);
-                    } else {
-                        //rv gone
-                        mAddons.setVisibility(View.GONE);
-                        view.setVisibility(View.GONE);
-                        mShowDetails.setVisibility(View.VISIBLE);
-                        mHideDetails.setVisibility(View.GONE);
-                        isVisible = false;
-                    }
-                } else {
-                    Log.e(TAG, "detailHolder: i m f***android:stateListAnimator=\"@null\"ed ");
-                }
-            });
+//            itemView.setOnClickListener(v -> {
+//                MenuModel mMenuItem = menuItems.get(getAdapterPosition());
+//                Log.e(TAG, "detailHolder: menu id " + mMenuItem.getmAddOnAvailable());
+//                if (!mMenuItem.getmAddOnAvailable().equals("null")) {
+//                    //handle rv visibility
+//                    if (!isVisible) {
+//                        //rv visible
+//                        mAddons.setVisibility(View.VISIBLE);
+//                        isVisible = true;
+//                        mShowDetails.setVisibility(View.INVISIBLE);
+//                        int position = getAdapterPosition();
+//                        if (position != RecyclerView.NO_POSITION) {
+//                            listenerMenu.getMenuItems(true, mParent1RV, position);
+//                        }
+//                        view.setVisibility(View.VISIBLE);
+//                        mHideDetails.setVisibility(View.VISIBLE);
+//                    } else {
+//                        //rv gone
+//                        mAddons.setVisibility(View.GONE);
+//                        view.setVisibility(View.GONE);
+//                        mShowDetails.setVisibility(View.VISIBLE);
+//                        mHideDetails.setVisibility(View.GONE);
+//                        isVisible = false;
+//                    }
+//                } else {
+//                    Log.e(TAG, "detailHolder: i m f***android:stateListAnimator=\"@null\"ed ");
+//                }
+//            });
         }
     }
 }

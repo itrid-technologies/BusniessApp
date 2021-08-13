@@ -116,5 +116,7 @@ dependencies {
     //Pulse Animation
     implementation "com.gauravbhola.ripplepulsebackground:library:1.0.0"
 
-//
+    //Zandesk
+    implementation "zendesk.messaging:messaging-android:1.0.2"
+
 }

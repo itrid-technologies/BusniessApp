@@ -16,6 +16,7 @@ import com.itridtechnologies.resturantapp.utils.Constants;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,8 +42,10 @@ public class AdapterTotal extends RecyclerView.Adapter<AdapterTotal.detailHolder
     @Override
     public void onBindViewHolder(@NonNull @NotNull detailHolderr holder, int position) {
         TotalModel totalModel = totalModelList.get(position);
+        DecimalFormat format = new DecimalFormat("0.00");
+
         holder.mSubTotalName.setText(totalModel.getmTotalName());
-        holder.mSubTotalAmount.setText(Constants.CURRENCY_SIGN + " " + totalModel.getmTotalAmount());
+        holder.mSubTotalAmount.setText(Constants.CURRENCY_SIGN + " " + format.format(Double.parseDouble(totalModel.getmTotalAmount())));
 
     }
 

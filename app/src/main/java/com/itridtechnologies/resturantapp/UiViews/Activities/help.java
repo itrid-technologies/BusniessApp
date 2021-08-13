@@ -10,6 +10,9 @@ import android.os.Bundle;
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 
+import zendesk.logger.Logger;
+import zendesk.messaging.android.Messaging;
+
 public class help extends AppCompatActivity {
 
     //setting name of toolbar
@@ -21,8 +24,10 @@ public class help extends AppCompatActivity {
         mToolbar = findViewById(R.id.action_bar_help);
         AppManager.hideStatusBar(help.this);
         toolbar();
+        Messaging.instance().showMessaging(help.this);
+        Logger.setLoggable(true);
+        Logger.isLoggable();
     }
-
 
     ////Toolbar
     public void toolbar()

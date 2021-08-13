@@ -147,8 +147,8 @@ public class FeedbackActivity extends AppCompatActivity {
             binding.thumbsUp.setOnClickListener(v -> {
                 binding.thumbsUp.setImageResource(R.drawable.ic_like_tint);
                 binding.thumbsDown.setImageResource(R.drawable.ic_dislike_untint);
-                binding.thumbsDown.setBackgroundResource(R.drawable.selected_thumb_bg);
-                binding.thumbsUp.setBackgroundResource(R.drawable.selected_thumb_down_bg);
+                binding.thumbsDown.setBackgroundResource(R.drawable.unselected_thumb_bg);
+                binding.thumbsUp.setBackgroundResource(R.drawable.selected_thumb_bg);
                 mRating = 5;
                 Log.e(TAG, "listeners: mRating " + mRating);
 
@@ -159,13 +159,12 @@ public class FeedbackActivity extends AppCompatActivity {
             binding.thumbsDown.setOnClickListener(v -> {
                 binding.thumbsUp.setImageResource(R.drawable.ic_like_untint);
                 binding.thumbsDown.setImageResource(R.drawable.ic_dislike_tint);
-                binding.thumbsDown.setBackgroundResource(R.drawable.unselected_thumb_bg);
+                binding.thumbsDown.setBackgroundResource(R.drawable.selected_thumb_down_bg);
                 binding.thumbsUp.setBackgroundResource(R.drawable.unselected_thumb_bg);
                 mRating = 1;
                 Log.e(TAG, "listeners: mRating " + mRating);
             });
         }
-
     }//listeners()
 
     private void postFeedback() {

@@ -16,6 +16,7 @@ import com.itridtechnologies.resturantapp.utils.Constants;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class AdapterOrderAddOns extends RecyclerView.Adapter<AdapterOrderAddOns.detailHolderClass>{
@@ -41,9 +42,12 @@ public class AdapterOrderAddOns extends RecyclerView.Adapter<AdapterOrderAddOns.
     @Override
     public void onBindViewHolder(@NonNull @NotNull detailHolderClass holder, int position) {
         AddonItemsItem mAddonItems = addOnName.get(position);
+        DecimalFormat format = new DecimalFormat("0.00");
+
         holder.mAddonName.setText(mAddonItems.getAddonItemName());
-        holder.mAddonPrice.setText("(" + Constants.CURRENCY_SIGN + "." + mAddonItems.getAddonItemPrice() + ")");
-    }
+        holder.mAddonPrice.setText("(" + Constants.CURRENCY_SIGN + "." + format.format(Double.parseDouble(mAddonItems.getAddonItemPrice())) + ")");
+
+    }//onBindViewHolder
 
     @Override
     public int getItemCount() {
@@ -58,5 +62,5 @@ public class AdapterOrderAddOns extends RecyclerView.Adapter<AdapterOrderAddOns.
             mAddonName = itemView.findViewById(R.id.tv_sub_item_name);
             mAddonPrice = itemView.findViewById(R.id.tv_sub_item_price);
         }
-    }
+    }//detailHolderClass
 }

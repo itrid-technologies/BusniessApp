@@ -183,7 +183,6 @@ public class NewOrder extends AppCompatActivity {
         }.start();
     }//timer
 
-
     public void clickListeners() {
         //Intent when order is Accepted
         mBtnAccept.setOnClickListener(v -> {
@@ -457,7 +456,6 @@ public class NewOrder extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         changingView();
         mOrderItem = getOrderFromDB(or);
         OrderTotalsItem mOrderTotalItem = getOrderTotalsFromDB(Integer.parseInt(or));

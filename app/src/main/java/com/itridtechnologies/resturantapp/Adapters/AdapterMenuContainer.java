@@ -16,12 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.JsonObject;
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.model.AddonModel;
+import com.itridtechnologies.resturantapp.model.ModiferModel;
 import com.itridtechnologies.resturantapp.models.MenuItemAvailable.MenuItemAvailableResponse;
+import com.itridtechnologies.resturantapp.models.OrderSubItems.AddonItemsItem;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -56,10 +59,25 @@ public class AdapterMenuContainer extends RecyclerView.Adapter<AdapterMenuContai
 
     @Override
     public void onBindViewHolder(@NonNull detailHolderr holder, int position) {
+
         AddonModel mAddonItem = addonItems.get(position);
         holder.mAddOnTitle.setText(mAddonItem.getmAddonName());
 
         Log.e("TAG", "onBindViewHolder: mAddonItem.getAddOnParent().get(0).getAddonId()" + mAddonItem.getmAvailibility());
+
+        List<ModiferModel> mOrderModifier = new ArrayList<>();
+
+        for (int i=0;i<mAddonItem.getAddOnParent().size();i++)
+        {
+            mOrderModifier.add(new ModiferModel(
+                    mAddonItem.getAddOnParent().get(i).getName()
+            ));
+        }
+
+        holder.mRVAddon.setLayoutManager(new LinearLayoutManager(mCtx));
+        AdapterModifer adapterModifier = new AdapterModifer(mOrderModifier, mCtx);
+        holder.mRVAddon.setHasFixedSize(true);
+        holder.mRVAddon.setAdapter(adapterModifier);
 
         holder.mSwitch.setChecked(mAddonItem.getmAvailibility() == 1);
 
@@ -107,7 +125,7 @@ public class AdapterMenuContainer extends RecyclerView.Adapter<AdapterMenuContai
 
 
     public interface ItemClickListenerContainer {
-        void getMenuAddons(boolean hasSubItems, RecyclerView mRVAddon);
+//        void getMenuAddons(boolean hasSubItems, RecyclerView mRVAddon);
     }
 
 
@@ -125,7 +143,7 @@ public class AdapterMenuContainer extends RecyclerView.Adapter<AdapterMenuContai
             mRVAddon = itemView.findViewById(R.id.rv_addon);
             mSwitch = itemView.findViewById(R.id.switch_rv3_addon);
             mRVAddon.setVisibility(View.VISIBLE);
-            listener.getMenuAddons(true, mRVAddon);
+//            listener.getMenuAddons(true, mRVAddon);
 //            mShowDet = itemView.findViewById(R.id.iv_open_details_addon);
 //            mHideDet = itemView.findViewById(R.id.iv_close_details_addon);
 //

@@ -622,7 +622,7 @@ public class FragmentDashboard extends Fragment {
         Log.e(TAG, "setTimeLayout: open today " + openToday);
 
         if (closeTime.equals("N/A") && openTime.equals("N/A")) {
-            String msg = "Business Is Closed";
+            String msg = AppManager.getBusinessDetails().getData().getResults().getBusinessName() + " Is Closed";
             imgNoOrder.setImageResource(R.drawable.ic_businessclosed);
             noOrders.setText(msg);
 

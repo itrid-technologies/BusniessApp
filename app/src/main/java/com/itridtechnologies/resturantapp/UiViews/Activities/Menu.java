@@ -83,6 +83,7 @@ public class Menu extends AppCompatActivity {
         //Pull to Swipe
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
 
+            int currentPos = mTabLayout.getSelectedTabPosition();
             final Handler handler = new Handler();
             handler.postDelayed(() -> mSwipeRefreshLayout.setRefreshing(false), 2000);
             mMenuAddonsList.clear();
@@ -91,6 +92,8 @@ public class Menu extends AppCompatActivity {
             mModifiersList.clear();
             cats.clear();
             getCategoriesApi();
+            ///Categories Items
+//            getCatItems(currentPos);
         });
 
         //hide status bar
@@ -384,65 +387,65 @@ public class Menu extends AppCompatActivity {
             mTabLayout.setEnabled(false);
             //mModifiersList.clear();MenuAddOnResponse
             Log.e("Id", "id is " + menuItemList.get(position).getId());
-            String id = menuItemList.get(position).getId();
-            if (id != null)
-            {
-                //Changing the
-                //Call<MenuAddOnResponse> call = RetrofitNetMan.getRestApiService().getAddons(token, menuItemList.get(position).getmAddOnAvailable());
-                Call<MenuAddOnResponse> call = RetrofitNetMan.getRestApiService().getAddons(token, menuItemList.get(position).getId());
-                call.enqueue(new Callback<MenuAddOnResponse>() {
-                    @Override
-                    public void onResponse(@NotNull Call<MenuAddOnResponse> call, @NotNull Response<MenuAddOnResponse> response) {
-                        Log.e(TAG, "onResponse called for addons ");
-                        if (response.isSuccessful() && response.body() != null) {
-                            for (int i = 0; i < response.body().getData().size(); i++) {
-                                Log.e(TAG, "onResponse: addon respomse" + response.body().getData().size() );
-                                mMenuAddonsList.add(new AddonModel(
-                                        response.body().getData().get(i).getName(),
-                                        response.body().getData().get(i).getAvailability(),
-                                        response.body().getData().get(i).getAddon()
-                                ));
-                                for (int j = 0; j < response.body().getData().get(i).getAddon().size(); j++) {
-                                    Log.e(TAG, "onResponse: modifier respomse" + response.body().getData().size() );
-                                    mModifiersList.add(new ModiferModel(
-                                            response.body().getData().get(i).getAddon().get(j).getName()
-                                    ));
-                                }
-                                pm.saveMyData("itemId", String.valueOf(response.body().getData().get(i).getId()));
-                            }
-                        }
-                        else if (!response.isSuccessful()){
-                            Log.e(TAG, "onResponse: not success " + response.message() );
-                            AppManager.SnackBar(Menu.this,"No Data Found");
-                        }
-                        mTabLayout.setEnabled(true);
-
-                        if (hasSubItems) {
-                            Log.e(TAG, "onResponse: i have data now ");
-                            ////if we have data then we will show it
-                            AdapterMenuContainer adapMenuContainer = new AdapterMenuContainer(mMenuAddonsList, getApplicationContext());
-                            mParent1RV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                            mParent1RV.setHasFixedSize(true);
-                            mParent1RV.setAdapter(adapMenuContainer);
-
-                            adapMenuContainer.setOnItemClickListener(((hasSubItems1, mRVAddon) -> {
-                                AdapterModifer adapterModifer = new AdapterModifer(mModifiersList, getApplicationContext());
-                                mRVAddon.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                                mRVAddon.setHasFixedSize(true);
-                                mRVAddon.setAdapter(adapterModifer);
-                            }));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NotNull Call<MenuAddOnResponse> call, @NotNull Throwable t) {
-                        Log.e("TAG", "onFailure: i m failed" + t.getMessage());
-                    }
-                });
-            }
-            else {
-                AppManager.SnackBar(Menu.this,"No Data Found");
-            }
+//            String id = menuItemList.get(position).getId();
+//            if (id != null)
+//            {
+//                //Changing the
+//                //Call<MenuAddOnResponse> call = RetrofitNetMan.getRestApiService().getAddons(token, menuItemList.get(position).getmAddOnAvailable());
+////                Call<MenuAddOnResponse> call = RetrofitNetMan.getRestApiService().getAddons(token, menuItemList.get(position).getId());
+////                call.enqueue(new Callback<MenuAddOnResponse>() {
+////                    @Override
+////                    public void onResponse(@NotNull Call<MenuAddOnResponse> call, @NotNull Response<MenuAddOnResponse> response) {
+////                        Log.e(TAG, "onResponse called for addons ");
+////                        if (response.isSuccessful() && response.body() != null) {
+//////                            for (int i = 0; i < response.body().getData().size(); i++) {
+//////                                Log.e(TAG, "onResponse: addon respomse" + response.body().getData().size() );
+//////                                mMenuAddonsList.add(new AddonModel(
+//////                                        response.body().getData().get(i).getName(),
+//////                                        response.body().getData().get(i).getAvailability(),
+//////                                        response.body().getData().get(i).getAddon()
+//////                                ));
+//////                                for (int j = 0; j < response.body().getData().get(i).getAddon().size(); j++) {
+//////                                    Log.e(TAG, "onResponse: modifier respomse" + response.body().getData().size() );
+//////                                    mModifiersList.add(new ModiferModel(
+//////                                            response.body().getData().get(i).getAddon().get(j).getName()
+//////                                    ));
+//////                                }
+//////                                pm.saveMyData("itemId", String.valueOf(response.body().getData().get(i).getId()));
+//////                            }
+////                        }
+////                        else if (!response.isSuccessful()){
+////                            Log.e(TAG, "onResponse: not success " + response.message() );
+////                            AppManager.SnackBar(Menu.this,"No Data Found");
+////                        }
+////                        mTabLayout.setEnabled(true);
+////
+//////                        if (hasSubItems) {
+//////                            Log.e(TAG, "onResponse: i have data now ");
+//////                            ////if we have data then we will show it
+//////                            AdapterMenuContainer adapMenuContainer = new AdapterMenuContainer(mMenuAddonsList, getApplicationContext());
+//////                            mParent1RV.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+//////                            mParent1RV.setHasFixedSize(true);
+//////                            mParent1RV.setAdapter(adapMenuContainer);
+//////
+//////                            adapMenuContainer.setOnItemClickListener(((hasSubItems1, mRVAddon) -> {
+////////                                AdapterModifer adapterModifer = new AdapterModifer(mModifiersList, getApplicationContext());
+////////                                mRVAddon.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+////////                                mRVAddon.setHasFixedSize(true);
+////////                                mRVAddon.setAdapter(adapterModifer);
+//////                            }));
+//////                        }
+////                    }
+////
+////                    @Override
+////                    public void onFailure(@NotNull Call<MenuAddOnResponse> call, @NotNull Throwable t) {
+////                        Log.e("TAG", "onFailure: i m failed" + t.getMessage());
+////                    }
+////                });
+//            }
+//            else {
+//                AppManager.SnackBar(Menu.this,"No Data Found");
+//            }
         }));
     }
 

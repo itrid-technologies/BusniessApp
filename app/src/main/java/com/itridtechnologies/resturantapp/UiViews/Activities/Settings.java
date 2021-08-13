@@ -509,9 +509,10 @@ public class Settings extends AppCompatActivity {
         });
         //Setting Decreasing accept order button
         mSubAcceptOrder.setOnClickListener(v -> {
-            mAcceptNumber = mAcceptNumber - 1;
-            mAcceptOrder.setText(Integer.toString(mAcceptNumber));
+
             if (mAcceptNumber > 1) {
+                mAcceptNumber = mAcceptNumber - 1;
+                mAcceptOrder.setText(Integer.toString(mAcceptNumber));
                 mSubAcceptOrder.setEnabled(true);
                 mSubAcceptOrder.setImageResource(R.drawable.ic_remove_gray);
             } else {
@@ -530,13 +531,13 @@ public class Settings extends AppCompatActivity {
 
         //Setting Decreasing reject order button
         mSubRejectOrder.setOnClickListener(v -> {
-            mRejectNumber = mRejectNumber - 1;
-            mRejectOrder.setText(Integer.toString(mRejectNumber));
 
-            if (mRejectNumber > 1) {
+            if (mRejectNumber > 0) {
+                mRejectNumber = mRejectNumber - 1;
+                mRejectOrder.setText(Integer.toString(mRejectNumber));
                 mSubRejectOrder.setEnabled(true);
                 mSubRejectOrder.setImageResource(R.drawable.ic_remove_gray);
-            } else if (mRejectNumber < 1) {
+            } else {
                 mSubRejectOrder.setEnabled(false);
                 mSubRejectOrder.setImageResource(R.drawable.ic_remove_gray);
             }

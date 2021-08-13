@@ -43,6 +43,7 @@ import com.itridtechnologies.resturantapp.utils.Constants;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -116,6 +117,9 @@ public class ReadyDetails extends AppCompatActivity {
     //Addons details
     private List<AddonItemsItem> mOrderAddonDetails = new ArrayList<>();
 
+    //Decimal Format
+    private DecimalFormat format;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +129,7 @@ public class ReadyDetails extends AppCompatActivity {
         //initializing database
         databaseRoom = RoomDB.getInstance(ReadyDetails.this);
         AppManager.hideStatusBar(ReadyDetails.this);
+        format = new DecimalFormat("0.00");
         setVariables();
         CallFunctions();
         toolbarfun();
@@ -251,7 +256,8 @@ public class ReadyDetails extends AppCompatActivity {
 
     //Getting order details from api
     private void getOrderDetails(String orderId) {
-        Log.e(TAG, "getOrderDetails: order details" );
+
+        Log.e(TAG, "getOrderDetails: order details");
         Call<SubItems> call = RetrofitNetMan.getRestApiService().getOrderDetail(token, orderId);
         call.enqueue(new Callback<SubItems>() {
             @Override
@@ -262,7 +268,7 @@ public class ReadyDetails extends AppCompatActivity {
                     //List 1 (Orders Names)
                     mOrdersReady = response.body().getData().subList(0, response.body().getData().size());
 
-                    valueTotal = 0.0;
+                    valueTotal = 0.00;
                     //Saving and calculating total amount of order
                     Log.e(TAG, "onResponse: Total Amount" + response.body().getData().size());
                     for (int i = 0; i < response.body().getData().size(); i++) {
@@ -392,7 +398,7 @@ public class ReadyDetails extends AppCompatActivity {
 
         //Total and subtotal AMoutn
         if (tPrice != null) {
-            mTVSubTotalAmount.setText(Constants.CURRENCY_SIGN + " " + tPrice);
+            mTVSubTotalAmount.setText(Constants.CURRENCY_SIGN + " " + format.format(tPrice));
         } else {
             mTVSubTotalAmount.setText(Constants.CURRENCY_SIGN + " " + "0");
         }
@@ -534,7 +540,7 @@ public class ReadyDetails extends AppCompatActivity {
 
     //method to get business orders from server
     private void getDetails(String orderId) {
-        Log.e(TAG, "getDetails: persoal details" );
+        Log.e(TAG, "getDetails: persoal details");
         //retrieve token from pref
         String token = AppManager.getBusinessDetails().getData().getToken();
 
@@ -560,21 +566,30 @@ public class ReadyDetails extends AppCompatActivity {
                         ));
                         orderTotal = orderTotal + Double.parseDouble(response.body().getData().getOrderTotals().get(i).getValue());
                         Log.e(TAG, "onResponse: order total " + orderTotal);
+
                     }
 
                     //Adding order values
                     orderTotal = orderTotal + valueTotal;
+
                     Log.e(TAG, "onResponse: totAT + " + orderTotal);
 
-                    String address = response.body().getData().getOrderAddress().get(0).getAddressLine1() + " "
-                            + response.body().getData().getOrderAddress().get(0).getAddressLine2() + " "
-                            + response.body().getData().getOrderAddress().get(0).getCity() + " "
-                            + response.body().getData().getOrderAddress().get(0).getState() + " "
-                            + response.body().getData().getOrderAddress().get(0).getCountry() + " "
-                            + response.body().getData().getOrderAddress().get(0).getPostCode();
+                    String address;
 
-                    Log.e(TAG, "onResponse: address" +
-                            "" + address );
+                    if (response.body().getData().getOrderAddress().size() > 0) {
+                        address = response.body().getData().getOrderAddress().get(0).getAddressLine1() + " "
+                                + response.body().getData().getOrderAddress().get(0).getAddressLine2() + " "
+                                + response.body().getData().getOrderAddress().get(0).getCity() + " "
+                                + response.body().getData().getOrderAddress().get(0).getState() + " "
+                                + response.body().getData().getOrderAddress().get(0).getCountry() + " "
+                                + response.body().getData().getOrderAddress().get(0).getPostCode();
+
+                        Log.e(TAG, "onResponse: address" +
+                                "" + address);
+                    } else {
+                        address = "Not Available";
+                    }
+
 
                     UpdateUI
                             (

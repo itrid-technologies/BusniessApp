@@ -7,6 +7,7 @@ import com.itridtechnologies.resturantapp.models.BussinessHours.BusinessHours;
 import com.itridtechnologies.resturantapp.models.CancelOrder.CancelResponse;
 import com.itridtechnologies.resturantapp.models.DelayOrder.DelayResponse;
 import com.itridtechnologies.resturantapp.models.Feedback.FeedbackResponse;
+import com.itridtechnologies.resturantapp.models.FeedbackReviewGiven.FeedbackReviewGivenResponse;
 import com.itridtechnologies.resturantapp.models.HistoryOrderDetails.HistOrderDetailResponse;
 import com.itridtechnologies.resturantapp.models.MenuAddOns.MenuAddOnResponse;
 import com.itridtechnologies.resturantapp.models.MenuCategories.MenuCategoriesResponse;
@@ -244,6 +245,15 @@ public class RetrofitNetMan {
         //Feedback Tags
         @GET("ratingtagsvalues?for_type=1&tag_type=0&by_type=0")
         Call<FeedbackTagsResponse> getTags();
+
+        //Feedback given or not willbe check on history detailed screen
+        //If true review not shown else shown
+        @GET("business/check-review/{id}")
+        Call<FeedbackReviewGivenResponse> getFeedbackReviewGiven(
+                @Header("x-access-token") String token,
+                @Path("id") String orderId
+        );
+
 
     }//interface
 }

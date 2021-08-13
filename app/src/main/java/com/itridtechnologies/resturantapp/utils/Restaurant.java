@@ -6,6 +6,13 @@ import android.app.NotificationManager;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+
+import zendesk.messaging.android.FailureCallback;
+import zendesk.messaging.android.Messaging;
+import zendesk.messaging.android.MessagingError;
+import zendesk.messaging.android.SuccessCallback;
+
 import com.google.firebase.messaging.FirebaseMessaging;
 
 public class Restaurant extends Application {
@@ -21,6 +28,9 @@ public class Restaurant extends Application {
         super.onCreate();
         _instance = this;
         CreateNotificationChannels();
+
+        //zandesk
+        zandesk();
     }
 
     private void CreateNotificationChannels() {
@@ -55,5 +65,24 @@ public class Restaurant extends Application {
                         Log.e("FCM TOKEN", token);
                     }
                 });
-    }
+    }//getDeviceToken
+
+    private void zandesk(){
+        Messaging.initialize(
+                this,
+                "{channel_key}",
+                new SuccessCallback<Messaging>() {
+                    @Override
+                    public void onSuccess(Messaging value) {
+                        Log.i("IntegrationApplication", "Initialization successful");
+                    }
+                },
+                new FailureCallback<MessagingError>() {
+                    @Override
+                    public void onFailure(@Nullable MessagingError cause) {
+                        Log.e("IntegrationApplication", "Messaging failed to initialize", cause);
+                    }
+                });
+    }//zandesk
+
 }

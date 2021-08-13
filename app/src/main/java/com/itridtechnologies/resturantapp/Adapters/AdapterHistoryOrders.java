@@ -21,6 +21,7 @@ import com.itridtechnologies.resturantapp.models.orderHistory.OrdersItem;
 import com.itridtechnologies.resturantapp.utils.Constants;
 import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,9 +57,11 @@ public class AdapterHistoryOrders extends RecyclerView.Adapter<AdapterHistoryOrd
         DataItem orderItem = mHistoryOrders.get(position);
         //set data
 
+        DecimalFormat format = new DecimalFormat("0.00");
+
         holder.itemName.setText(orderItem.getItemName());
         holder.itemQty.setText(String.valueOf(orderItem.getItemQty()));
-        holder.itemPrice.setText(Constants.CURRENCY_SIGN + " " + orderItem.getItemPrice());
+        holder.itemPrice.setText(Constants.CURRENCY_SIGN + " " + format.format(Double.parseDouble(orderItem.getItemPrice())));
 
         //Assigning List
         mAddonItemName = mHistoryOrders.get(position).getOrderAddons();
