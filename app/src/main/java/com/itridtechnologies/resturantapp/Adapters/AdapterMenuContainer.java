@@ -79,18 +79,20 @@ public class AdapterMenuContainer extends RecyclerView.Adapter<AdapterMenuContai
         holder.mRVAddon.setHasFixedSize(true);
         holder.mRVAddon.setAdapter(adapterModifier);
 
+        Log.e("TAG", "onBindViewHolder: mAddonItem.getmAvailibility()" + mAddonItem.getmAvailibility() );
+
         holder.mSwitch.setChecked(mAddonItem.getmAvailibility() == 1);
 
         ///Hitting Put Api
         holder.mSwitch.setOnClickListener(v -> {
             JsonObject obj = new JsonObject();
             holder.mSwitch.setEnabled(false);
-            if (holder.mSwitch.isChecked()) {
+            if (mAddonItem.getmAvailibility() == 0) {
                 obj.addProperty("action", "0");
-                obj.addProperty("actionType", "item");
+                obj.addProperty("actionType", "addon");
             } else {
                 obj.addProperty("action", "1");
-                obj.addProperty("actionType", "item");
+                obj.addProperty("actionType", "addon");
             }
 
             Call<MenuItemAvailableResponse> call = RetrofitNetMan.getRestApiService().itemAvailable(token, String.valueOf(mAddonItem.getAddOnParent().get(0).getAddonId()), obj);

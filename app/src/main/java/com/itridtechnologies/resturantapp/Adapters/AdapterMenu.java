@@ -81,10 +81,6 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
         holder.mItemName.setText(mMenuItem.getmItemName());
         List<AddonModel> mOrderAddon = new ArrayList<>();
 
-
-
-
-
         if (mMenuItem.getId() != null)
         {
             //Setting on click listener
@@ -233,11 +229,12 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
 
             JsonObject obj = new JsonObject();
             holder.mSwitchItem.setEnabled(false);
-            if (holder.mSwitchItem.isChecked()) {
+            if (mMenuItem.getmYesNo() == 0) {
                 obj.addProperty("action", "1");
             } else {
                 obj.addProperty("action", "0");
             }
+
             obj.addProperty("actionType", "item");
             Log.e(TAG, "onBindViewHolder: menu " + mMenuItem.getmMenuid());
             Call<MenuItemAvailableResponse> call = RetrofitNetMan.getRestApiService().itemAvailable(token, String.valueOf(mMenuItem.getmMenuid()), obj);
