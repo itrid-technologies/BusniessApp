@@ -20,13 +20,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.tabs.TabLayout;
 import com.itridtechnologies.resturantapp.Adapters.AdapterMenu;
-import com.itridtechnologies.resturantapp.Adapters.AdapterMenuContainer;
-import com.itridtechnologies.resturantapp.Adapters.AdapterModifer;
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.model.AddonModel;
 import com.itridtechnologies.resturantapp.model.MenuModel;
 import com.itridtechnologies.resturantapp.model.ModiferModel;
-import com.itridtechnologies.resturantapp.models.MenuAddOns.MenuAddOnResponse;
 import com.itridtechnologies.resturantapp.models.MenuCats.MenuCatsResponse;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
@@ -320,6 +317,7 @@ public class Menu extends AppCompatActivity {
                                 Log.e(TAG, "onResponse: value is null");
                                 description = "";
                             }
+
 
                             Log.e(TAG, "onResponse: Item available" + response.body().getData().get(pos).getChildren().get(i).getAvailability());
 

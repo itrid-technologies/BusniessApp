@@ -179,7 +179,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
         try {
 
             //validatyin chevron
-            if (mMenuItem.getParentList().size()>0) {
+            if (!mMenuItem.getmAddOnAvailable().equals("null")) {
                 holder.mShowDetails.setVisibility(View.VISIBLE);
             } else {
                 holder.mShowDetails.setVisibility(View.GONE);
@@ -196,18 +196,15 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
             Log.e(TAG, "onBindViewHolder: Menu add on ");
         }
 
-        Log.e(TAG, "onBindViewHolder: Menu availablitiy status" + mMenuItem.getParentList().size());
+        Log.e(TAG, "onBindViewHolder: Menu availablitiy status" + mMenuItem.getmYesNo());
 
-        if (mMenuItem.getParentList().size() > 0) {
+        if (mMenuItem.getmYesNo() == 0) {
             holder.itemView.setEnabled(true);
-            if (mMenuItem.getmYesNo() == 1)
-            {
-                holder.mSwitchItem.setChecked(true);
-            }
-        } else {
-            holder.itemView.setEnabled(false);
             holder.mSwitchItem.setChecked(false);
-            holder.mShowDetails.setVisibility(View.GONE);
+        } else {
+            holder.itemView.setEnabled(true);
+            holder.mSwitchItem.setChecked(true);
+//            holder.mShowDetails.setVisibility(View.GONE);
         }
 
         /////Hiding If Not Available
