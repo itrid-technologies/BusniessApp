@@ -7,6 +7,9 @@ public class Results{
 	@SerializedName("business_name")
 	private String businessName;
 
+	@SerializedName("is_phone_verified")
+	private int isPhoneVerified;
+
 	@SerializedName("cover_photo")
 	private String coverPhoto;
 
@@ -19,6 +22,12 @@ public class Results{
 	@SerializedName("online_status")
 	private int onlineStatus;
 
+	@SerializedName("is_email_verified")
+	private int isEmailVerified;
+
+	@SerializedName("price_range")
+	private String priceRange;
+
 	@SerializedName("last_name")
 	private String lastName;
 
@@ -27,6 +36,15 @@ public class Results{
 
 	@SerializedName("customer_note")
 	private String customerNote;
+
+	@SerializedName("uuid")
+	private String uuid;
+
+	@SerializedName("delivery_type")
+	private int deliveryType;
+
+	@SerializedName("business_type")
+	private String businessType;
 
 	@SerializedName("business_description")
 	private String businessDescription;
@@ -50,6 +68,10 @@ public class Results{
 		return businessName;
 	}
 
+	public int getIsPhoneVerified(){
+		return isPhoneVerified;
+	}
+
 	public String getCoverPhoto(){
 		return coverPhoto;
 	}
@@ -66,6 +88,14 @@ public class Results{
 		return onlineStatus;
 	}
 
+	public int getIsEmailVerified(){
+		return isEmailVerified;
+	}
+
+	public String getPriceRange(){
+		return priceRange;
+	}
+
 	public String getLastName(){
 		return lastName;
 	}
@@ -76,6 +106,18 @@ public class Results{
 
 	public String getCustomerNote(){
 		return customerNote;
+	}
+
+	public String getUuid(){
+		return uuid;
+	}
+
+	public int getDeliveryType(){
+		return deliveryType;
+	}
+
+	public String getBusinessType(){
+		return businessType;
 	}
 
 	public String getBusinessDescription(){

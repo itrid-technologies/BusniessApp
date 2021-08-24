@@ -30,6 +30,7 @@ import com.itridtechnologies.resturantapp.models.UpdateSetting.UpdateSettingResp
 import com.itridtechnologies.resturantapp.models.orderFeesSetting.FeeUpdateResponse;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
+import com.itridtechnologies.resturantapp.utils.Constants;
 import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
 import org.jetbrains.annotations.NotNull;
@@ -106,6 +107,7 @@ public class Settings extends AppCompatActivity {
         mRejectOrder.setText(mRejectOrderCopies);
         mAcceptOrder.setText(mAcceptOrderCopies);
 
+
         setting();
 //        mAcceptNumber = Integer.parseInt(mAcceptOrder.getText().toString().trim());
 //        mRejectNumber = Integer.parseInt(mRejectOrder.getText().toString().trim());
@@ -129,11 +131,13 @@ public class Settings extends AppCompatActivity {
             if (mDarkmode.isChecked()) {
                 Log.e(TAG, "onCheckedChanged: dark isChecked");
                 mDarkmode.setChecked(true);
+                Constants.IS_DARK_MODE = true;
                 pm.saveMyDataBool("darkSwitch", true);
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             } else {
                 Log.e(TAG, "onCheckedChanged: light + isNotChecked");
                 mDarkmode.setChecked(false);
+                Constants.IS_DARK_MODE = false;
                 pm.saveMyDataBool("darkSwitch", false);
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             }
@@ -147,32 +151,40 @@ public class Settings extends AppCompatActivity {
         ///For printing testing
         testPrint();
 
-        mDeliverOrders.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (mDeliverOrders.isChecked()) {
-                delFee.setVisibility(View.VISIBLE);
-                delFeeView.setVisibility(View.VISIBLE);
-                minOrderView.setVisibility(View.VISIBLE);
-                minOrder.setVisibility(View.VISIBLE);
-                saveBtn.setVisibility(View.VISIBLE);
-            } else {
-                delFee.setVisibility(View.GONE);
-                delFeeView.setVisibility(View.GONE);
-                minOrderView.setVisibility(View.GONE);
-                minOrder.setVisibility(View.GONE);
-                saveBtn.setVisibility(View.GONE);
-            }
-        });
+        if (AppManager.getBusinessDetails().getData().getResults().getDeliveryType() == 0) {
+            delFee.setVisibility(View.GONE);
+            delFeeView.setVisibility(View.GONE);
+            minOrderView.setVisibility(View.GONE);
+            minOrder.setVisibility(View.GONE);
+            saveBtn.setVisibility(View.GONE);
+            mDeliverOrders.setChecked(false);
+        } else if (AppManager.getBusinessDetails().getData().getResults().getDeliveryType() == 1) {
+            mDeliverOrders.setChecked(true);
+            mDeliverOrders.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (mDeliverOrders.isChecked()) {
+                    delFee.setVisibility(View.VISIBLE);
+                    delFeeView.setVisibility(View.VISIBLE);
+                    minOrderView.setVisibility(View.VISIBLE);
+                    minOrder.setVisibility(View.VISIBLE);
+                    saveBtn.setVisibility(View.VISIBLE);
+                } else {
+                    delFee.setVisibility(View.GONE);
+                    delFeeView.setVisibility(View.GONE);
+                    minOrderView.setVisibility(View.GONE);
+                    minOrder.setVisibility(View.GONE);
+                    saveBtn.setVisibility(View.GONE);
+                }
+            });
+        }
 
         mSwipeRefreshLayout.setProgressViewOffset(true, 10, 180);
         //Pull to Swipe
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
-
             setting();
             final Handler handler = new Handler();
             handler.postDelayed(() -> {
                 mSwipeRefreshLayout.setRefreshing(false);
             }, 2000);
-
         });
     }
 
@@ -261,11 +273,18 @@ public class Settings extends AppCompatActivity {
                         public void onResponse(@NotNull Call<FeeUpdateResponse> call12, @NotNull Response<FeeUpdateResponse> response1) {
                             if (response.isSuccessful() && response.body() != null) {
 
-                                AppManager.SnackBar(Settings.this,response.message() + " " + response.body().getMessage());
+                                AppManager.SnackBar(Settings.this, " " + response.body().getMessage());
                                 saveBtn.setEnabled(true);
                                 saveBtn.setBackgroundColor(getResources().getColor(R.color.theme_color));
+
                             } else if (response.code() == 400) {
-                                AppManager.SnackBar(Settings.this,response.message());
+
+                                if (response.body() != null) {
+                                    AppManager.SnackBar(Settings.this, response.body().getMessage() + "");
+                                } else {
+                                    AppManager.SnackBar(Settings.this, response.message() + "");
+                                }
+
                                 saveBtn.setEnabled(true);
                                 saveBtn.setBackgroundColor(getResources().getColor(R.color.theme_color));
                                 Log.e("TAG", "onResponse: " + response.message());
@@ -277,9 +296,13 @@ public class Settings extends AppCompatActivity {
                         @Override
                         public void onFailure(@NotNull Call<FeeUpdateResponse> call12, @NotNull Throwable t) {
                             saveBtn.setEnabled(true);
-                            AppManager.SnackBar(Settings.this,t.getMessage());
+
+
+                            AppManager.SnackBar(Settings.this, t.getMessage() + "");
                             saveBtn.setBackgroundColor(getResources().getColor(R.color.theme_color));
                             Log.e("TAG", "onResponse: " + t.getMessage());
+
+
                         }
                     });
                 });
@@ -287,6 +310,7 @@ public class Settings extends AppCompatActivity {
                 //Showing View And Hiding Progress Bar
                 mPBSetting.setVisibility(View.GONE);
                 mNSVSetting.setVisibility(View.VISIBLE);
+
             }
 
             @Override
@@ -318,17 +342,27 @@ public class Settings extends AppCompatActivity {
                 public void onResponse(@NotNull Call<UpdateSettingResponse> call1, @NotNull Response<UpdateSettingResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         mDeliverOrders.setEnabled(true);
-                        AppManager.SnackBar(Settings.this, response.message() + " " + response.body().getMessage());
+                        AppManager.SnackBar(Settings.this, " " + response.body().getMessage());
                         Log.e("TAG", "onResponse: " + response.message());
                     } else if (response.code() == 400) {
                         mDeliverOrders.setEnabled(true);
-                        AppManager.SnackBar(Settings.this, response.message() + " " + response.body().getMessage());
+                        if (response.body() != null) {
+                            AppManager.SnackBar(Settings.this, " " + response.body().getMessage());
+                        } else {
+                            AppManager.SnackBar(Settings.this, " " + response.message());
+                        }
                         Log.e("TAG", "onResponse: " + response.message());
                     } else if (response.code() == 500) {
                         mDeliverOrders.setEnabled(true);
                         Log.e("TAG", "onResponse: b1" + response.message());
                         mDeliverOrders.setChecked(false);
                         AppManager.SnackBar(Settings.this, "Business mode can only be switched between business operation hours.");
+                    } else {
+                        if (response.body() != null) {
+                            AppManager.SnackBar(Settings.this, " " + response.body().getMessage());
+                        } else {
+                            AppManager.SnackBar(Settings.this, " " + response.message());
+                        }
                     }
                     //Showing View And Hiding Progress Bar
                     mPBSetting.setVisibility(View.GONE);
@@ -364,18 +398,32 @@ public class Settings extends AppCompatActivity {
                 public void onResponse(@NotNull Call<UpdateSettingResponse> call1, @NotNull Response<UpdateSettingResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         mPickupOrders.setEnabled(true);
-                        AppManager.SnackBar(Settings.this, response.message() + " " + response.body().getMessage());
+                        AppManager.SnackBar(Settings.this, " " + response.body().getMessage());
                         Log.e("TAG", "onResponse: " + response.message());
                     } else if (response.code() == 400) {
                         mPickupOrders.setEnabled(true);
-                        AppManager.SnackBar(Settings.this, response.message() + " " + response.body().getMessage());
+                        if (response.body() != null) {
+                            AppManager.SnackBar(Settings.this, " " + response.body().getMessage());
+                        } else {
+                            AppManager.SnackBar(Settings.this, " " + response.message());
+                        }
                         Log.e("TAG", "onResponse: " + response.message());
                     } else if (response.code() == 500) {
                         mPickupOrders.setEnabled(true);
-                        AppManager.SnackBar(Settings.this, response.message() + " " + response.body().getMessage());
+                        if (response.body() != null) {
+                            AppManager.SnackBar(Settings.this, " " + response.body().getMessage());
+                        } else {
+                            AppManager.SnackBar(Settings.this, " " + response.message());
+                        }
                         Log.e("TAG", "onResponse: b2" + response.message());
                         mPickupOrders.setChecked(false);
                         AppManager.SnackBar(Settings.this, "Business mode can only be switched between business operation hours.");
+                    } else {
+                        if (response.body() != null) {
+                            AppManager.SnackBar(Settings.this, " " + response.body().getMessage());
+                        } else {
+                            AppManager.SnackBar(Settings.this, " " + response.message());
+                        }
                     }
                     //Showing View And Hiding Progress Bar
                     mPBSetting.setVisibility(View.GONE);
@@ -411,18 +459,32 @@ public class Settings extends AppCompatActivity {
                 public void onResponse(@NotNull Call<UpdateSettingResponse> call1, @NotNull Response<UpdateSettingResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         mNewOrders.setEnabled(true);
-                        AppManager.SnackBar(Settings.this, response.message() + " " + response.body().getMessage());
+                        AppManager.SnackBar(Settings.this, " " + response.body().getMessage());
                         Log.e("TAG", "onResponse: " + response.message());
                     } else if (response.code() == 400) {
                         mNewOrders.setEnabled(true);
-                        AppManager.SnackBar(Settings.this, response.message() + " " + response.body().getMessage());
+                        if (response.body() != null) {
+                            AppManager.SnackBar(Settings.this, " " + response.body().getMessage());
+                        } else {
+                            AppManager.SnackBar(Settings.this, " " + response.message());
+                        }
                         Log.e("TAG", "onResponse: " + response.message());
                     } else if (response.code() == 500) {
                         mNewOrders.setEnabled(true);
-                        AppManager.SnackBar(Settings.this, response.message() + " " + response.body().getMessage());
+                        if (response.body() != null) {
+                            AppManager.SnackBar(Settings.this, " " + response.body().getMessage());
+                        } else {
+                            AppManager.SnackBar(Settings.this, " " + response.message());
+                        }
                         Log.e("TAG", "onResponse: b3" + response.message());
                         mNewOrders.setChecked(false);
                         AppManager.SnackBar(Settings.this, "Business mode can only be switched between business operation hours.");
+                    } else {
+                        if (response.body() != null) {
+                            AppManager.SnackBar(Settings.this, " " + response.body().getMessage());
+                        } else {
+                            AppManager.SnackBar(Settings.this, " " + response.message());
+                        }
                     }
                     //Showing View And Hiding Progress Bar
                     mPBSetting.setVisibility(View.GONE);
@@ -561,6 +623,7 @@ public class Settings extends AppCompatActivity {
     }
 
     ///setting Variables
+    @SuppressLint("SetTextI18n")
     public void setVariables() {
         mAcceptOrder = findViewById(R.id.no_of_recipts);
         mRejectOrder = findViewById(R.id.no_of_recipts_rej);

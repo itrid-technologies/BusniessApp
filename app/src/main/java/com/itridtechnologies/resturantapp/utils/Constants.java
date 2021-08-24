@@ -51,4 +51,7 @@ public final class Constants {
     public static String CURRENCY_SIGN = "Rs.";
 
     public static String DEVICE_TOKEN = null;
+
+    public static boolean IS_DARK_MODE = false;
+
 }

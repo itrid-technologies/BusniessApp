@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.MimeTypeMap;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +28,6 @@ import com.itridtechnologies.resturantapp.models.login.LoginResponse;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.List;
 
 public final class AppManager {
 
@@ -125,7 +123,7 @@ public final class AppManager {
     public static void SnackBar(AppCompatActivity activity, String msg){
 
         Snackbar.make(activity.findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG)
-                .setBackgroundTint(activity.getResources().getColor(R.color.theme_color))
+                    .setBackgroundTint(activity.getResources().getColor(R.color.theme_color))
                 .setTextColor(activity.getResources().getColor(R.color.white))
                 .show();
 

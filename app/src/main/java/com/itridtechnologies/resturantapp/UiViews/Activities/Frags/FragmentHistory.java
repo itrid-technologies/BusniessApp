@@ -43,6 +43,7 @@ import com.itridtechnologies.resturantapp.models.historyNew.NewHistoryWithTotals
 import com.itridtechnologies.resturantapp.models.orderHistory.ItemsItem;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
+import com.itridtechnologies.resturantapp.utils.Constants;
 import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
 import org.jetbrains.annotations.NotNull;
@@ -215,27 +216,31 @@ public class FragmentHistory extends Fragment {
                 Log.e("TAG", "onCheckedChanged: " + checkedId);
                 //Calender View
                 mDateET.setOnClickListener(v -> {
-
+                    mDateET.setEnabled(false);
                     DateRangePickerFragment dateRangePickerFragment = DateRangePickerFragment.Companion.newInstance(
-                            new DateRangePickerFragment.OnDateRangeSetListener() {
-                                @Override
-                                public void onDateRangeSet(DateRangePickerFragment view,
-                                                           int yearStart, int monthStart,
-                                                           int dayStart, int yearEnd,
-                                                           int monthEnd, int dayEnd) {
+                            (view, yearStart, monthStart, dayStart, yearEnd, monthEnd, dayEnd) -> {
+                                mDateET.setEnabled(true);
 
-                                    Toast.makeText(requireContext(), "start from " + yearStart + monthStart + dayStart
-                                            + "end at " + yearEnd + monthEnd + dayEnd, Toast.LENGTH_SHORT).show();
+                                datee = "From: " + dayStart + "-" + monthStart + "-" + yearStart + " To : " + dayEnd + "-" + monthEnd  + "-" + yearEnd;
+                                mDateET.setText(datee);
 
-                                    // grab the date range, do what you want
-                                }
+                                mDateET.setEnabled(true);
+
+                                mStartDate = yearStart + "-" + monthStart + 1 + "-" + dayStart;
+                                mEndDate = yearEnd + "-" + monthEnd + 1 + "-" + dayEnd;
+
+                                getHistoryOrders(mStartDate, mEndDate);
+
+                                Log.e(TAG, "onStart: Start Date " + mStartDate);
+                                Log.e(TAG, "onStart: End Date " + mEndDate);
+
                             });
 
-                    dateRangePickerFragment.setThemeDark(true);
-                    dateRangePickerFragment.setMaxDate(c);
-                    dateRangePickerFragment.show(getChildFragmentManager(), "dateRangePicker");
+                    dateRangePickerFragment.setThemeDark(Constants.IS_DARK_MODE);
 
-                    mDateET.setEnabled(false);
+                    dateRangePickerFragment.setMaxDate(c);
+                    dateRangePickerFragment.setOnCancelListener(dialog -> mDateET.setEnabled(true));
+                    dateRangePickerFragment.show(getChildFragmentManager(), "dateRangePicker");
 
                     //DateRange Picker
 //                    materialDatePicker.show(getChildFragmentManager(), "Range Picker");
@@ -244,17 +249,30 @@ public class FragmentHistory extends Fragment {
 
 
                 DateRangePickerFragment dateRangePickerFragment = DateRangePickerFragment.Companion.newInstance(
-                        new DateRangePickerFragment.OnDateRangeSetListener() {
-                            @Override
-                            public void onDateRangeSet(DateRangePickerFragment view,
-                                                       int yearStart, int monthStart,
-                                                       int dayStart, int yearEnd,
-                                                       int monthEnd, int dayEnd) {
-                                // grab the date range, do what you want
-                            }
+                        (view, yearStart, monthStart, dayStart, yearEnd, monthEnd, dayEnd) -> {
+
+                            mDateET.setEnabled(true);
+
+//                            Log.e(TAG, "onStart: " + materialDatePicker.getHeaderText());
+                            datee = "From: " + dayStart + "-" + monthStart + "-" + yearStart + " To : " + dayEnd + "-" + monthEnd  + "-" + yearEnd;
+                            mDateET.setText(datee);
+
+                            mDateET.setEnabled(true);
+
+                            mStartDate = yearStart + "-" + monthStart + 1 + "-" + dayStart;
+                            mEndDate = yearEnd + "-" + monthEnd + 1 + "-" + dayEnd;
+
+                            getHistoryOrders(mStartDate, mEndDate);
+
+                            Log.e(TAG, "onStart: Start Date " + mStartDate);
+                            Log.e(TAG, "onStart: End Date " + mEndDate);
+
                         });
 
+
+                dateRangePickerFragment.setThemeDark(Constants.IS_DARK_MODE);
                 dateRangePickerFragment.setMaxDate(c);
+                dateRangePickerFragment.setOnCancelListener(dialog -> mDateET.setEnabled(true));
                 dateRangePickerFragment.show(getChildFragmentManager(), "dateRangePicker");
 
 
@@ -284,43 +302,43 @@ public class FragmentHistory extends Fragment {
             }
         });
 
-        materialDatePicker.addOnNegativeButtonClickListener(v -> mDateET.setEnabled(true));
-
-        materialDatePicker.addOnPositiveButtonClickListener(selection -> {
-            Log.e(TAG, "onStart: " + materialDatePicker.getHeaderText());
-            datee = materialDatePicker.getHeaderText();
-            mDateET.setText(datee);
-
-            mDateET.setEnabled(true);
-
-            //Split
-            String[] range = datee.split(" – ");
-
-            mStartDate = range[0];
-            mEndDate = range[1];
-
-            ////Spliting again for start month and day
-            String[] sDate = mStartDate.split(" ");
-            mStartMonth = sDate[0];
-            mStartDay = sDate[1];
-
-            ////Spliting again for end month and day
-            String[] eDate = mEndDate.split(" ");
-            mEndMonth = eDate[0];
-            mEndDay = eDate[1];
-
-            convertIntoNumberStartMonth(mStartMonth);
-            convertIntoNumberEndMonth(mEndMonth);
-
-            Calendar cal = Calendar.getInstance();
-            mStartDate = cal.get(Calendar.YEAR) + "-" + mStartMonth + "-" + mStartDay;
-            mEndDate = cal.get(Calendar.YEAR) + "-" + mEndMonth + "-" + mEndDay;
-            getHistoryOrders(mStartDate, mEndDate);
-
-            Log.e(TAG, "onStart: Start Date " + mStartDate);
-            Log.e(TAG, "onStart: End Date " + mEndDate);
-
-        });
+//        materialDatePicker.addOnNegativeButtonClickListener(v -> mDateET.setEnabled(true));
+//
+//        materialDatePicker.addOnPositiveButtonClickListener(selection -> {
+//            Log.e(TAG, "onStart: " + materialDatePicker.getHeaderText());
+//            datee = materialDatePicker.getHeaderText();
+//            mDateET.setText(datee);
+//
+//            mDateET.setEnabled(true);
+//
+//            //Split
+//            String[] range = datee.split(" – ");
+//
+//            mStartDate = range[0];
+//            mEndDate = range[1];
+//
+//            ////Spliting again for start month and day
+//            String[] sDate = mStartDate.split(" ");
+//            mStartMonth = sDate[0];
+//            mStartDay = sDate[1];
+//
+//            ////Spliting again for end month and day
+//            String[] eDate = mEndDate.split(" ");
+//            mEndMonth = eDate[0];
+//            mEndDay = eDate[1];
+//
+//            convertIntoNumberStartMonth(mStartMonth);
+//            convertIntoNumberEndMonth(mEndMonth);
+//
+//            Calendar cal = Calendar.getInstance();
+//            mStartDate = cal.get(Calendar.YEAR) + "-" + mStartMonth + "-" + mStartDay;
+//            mEndDate = cal.get(Calendar.YEAR) + "-" + mEndMonth + "-" + mEndDay;
+//            getHistoryOrders(mStartDate, mEndDate);
+//
+//            Log.e(TAG, "onStart: Start Date " + mStartDate);
+//            Log.e(TAG, "onStart: End Date " + mEndDate);
+//
+//        });
 
     }
 

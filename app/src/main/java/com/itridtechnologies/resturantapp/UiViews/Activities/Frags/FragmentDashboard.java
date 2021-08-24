@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -606,7 +605,8 @@ public class FragmentDashboard extends Fragment {
 
             @Override
             public void onFailure(@NotNull Call<BusinessHours> call, @NotNull Throwable t) {
-                AppManager.toast(t.getMessage());
+
+                AppManager.SnackBar((AppCompatActivity) mActivity, t.getMessage());
             }
         });
     }
@@ -640,17 +640,14 @@ public class FragmentDashboard extends Fragment {
     private String get12Hours(String time) {
         String convertTimeIn12Hours = "";
 
-        Toast.makeText(requireContext(), time, Toast.LENGTH_SHORT).show();
 
         DateFormat f1 = new SimpleDateFormat("HH:mm:ss"); //HH for hour of the day (0 - 23)
         Date d;
         try {
             d = f1.parse(time);
             DateFormat f2 = new SimpleDateFormat("h:mma");
-            if (d!=null)
-            {
+            if (d != null) {
                 convertTimeIn12Hours = f2.format(d); // "12:18am"
-                Toast.makeText(requireContext(), "" + convertTimeIn12Hours, Toast.LENGTH_SHORT).show();
             }
 
         } catch (ParseException e) {
@@ -1032,7 +1029,7 @@ public class FragmentDashboard extends Fragment {
             @Override
             public void onResponse(@NotNull Call<UpdateSettingResponse> call1, @NotNull Response<UpdateSettingResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    AppManager.SnackBar((AppCompatActivity) mActivity, response.body().getMessage());
+//                    AppManager.SnackBar((AppCompatActivity) mActivity, response.body().getMessage());
                     if (mBusyMode.isChecked()) {
 
                         anim_in.setAnimationListener(new Animation.AnimationListener() {
@@ -1081,6 +1078,14 @@ public class FragmentDashboard extends Fragment {
 
 
                 } else if (response.code() == 400) {
+
+                    if (response.body() != null) {
+                        AppManager.SnackBar((AppCompatActivity) mActivity, response.body().getMessage());
+                    }
+                    else {
+                        AppManager.SnackBar((AppCompatActivity) mActivity, response.message());
+                    }
+
                     if (mBusyMode.isChecked()) {
 
 
@@ -1126,10 +1131,14 @@ public class FragmentDashboard extends Fragment {
 
                         mBusyNotify.startAnimation(anim_out);
                     }
-                    AppManager.toast(response.message());
-                    Log.e(TAG, "onResponse: " + response.message());
+
                 } else {
-                    AppManager.SnackBar((AppCompatActivity) mActivity, response.message());
+                    if (response.body() != null) {
+                        AppManager.SnackBar((AppCompatActivity) mActivity, response.body().getMessage());
+                    }
+                    else {
+                        AppManager.SnackBar((AppCompatActivity) mActivity, response.message());
+                    }
                     mBusyMode.setChecked(false);
 
                     anim_out.setAnimationListener(new Animation.AnimationListener() {
@@ -1156,7 +1165,7 @@ public class FragmentDashboard extends Fragment {
             @Override
             public void onFailure(@NotNull Call<UpdateSettingResponse> call1, @NotNull Throwable t) {
                 Log.e(TAG, "onFailure: " + t.getMessage());
-                AppManager.toast(t.getMessage());
+                    AppManager.SnackBar((AppCompatActivity) mActivity, t.getMessage());
             }
         });
     }
@@ -1273,8 +1282,7 @@ public class FragmentDashboard extends Fragment {
                     if (response.body().isSuccess()) {
                         mNewPageOrderItemList.remove(o);
                         adapter.notifyDataSetChanged();
-                        if (mNewPageOrderItemList.isEmpty())
-                        {
+                        if (mNewPageOrderItemList.isEmpty()) {
                             noOrders.setVisibility(View.VISIBLE);
                             imgNoOrder.setVisibility(View.VISIBLE);
                             openCloseFun();
@@ -1336,8 +1344,7 @@ public class FragmentDashboard extends Fragment {
                                             Log.e(TAG, "onResponse: no info returning from live data");
                                         }
                                     });
-                        }
-                        catch (Exception e) {
+                        } catch (Exception e) {
                             Log.e(TAG, "onResponse: " + e.getMessage());
                         }
 

@@ -1,5 +1,6 @@
 package com.itridtechnologies.resturantapp.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.model.AddonModel;
@@ -61,18 +63,18 @@ public class AdapterMenuContainer extends RecyclerView.Adapter<AdapterMenuContai
     @Override
     public void onBindViewHolder(@NonNull detailHolderr holder, int position) {
 
+        @SuppressLint("ResourceAsColor")
         AddonModel mAddonItem = addonItems.get(position);
         holder.mAddOnTitle.setText(mAddonItem.getmAddonName());
 
-        Log.e("TAG", "onBindViewHolder: addon " + mAddonItem.getmAvailibility() );
+        Log.e("TAG", "onBindViewHolder: addon " + mAddonItem.getmAvailibility());
         holder.mSwitch.setChecked(mAddonItem.getmAvailibility() == 1);
 
         Log.e("TAG", "onBindViewHolder: mAddonItem.getAddOnParent().get(0).getAddonId()" + mAddonItem.getmAvailibility());
 
         List<ModiferModel> mOrderModifier = new ArrayList<>();
 
-        for (int i=0;i<mAddonItem.getAddOnParent().size();i++)
-        {
+        for (int i = 0; i < mAddonItem.getAddOnParent().size(); i++) {
             mOrderModifier.add(new ModiferModel(
                     mAddonItem.getAddOnParent().get(i).getName()
             ));
@@ -83,7 +85,7 @@ public class AdapterMenuContainer extends RecyclerView.Adapter<AdapterMenuContai
         holder.mRVAddon.setHasFixedSize(true);
         holder.mRVAddon.setAdapter(adapterModifier);
 
-        Log.e("TAG", "onBindViewHolder: mAddonItem.getmAvailibility()" + mAddonItem.getmAvailibility() );
+        Log.e("TAG", "onBindViewHolder: mAddonItem.getmAvailibility()" + mAddonItem.getmAvailibility());
 
         holder.mSwitch.setChecked(mAddonItem.getmAvailibility() == 1);
 
@@ -101,23 +103,44 @@ public class AdapterMenuContainer extends RecyclerView.Adapter<AdapterMenuContai
 
             Call<MenuItemAvailableResponse> call = RetrofitNetMan.getRestApiService().itemAvailable(token, String.valueOf(mAddonItem.getAddOnParent().get(0).getAddonId()), obj);
             call.enqueue(new Callback<MenuItemAvailableResponse>() {
+                @SuppressLint("ResourceAsColor")
                 @Override
                 public void onResponse(@NotNull Call<MenuItemAvailableResponse> call, @NotNull Response<MenuItemAvailableResponse> response) {
 //                    Log.e("Id Number", pm.getMyDataString("itemId"));
                     if (response.isSuccessful()) {
                         Log.e("TAG", "onResponse: " + response.message() + response.code());
-                        AppManager.toast(response.message());
+                        if (response.body() != null) {
+                            Snackbar.make(holder.itemView, " " + response.body().getMessage(), 2000)
+                                    .setBackgroundTint(mCtx.getResources().getColor(R.color.theme_color))
+                                    .show();
+                        } else {
+                            Snackbar.make(holder.itemView, " " + response.message(), 2000)
+                                    .setBackgroundTint(mCtx.getResources().getColor(R.color.theme_color))
+                                    .show();
+                        }
+
                     } else if (response.code() == 400) {
                         Log.e("TAG", "onResponse:hs " + response.message() + response.code());
-                        AppManager.toast(response.message());
+                        if (response.body() != null) {
+                            Snackbar.make(holder.itemView, " " + response.body().getMessage(), 2000)
+                                    .setBackgroundTint(mCtx.getResources().getColor(R.color.theme_color))
+                                    .show();
+                        } else {
+                            Snackbar.make(holder.itemView, " " + response.message(), 2000)
+                                    .setBackgroundTint(mCtx.getResources().getColor(R.color.theme_color))
+                                    .show();
+                        }
                         holder.mSwitch.setChecked(false);
                     }
                     holder.mSwitch.setEnabled(true);
                 }
 
+                @SuppressLint("ResourceAsColor")
                 @Override
                 public void onFailure(@NotNull Call<MenuItemAvailableResponse> call, @NotNull Throwable t) {
-                    AppManager.toast("No Internet Connection");
+                    Snackbar.make(holder.itemView, " " + t.getMessage(), 2000)
+                            .setBackgroundTint(mCtx.getResources().getColor(R.color.theme_color))
+                            .show();
                 }
             });
         });

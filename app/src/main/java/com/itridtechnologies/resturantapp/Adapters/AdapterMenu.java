@@ -1,5 +1,6 @@
 package com.itridtechnologies.resturantapp.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
@@ -74,6 +75,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
         return new AdapterMenu.detailHolder(view, mListenerMenu, menuItems);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull detailHolder holder, int position) {
 
@@ -81,7 +83,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
         holder.mItemName.setText(mMenuItem.getmItemName());
         List<AddonModel> mOrderAddon = new ArrayList<>();
 
-        Log.e(TAG, "onBindViewHolder: yes or no " + mMenuItem.getmYesNo() );
+        Log.e(TAG, "onBindViewHolder: yes or no " + mMenuItem.getmYesNo());
 
         if (mMenuItem.getmYesNo() == 1) {
             holder.mSwitchItem.setChecked(true);
@@ -100,6 +102,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
                         //Call<MenuAddOnResponse> call = RetrofitNetMan.getRestApiService().getAddons(token, menuItemList.get(position).getmAddOnAvailable());
                         Call<MenuAddOnResponse> call = RetrofitNetMan.getRestApiService().getAddons(token, mMenuItem.getId());
                         call.enqueue(new Callback<MenuAddOnResponse>() {
+                            @SuppressLint("ResourceAsColor")
                             @Override
                             public void onResponse(@NotNull Call<MenuAddOnResponse> call, @NotNull Response<MenuAddOnResponse> response) {
                                 Log.e(TAG, "onResponse called for addons ");
@@ -122,7 +125,9 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
 
                                 } else if (!response.isSuccessful()) {
                                     Log.e(TAG, "onResponse: not success " + response.message());
-                                    Snackbar.make(holder.view, "No Data Found", 2000).show();
+                                    Snackbar.make(holder.view, "No Data Found", 2000)
+                                            .setBackgroundTint(mCtx.getResources().getColor(R.color.theme_color))
+                                            .show();
                                 }
 //                        if (hasSubItems) {
 //                            Log.e(TAG, "onResponse: i have data now ");
@@ -166,13 +171,15 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
 
             });
         } else {
-            Snackbar.make(holder.view, "No Data Found", 2000).show();
+            Snackbar.make(holder.view, "No Data Found", 2000)
+                    .setBackgroundTint(mCtx.getResources().getColor(R.color.theme_color))
+                    .show();
         }
 
         try {
 
             //validatyin chevron
-            if (!mMenuItem.getmAddOnAvailable().equals("null")) {
+            if (mMenuItem.getParentList().size()>0) {
                 holder.mShowDetails.setVisibility(View.VISIBLE);
             } else {
                 holder.mShowDetails.setVisibility(View.GONE);
@@ -189,16 +196,18 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
             Log.e(TAG, "onBindViewHolder: Menu add on ");
         }
 
-        Log.e(TAG, "onBindViewHolder: Menu availablitiy status" + mMenuItem.getmYesNo());
+        Log.e(TAG, "onBindViewHolder: Menu availablitiy status" + mMenuItem.getParentList().size());
 
-        if (mMenuItem.getmYesNo() == 0) {
+        if (mMenuItem.getParentList().size() > 0) {
+            holder.itemView.setEnabled(true);
+            if (mMenuItem.getmYesNo() == 1)
+            {
+                holder.mSwitchItem.setChecked(true);
+            }
+        } else {
             holder.itemView.setEnabled(false);
             holder.mSwitchItem.setChecked(false);
             holder.mShowDetails.setVisibility(View.GONE);
-        } else {
-            holder.itemView.setEnabled(true);
-            holder.mSwitchItem.setChecked(true);
-//            holder.mShowDetails.setVisibility(View.GONE);
         }
 
         /////Hiding If Not Available
@@ -244,7 +253,9 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
                     Log.e("Id Number", pm.getMyDataString("itemId"));
 
                     if (response.isSuccessful() && response.body() != null) {
-                        Snackbar.make(holder.view, response.message() + " " + response.body().getMessage(), 2000).show();
+                        Snackbar.make(holder.view, " " + response.body().getMessage(), 2000)
+                                .setBackgroundTint(mCtx.getResources().getColor(R.color.theme_color))
+                                .show();
                         Log.e(TAG, "onResponse: " + response.message());
                     } else {
                         Snackbar.make(holder.view, response.message(), 2000).show();
@@ -254,7 +265,9 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
 
                 @Override
                 public void onFailure(@NotNull Call<MenuItemAvailableResponse> call, @NotNull Throwable t) {
-                    Snackbar.make(holder.view, Objects.requireNonNull(t.getMessage()), 2000).show();
+                    Snackbar.make(holder.view, Objects.requireNonNull(t.getMessage()), 2000)
+                            .setBackgroundTint(mCtx.getResources().getColor(R.color.theme_color))
+                            .show();
                     Log.e(TAG, "onFailure: " + t.getMessage());
                 }
             });

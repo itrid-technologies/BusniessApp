@@ -245,4 +245,10 @@ public class MainActivity extends AppCompatActivity {
             mLoginBtn.setEnabled(true);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }
+
