@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
             if (validations.isEmailValid(mEmailId.getText().toString())) {
 //                mProgress.setVisibility(View.VISIBLE);
                 mLoginBtn.setEnabled(false);
+                mLoginBtn.setBackgroundColor(getResources().getColor(R.color.disable_grey));
                 mLoginTV.setVisibility(View.GONE);
                 mPBLogin.setVisibility(View.VISIBLE);
                 postDetails();
@@ -169,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
                     mEnterEmail.setText("Email or Password Doesn't Match");
                     mEnterEmail.setVisibility(View.VISIBLE);
                     mLoginBtn.setEnabled(true);
+                    mLoginBtn.setBackgroundColor(getResources().getColor(R.color.theme_color));
                     textWatcher();
                     AppManager.SnackBar(MainActivity.this, "Email or Password Doesn't Match");
                     mPBLogin.setVisibility(View.GONE);
@@ -184,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
 //                ///Handling Color of button if able and disable
 //                mLoginBtn.setBackgroundColor(getResources().getColor(R.color.theme_color));
                 mLoginBtn.setEnabled(true);
+                mLoginBtn.setBackgroundColor(getResources().getColor(R.color.theme_color));
                 try {
                     mProgress.setVisibility(View.GONE);
                 } catch (Exception ignored) {

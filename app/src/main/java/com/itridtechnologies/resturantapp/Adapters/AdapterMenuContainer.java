@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
@@ -62,6 +63,9 @@ public class AdapterMenuContainer extends RecyclerView.Adapter<AdapterMenuContai
 
         AddonModel mAddonItem = addonItems.get(position);
         holder.mAddOnTitle.setText(mAddonItem.getmAddonName());
+
+        Log.e("TAG", "onBindViewHolder: addon " + mAddonItem.getmAvailibility() );
+        holder.mSwitch.setChecked(mAddonItem.getmAvailibility() == 1);
 
         Log.e("TAG", "onBindViewHolder: mAddonItem.getAddOnParent().get(0).getAddonId()" + mAddonItem.getmAvailibility());
 

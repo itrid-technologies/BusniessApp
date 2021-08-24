@@ -81,12 +81,16 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
         holder.mItemName.setText(mMenuItem.getmItemName());
         List<AddonModel> mOrderAddon = new ArrayList<>();
 
-        if (mMenuItem.getId() != null)
-        {
-            //Setting on click listener
-            holder.itemView.setOnClickListener(v->{
-                mOrderAddon.clear();
+        Log.e(TAG, "onBindViewHolder: yes or no " + mMenuItem.getmYesNo() );
 
+        if (mMenuItem.getmYesNo() == 1) {
+            holder.mSwitchItem.setChecked(true);
+        }
+
+        if (mMenuItem.getId() != null) {
+            //Setting on click listener
+            holder.itemView.setOnClickListener(v -> {
+                mOrderAddon.clear();
 
                 if (!mMenuItem.getmAddOnAvailable().equals("null")) {
                     //handle rv visibility
@@ -101,7 +105,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
                                 Log.e(TAG, "onResponse called for addons ");
                                 if (response.isSuccessful() && response.body() != null) {
                                     for (int i = 0; i < response.body().getData().size(); i++) {
-                                        Log.e(TAG, "onResponse: addon respomse" + response.body().getData().size() );
+                                        Log.e(TAG, "onResponse: addon respomse" + response.body().getData().size());
                                         mOrderAddon.add(new AddonModel(
                                                 response.body().getData().get(i).getName(),
                                                 response.body().getData().get(i).getAvailability(),
@@ -116,10 +120,9 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
                                     holder.mParent1RV.setHasFixedSize(true);
                                     holder.mParent1RV.setAdapter(adapterMenuContainer);
 
-                                }
-                                else if (!response.isSuccessful()){
-                                    Log.e(TAG, "onResponse: not success " + response.message() );
-                                    Snackbar.make(holder.view, "No Data Found",2000).show();
+                                } else if (!response.isSuccessful()) {
+                                    Log.e(TAG, "onResponse: not success " + response.message());
+                                    Snackbar.make(holder.view, "No Data Found", 2000).show();
                                 }
 //                        if (hasSubItems) {
 //                            Log.e(TAG, "onResponse: i have data now ");
@@ -162,9 +165,8 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
                 }
 
             });
-        }
-        else {
-            Snackbar.make(holder.view,"No Data Found", 2000).show();
+        } else {
+            Snackbar.make(holder.view, "No Data Found", 2000).show();
         }
 
         try {
@@ -183,8 +185,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
             } else {
                 holder.mItemDescription.setVisibility(View.GONE);
             }
-        }
-        catch (Exception ignored) {
+        } catch (Exception ignored) {
             Log.e(TAG, "onBindViewHolder: Menu add on ");
         }
 
@@ -194,8 +195,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
             holder.itemView.setEnabled(false);
             holder.mSwitchItem.setChecked(false);
             holder.mShowDetails.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             holder.itemView.setEnabled(true);
             holder.mSwitchItem.setChecked(true);
 //            holder.mShowDetails.setVisibility(View.GONE);
@@ -244,18 +244,17 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
                     Log.e("Id Number", pm.getMyDataString("itemId"));
 
                     if (response.isSuccessful() && response.body() != null) {
-                        Snackbar.make(holder.view,response.message() + " " + response.body().getMessage(),2000).show();
+                        Snackbar.make(holder.view, response.message() + " " + response.body().getMessage(), 2000).show();
                         Log.e(TAG, "onResponse: " + response.message());
-                    }
-                    else {
-                        Snackbar.make(holder.view,response.message(),2000).show();
+                    } else {
+                        Snackbar.make(holder.view, response.message(), 2000).show();
                     }
                     holder.mSwitchItem.setEnabled(true);
                 }
 
                 @Override
                 public void onFailure(@NotNull Call<MenuItemAvailableResponse> call, @NotNull Throwable t) {
-                    Snackbar.make(holder.view, Objects.requireNonNull(t.getMessage()),2000).show();
+                    Snackbar.make(holder.view, Objects.requireNonNull(t.getMessage()), 2000).show();
                     Log.e(TAG, "onFailure: " + t.getMessage());
                 }
             });
@@ -272,7 +271,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
         void getMenuItems(boolean hasSubItems, RecyclerView mParent1RV, int position);
     }
 
-    private void adapter(){
+    private void adapter() {
 
     }//adapter
 

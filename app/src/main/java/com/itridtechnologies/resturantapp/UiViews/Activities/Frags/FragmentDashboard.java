@@ -1,18 +1,15 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities.Frags;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,7 +23,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
@@ -43,7 +39,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.JsonObject;
 import com.itridtechnologies.resturantapp.Adapters.RecyclerViewAdapterDashboard;
@@ -74,6 +69,8 @@ import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -616,29 +613,53 @@ public class FragmentDashboard extends Fragment {
 
     private void setTimeLayout(int isClosed, String openCloseTime, String openToday, String day) {
 
-        String openTime = openCloseTime;
-        String closeTime = openToday;
+        String time12Hours = get12Hours(openCloseTime);
 
         Log.e(TAG, "setTimeLayout: open today " + openToday);
 
-        if (closeTime.equals("N/A") && openTime.equals("N/A")) {
+        if (openToday.equals("N/A") && openCloseTime.equals("N/A")) {
             String msg = AppManager.getBusinessDetails().getData().getResults().getBusinessName() + " Is Closed";
             imgNoOrder.setImageResource(R.drawable.ic_businessclosed);
             noOrders.setText(msg);
 
         } else if (openToday.equals("yes")) {
-            Log.e(TAG, "setTimeLayout: " + openCloseTime.substring(0, openTime.length() - 3) + " close " + closeTime);
-            String openMsg = "Open Now - Accepting Orders till " + openTime.substring(0, openCloseTime.length() - 3) + " PM";
+            Log.e(TAG, "setTimeLayout: " + time12Hours + " close " + openToday);
+            String openMsg = "Open Now - Accepting Orders till " + time12Hours;
             if (isClosed == 0) {
                 imgNoOrder.setImageResource(R.drawable.ic_businessopen);
                 noOrders.setText(openMsg);
             }
         } else {
-            String closeMsg = "Closed - Opening " + day + " " + openTime.substring(0, openTime.length() - 3) + " AM";
+            String closeMsg = "Closed - Opening " + day + " " + time12Hours;
             imgNoOrder.setImageResource(R.drawable.ic_businessclosed);
             noOrders.setText(closeMsg);
         }
     }//setTimeLayout
+
+
+    private String get12Hours(String time) {
+        String convertTimeIn12Hours = "";
+
+        Toast.makeText(requireContext(), time, Toast.LENGTH_SHORT).show();
+
+        DateFormat f1 = new SimpleDateFormat("HH:mm:ss"); //HH for hour of the day (0 - 23)
+        Date d;
+        try {
+            d = f1.parse(time);
+            DateFormat f2 = new SimpleDateFormat("h:mma");
+            if (d!=null)
+            {
+                convertTimeIn12Hours = f2.format(d); // "12:18am"
+                Toast.makeText(requireContext(), "" + convertTimeIn12Hours, Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (ParseException e) {
+            Log.e(TAG, "get12Hours: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return convertTimeIn12Hours;
+    }//get12Hours
 
     ////Send to preparing order if autoaccept is on
     private void autoPreparing(String orderId) {
@@ -738,6 +759,8 @@ public class FragmentDashboard extends Fragment {
 ////                                }
 ////                            });
 ////
+
+
                 } catch (Exception e) {
                     Log.e(TAG, "onResponse: " + e.getMessage());
                 }

@@ -1,5 +1,6 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities.Frags;
 
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -16,6 +18,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.beeline09.daterangepicker.date.DateRangePickerFragment;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.itridtechnologies.resturantapp.Adapters.AdapterHistoryFragment;
 import com.itridtechnologies.resturantapp.R;
@@ -196,6 +200,8 @@ public class FragmentHistory extends Fragment {
         builder.setTitleText("Select a Range to get Orders");
         builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
 
+        Calendar c = Calendar.getInstance();
+
 //        DatePickerDialog.
         final MaterialDatePicker materialDatePicker = builder.build();
 
@@ -209,14 +215,52 @@ public class FragmentHistory extends Fragment {
                 Log.e("TAG", "onCheckedChanged: " + checkedId);
                 //Calender View
                 mDateET.setOnClickListener(v -> {
+
+                    DateRangePickerFragment dateRangePickerFragment = DateRangePickerFragment.Companion.newInstance(
+                            new DateRangePickerFragment.OnDateRangeSetListener() {
+                                @Override
+                                public void onDateRangeSet(DateRangePickerFragment view,
+                                                           int yearStart, int monthStart,
+                                                           int dayStart, int yearEnd,
+                                                           int monthEnd, int dayEnd) {
+
+                                    Toast.makeText(requireContext(), "start from " + yearStart + monthStart + dayStart
+                                            + "end at " + yearEnd + monthEnd + dayEnd, Toast.LENGTH_SHORT).show();
+
+                                    // grab the date range, do what you want
+                                }
+                            });
+
+                    dateRangePickerFragment.setThemeDark(true);
+                    dateRangePickerFragment.setMaxDate(c);
+                    dateRangePickerFragment.show(getChildFragmentManager(), "dateRangePicker");
+
                     mDateET.setEnabled(false);
+
                     //DateRange Picker
-                    materialDatePicker.show(getChildFragmentManager(), "Range Picker");
+//                    materialDatePicker.show(getChildFragmentManager(), "Range Picker");
 
                 });
 
+
+                DateRangePickerFragment dateRangePickerFragment = DateRangePickerFragment.Companion.newInstance(
+                        new DateRangePickerFragment.OnDateRangeSetListener() {
+                            @Override
+                            public void onDateRangeSet(DateRangePickerFragment view,
+                                                       int yearStart, int monthStart,
+                                                       int dayStart, int yearEnd,
+                                                       int monthEnd, int dayEnd) {
+                                // grab the date range, do what you want
+                            }
+                        });
+
+                dateRangePickerFragment.setMaxDate(c);
+                dateRangePickerFragment.show(getChildFragmentManager(), "dateRangePicker");
+
+
+
                 //DateRange Picker
-                materialDatePicker.show(getChildFragmentManager(), "Range Picker");
+//                materialDatePicker.show(getChildFragmentManager(), "Range Picker");
 
             }
             else {
