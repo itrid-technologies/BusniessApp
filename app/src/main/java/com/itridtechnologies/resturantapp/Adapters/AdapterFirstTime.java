@@ -113,19 +113,21 @@ public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.deta
         holder.mOrderTime.setText(minTime[1].substring(0, minTime[1].length() - 8));
 
         //Payment Status
-        if (mStatus.trim().equals("0")) {
+        if (String.valueOf(mOrderInfo.getPaymentStatus()).trim().equals("0")) {
+            holder.mStatus.setText(mStatus);
             mStatus = "Unpaid";
-        } else if (mStatus.trim().equals("1")) {
+        } else if (String.valueOf(mOrderInfo.getPaymentStatus()).trim().equals("1")) {
             mStatus = "Paid";
+            holder.mStatus.setText(mStatus);
         }
 
         ///Setting the String name of Order Type 0,1,2
         if (mType.trim().equals("0")) {
-            mType = "Self-Delivery";
+            mType = "PickUp";
         } else if (mType.trim().equals("1")) {
-            mType = "Deliver with own courier";
-        } else {
             mType = "Delivery";
+        } else {
+            mType = "Deliver with own courier";
         }
 
         sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
