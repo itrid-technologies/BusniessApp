@@ -2,6 +2,7 @@ package com.itridtechnologies.resturantapp.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +45,12 @@ public class AdapterTotal extends RecyclerView.Adapter<AdapterTotal.detailHolder
         TotalModel totalModel = totalModelList.get(position);
         DecimalFormat format = new DecimalFormat("0.00");
 
+        if (position == totalModelList.size())
+        {
+            holder.mSubTotalAmount.setTypeface(null, Typeface.BOLD);
+            holder.mSubTotalName.setTypeface(null, Typeface.BOLD);
+        }
+
         holder.mSubTotalName.setText(totalModel.getmTotalName());
         holder.mSubTotalAmount.setText(Constants.CURRENCY_SIGN + " " + format.format(Double.parseDouble(totalModel.getmTotalAmount())));
 
@@ -54,7 +61,7 @@ public class AdapterTotal extends RecyclerView.Adapter<AdapterTotal.detailHolder
         return totalModelList.size();
     }
 
-    public class detailHolderr extends RecyclerView.ViewHolder {
+    public static class detailHolderr extends RecyclerView.ViewHolder {
 
         private TextView mSubTotalName;
         private TextView mSubTotalAmount;

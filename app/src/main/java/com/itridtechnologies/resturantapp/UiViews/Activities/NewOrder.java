@@ -683,7 +683,7 @@ public class NewOrder extends AppCompatActivity {
                             Log.e(TAG, "onResponse: order total " + orderTotal);
                         }
 
-                        orderTotal = orderTotal + valueTotal;
+//                        orderTotal = orderTotal + valueTotal;
 
                         //Updating UI
                         UpdateUI(

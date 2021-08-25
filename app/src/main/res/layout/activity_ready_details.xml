@@ -346,49 +346,49 @@
                         android:id="@+id/rv_order_totals_ready"
                         style="@style/fieldsBg"
                         android:layout_width="match_parent"
+                        android:paddingBottom="15dp"
                         android:layout_height="wrap_content"
-                        android:paddingTop="20dp"
-                        tools:listitem="@layout/total_container" />
+                        android:paddingTop="20dp" />
 
                 </TableRow>
 
-                <TableRow
-                    style="@style/fieldsBg"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+<!--                <TableRow-->
+<!--                    style="@style/fieldsBg"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content">-->
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="20dp"
-                        android:weightSum="5">
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:orientation="horizontal"-->
+<!--                        android:paddingTop="10dp"-->
+<!--                        android:paddingBottom="20dp"-->
+<!--                        android:weightSum="5">-->
 
-                        <TextView
-                            android:id="@+id/tv_total"
-                            style="@style/FontMediumBlack"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="30dp"
-                            android:layout_weight="4"
-                            android:text="@string/Total"
-                            android:textStyle="bold" />
+<!--                        <TextView-->
+<!--                            android:id="@+id/tv_total"-->
+<!--                            style="@style/FontMediumBlack"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginLeft="30dp"-->
+<!--                            android:layout_weight="4"-->
+<!--                            android:text="@string/Total"-->
+<!--                            android:textStyle="bold" />-->
 
-                        <TextView
-                            android:id="@+id/tv_sub_total_amount_RO"
-                            style="@style/FontMediumBlack"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="30dp"
-                            android:layout_weight="1"
-                            android:gravity="end"
-                            android:text="200.00"
-                            android:textStyle="bold" />
+<!--                        <TextView-->
+<!--                            android:id="@+id/tv_sub_total_amount_RO"-->
+<!--                            style="@style/FontMediumBlack"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginEnd="30dp"-->
+<!--                            android:layout_weight="1"-->
+<!--                            android:gravity="end"-->
+<!--                            android:text="200.00"-->
+<!--                            android:textStyle="bold" />-->
 
-                    </LinearLayout>
+<!--                    </LinearLayout>-->
 
-                </TableRow>
+<!--                </TableRow>-->
 
 
                 <TableRow

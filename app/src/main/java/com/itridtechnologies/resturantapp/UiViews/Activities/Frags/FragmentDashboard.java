@@ -222,7 +222,8 @@ public class FragmentDashboard extends Fragment {
                     // gcm successfully registered
                     Log.e(TAG, "onCreate: " + FCM.deviceToken.getValue());
 
-                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
+                }
+                else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
 
                     // new push notification is received
                     mOrderId = intent.getStringExtra("idByNotification");
@@ -382,6 +383,28 @@ public class FragmentDashboard extends Fragment {
             }
             subscribeToTest();
         });
+
+        if (mBusyMode.isChecked())
+        {
+            anim_in.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    mBusyNotify.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+            mBusyNotify.startAnimation(anim_in);
+        }
 
         ////Setting no orders
         openCloseFun();
