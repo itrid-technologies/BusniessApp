@@ -21,6 +21,7 @@ import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.models.DelayOrder.DelayResponse;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
+import com.itridtechnologies.resturantapp.utils.LogoutViaNotification;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -48,6 +49,19 @@ public class DelayOrder extends AppCompatActivity {
         mOrderNo = getIntent().getStringExtra("orderNo");
         mToolbar.setTitle("Delay Order #"+mOrderNo);
         setClickListener();
+        LogoutViaNotification.logoutOnType();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogoutViaNotification.onResumeFun();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LogoutViaNotification.onPauseFun();
     }
 
     @SuppressLint({"SetTextI18n", "UseCompatLoadingForDrawables"})

@@ -41,6 +41,7 @@ import com.itridtechnologies.resturantapp.models.newOrder.OrderTotalsItem;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 import com.itridtechnologies.resturantapp.utils.Constants;
+import com.itridtechnologies.resturantapp.utils.LogoutViaNotification;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -124,6 +125,8 @@ public class NewOrder extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_order);
+
+        LogoutViaNotification.logoutOnType();
         //Context for Room
         //initializing database
         databaseRoom = RoomDB.getInstance(NewOrder.this);
@@ -787,7 +790,20 @@ public class NewOrder extends AppCompatActivity {
             intent.setData(Uri.parse(uri));
             startActivity(intent);
         });
-    }//callfun
+    }//callfun..
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogoutViaNotification.onResumeFun();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LogoutViaNotification.onPauseFun();
+    }
 
     @Override
     public void onBackPressed() {

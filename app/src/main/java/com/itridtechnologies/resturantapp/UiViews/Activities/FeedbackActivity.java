@@ -29,6 +29,7 @@ import com.itridtechnologies.resturantapp.models.Feedback.FeedbackResponse;
 import com.itridtechnologies.resturantapp.models.feedbacktags.FeedbackTagsResponse;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
+import com.itridtechnologies.resturantapp.utils.LogoutViaNotification;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -68,7 +69,21 @@ public class FeedbackActivity extends AppCompatActivity {
 
         toolbarfun();
 
+        LogoutViaNotification.logoutOnType();
+
     }//onCreate
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogoutViaNotification.onResumeFun();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LogoutViaNotification.onPauseFun();
+    }
 
     //Setting Toolbar
     public void toolbarfun() {

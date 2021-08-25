@@ -1,7 +1,7 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities.Frags;
 
-import android.app.DatePickerDialog;
-import android.content.DialogInterface;
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -18,7 +17,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,7 +28,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.beeline09.daterangepicker.date.DateRangePickerFragment;
-import com.google.android.material.datepicker.MaterialDatePicker;
 import com.itridtechnologies.resturantapp.Adapters.AdapterHistoryFragment;
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.UiViews.Activities.HistoryDetails;
@@ -39,6 +36,7 @@ import com.itridtechnologies.resturantapp.UiViews.Activities.Menu;
 import com.itridtechnologies.resturantapp.UiViews.Activities.Settings;
 import com.itridtechnologies.resturantapp.UiViews.Activities.help;
 import com.itridtechnologies.resturantapp.model.NewHistory;
+import com.itridtechnologies.resturantapp.models.Pagination.PaginationResponse;
 import com.itridtechnologies.resturantapp.models.historyNew.NewHistoryWithTotals;
 import com.itridtechnologies.resturantapp.models.orderHistory.ItemsItem;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
@@ -60,8 +58,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static android.content.ContentValues.TAG;
-
 public class FragmentHistory extends Fragment {
 
     private RecyclerView mHistoryRecyclerView; //Main RecyclerView
@@ -72,6 +68,22 @@ public class FragmentHistory extends Fragment {
     private PreferencesManager pm;
     private TextView mNoRecordFound;
     private LinearLayout mLayout;
+    private boolean isDated = false;
+
+
+    //page size
+    private final int pageSize = 10;
+    //pagination var
+    private int page_no = 1;
+    //flags
+    private boolean isLastPage;
+    private boolean isLoading;
+    //checking last pos
+    private int firstVisibleItem;
+    private int visibleItemCount;
+    private int totalItemCount;
+    //layout manager
+    private LinearLayoutManager manager;
 
     //Table Row
     private TableRow mTRDatePicker;
@@ -100,10 +112,6 @@ public class FragmentHistory extends Fragment {
     //Starting and End Date For Filtering
     private String mStartDate = "";
     private String mEndDate = "";
-    private String mStartMonth;
-    private String mEndMonth;
-    private String mStartDay;
-    private String mEndDay;
 
 
     @Override
@@ -153,7 +161,7 @@ public class FragmentHistory extends Fragment {
                     startActivity(intent);
                     return false;
                 }
-                case R.id.over_flow_log_out:{
+                case R.id.over_flow_log_out: {
                     Intent intent = new Intent(requireContext(), MainActivity.class);
                     pm.clearSharedPref();
                     pm.saveMyDataBool("login", false);
@@ -194,17 +202,17 @@ public class FragmentHistory extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        //date Range Picker
-        MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.dateRangePicker();
-
-        builder.setTitleText("Select a Range to get Orders");
-        builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
+//
+//        //date Range Picker
+//        MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.dateRangePicker();
+//
+//        builder.setTitleText("Select a Range to get Orders");
+//        builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
 
         Calendar c = Calendar.getInstance();
-
-//        DatePickerDialog.
-        final MaterialDatePicker materialDatePicker = builder.build();
+//
+////        DatePickerDialog.
+//        final MaterialDatePicker materialDatePicker = builder.build();
 
         //////For taking date from calender
         mRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
@@ -221,7 +229,7 @@ public class FragmentHistory extends Fragment {
                             (view, yearStart, monthStart, dayStart, yearEnd, monthEnd, dayEnd) -> {
                                 mDateET.setEnabled(true);
 
-                                datee = "From: " + dayStart + "-" + monthStart + "-" + yearStart + " To : " + dayEnd + "-" + monthEnd  + "-" + yearEnd;
+                                datee = "From: " + dayStart + "-" + monthStart + "-" + yearStart + " To : " + dayEnd + "-" + monthEnd + "-" + yearEnd;
                                 mDateET.setText(datee);
 
                                 mDateET.setEnabled(true);
@@ -254,7 +262,7 @@ public class FragmentHistory extends Fragment {
                             mDateET.setEnabled(true);
 
 //                            Log.e(TAG, "onStart: " + materialDatePicker.getHeaderText());
-                            datee = "From: " + dayStart + "-" + monthStart + "-" + yearStart + " To : " + dayEnd + "-" + monthEnd  + "-" + yearEnd;
+                            datee = "From: " + dayStart + "-" + monthStart + "-" + yearStart + " To : " + dayEnd + "-" + monthEnd + "-" + yearEnd;
                             mDateET.setText(datee);
 
                             mDateET.setEnabled(true);
@@ -276,12 +284,10 @@ public class FragmentHistory extends Fragment {
                 dateRangePickerFragment.show(getChildFragmentManager(), "dateRangePicker");
 
 
-
                 //DateRange Picker
 //                materialDatePicker.show(getChildFragmentManager(), "Range Picker");
 
-            }
-            else {
+            } else {
                 mStartDate = "all";
                 mEndDate = "all";
 
@@ -345,149 +351,167 @@ public class FragmentHistory extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        page_no = 1;
+
+        Log.e(TAG, "onResume: ");
         Log.e(TAG, "onResume: i m resumed");
-    }
-
-    private void convertIntoNumberStartMonth(String startMonth) {
-        switch (startMonth) {
-            case "Jan": {
-                mStartMonth = "01";
-                break;
-            }
-            case "Feb": {
-                mStartMonth = "02";
-                break;
-            }
-            case "Mar": {
-                mStartMonth = "03";
-                break;
-            }
-            case "Apr": {
-                mStartMonth = "04";
-                break;
-            }
-            case "May": {
-                mStartMonth = "05";
-                break;
-            }
-            case "Jun": {
-                mStartMonth = "06";
-                break;
-            }
-            case "Jul": {
-                mStartMonth = "07";
-                break;
-            }
-            case "Aug": {
-                mStartMonth = "08";
-                break;
-            }
-            case "Sep": {
-                mStartMonth = "09";
-                break;
-            }
-            case "Oct": {
-                mStartMonth = "10";
-                break;
-            }
-            case "Nov": {
-                mStartMonth = "11";
-                break;
-            }
-            case "Dec": {
-                mStartMonth = "12";
-                break;
-            }
-            default: {
-                mStartMonth = "09";
-                break;
-            }
-        }
-    }
-
-    private void convertIntoNumberEndMonth(String endMonth) {
-        switch (endMonth) {
-            case "Jan": {
-                mEndMonth = "01";
-                break;
-            }
-            case "Feb": {
-                mEndMonth = "02";
-                break;
-            }
-            case "Mar": {
-                mEndMonth = "03";
-                break;
-            }
-            case "Apr": {
-                mEndMonth = "04";
-                break;
-            }
-            case "May": {
-                mEndMonth = "05";
-                break;
-            }
-            case "Jun": {
-                mEndMonth = "06";
-                break;
-            }
-            case "Jul": {
-                mEndMonth = "07";
-                break;
-            }
-            case "Aug": {
-                mEndMonth = "08";
-                break;
-            }
-            case "Sep": {
-                mEndMonth = "09";
-                break;
-            }
-            case "Oct": {
-                mEndMonth = "10";
-                break;
-            }
-            case "Nov": {
-                mEndMonth = "11";
-                break;
-            }
-            case "Dec": {
-                mEndMonth = "12";
-                break;
-            }
-            default: {
-                mEndMonth = "10";
-                break;
-            }
-        }
     }
 
     ///Updating user Interface
     //Setting Adapter
     private void adapter() {
         try {
-            mHistoryRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext().getApplicationContext()));
+            manager = new LinearLayoutManager(requireContext().getApplicationContext());
             adapter = new AdapterHistoryFragment(histOrderList, requireContext());
             mHistoryRecyclerView.setAdapter(adapter);
+            mHistoryRecyclerView.setLayoutManager(manager);
 
             adapter.setOnItemClickListener(position -> {
                 Intent intent = new Intent(requireContext(), HistoryDetails.class);
                 pm.saveMyData("orderIdHis", histOrderList.get(position).getmOrderNumber());
+                pm.saveMyData("pageNo", String.valueOf(page_no));
                 pm.saveMyData("orderHisPos", String.valueOf(position));
                 startActivity(intent);
             });
+
+
+            //checking for last item LastItem
+            LastItem();
+
 
         } catch (Exception ignored) {
         }
 
     }//UI
 
+
+    private void LastItem() {
+
+        mHistoryRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                Log.e(TAG, "onScrollStateChanged: " + "");
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                Log.e(TAG, "onScrolled: " + "");
+
+                visibleItemCount = manager.getChildCount();
+                totalItemCount = manager.getItemCount();
+                firstVisibleItem = manager.findFirstVisibleItemPosition();
+
+                if (!isLoading && !isLastPage) {
+
+                    if ((visibleItemCount + firstVisibleItem) >= totalItemCount &&
+                            firstVisibleItem >= 0 && totalItemCount >= pageSize) {
+
+                        page_no++;
+                        Log.e(TAG, "onScrolled: " + "last item" + page_no);
+
+                        LoadMoreItems();
+
+                    }
+                }
+
+            }
+        });
+
+    }
+
+
+    private void LoadMoreItems() {
+
+        isLoading = true;
+
+        if(isDated)
+        {
+            getHistoryOrders(mStartDate, mEndDate);
+        }
+        else
+        {
+            Call<NewHistoryWithTotals> call = RetrofitNetMan.getRestApiService().getFullHistory(AppManager.getBusinessDetails().getData().getToken(), page_no);
+            call.enqueue(new Callback<NewHistoryWithTotals>() {
+                @Override
+                public void onResponse(@NonNull Call<NewHistoryWithTotals> call, @NonNull Response<NewHistoryWithTotals> response) {
+
+                    isLoading = false;
+
+                    if (response.isSuccessful()) {
+
+                        if (response.body() != null) {
+
+                            if (response.body().isSuccess()) {
+
+                                if (response.body().getData().getResults().size() > 0) {
+
+                                    DecimalFormat format = new DecimalFormat("0.00");
+
+                                    //collect data and update UI
+                                    Log.e(TAG, "onResponse: " + response.body().getData().getResults().size());
+                                    for (int i = 0; i < response.body().getData().getResults().size(); i++) {
+
+                                        //CALCULATING TOTAL
+                                        for (int j = 0; j < response.body().getData().getResults().get(i).getOrderTotal().size(); j++) {
+                                            mTotalValue = mTotalValue + Double.parseDouble(response.body().getData().getResults().get(i).getOrderTotal().get(j).getValue());
+                                        }
+                                        Log.e(TAG, "onResponse: " + mTotalValue);
+
+                                        histOrderList.add(new NewHistory(
+                                                String.valueOf(response.body().getData().getResults().get(i).getId()),
+                                                response.body().getData().getResults().get(i).getFirstName() + " " +
+                                                        response.body().getData().getResults().get(i).getLastName(),
+                                                String.valueOf(response.body().getData().getResults().get(i).getItemCount()),
+                                                String.valueOf(format.format(mTotalValue)),
+                                                response.body().getData().getResults().get(i).getPickuptime()
+                                        ));
+                                        mTotalValue = 0.00;
+                                        Log.e(TAG, "onResponse: Cleared" + mTotalValue);
+                                    }
+
+                                    adapter.AddData(histOrderList);
+                                    isLastPage = response.body().getData().getResults().size() < pageSize;
+
+                                } else {
+
+                                    isLastPage = true;
+                                }
+
+                            }
+
+                        }
+
+                    } else {
+
+                        Log.e(TAG, "onResponse:load more " + "something is wrong");
+
+                    }
+
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<NewHistoryWithTotals> call, @NonNull Throwable t) {
+
+                    Log.e(TAG, "onFailure: " + t.getMessage());
+                    isLoading = false;
+
+                }
+            });
+        }
+
+
+    }
+
     //Getting History from Server (API)
     private void getHistoryOrders(String sDate, String eDate) {
         histOrderList.clear();
         //Getting token
         String token = AppManager.getBusinessDetails().getData().getToken();
-        Call<NewHistoryWithTotals> call = RetrofitNetMan.getRestApiService().getHistory(token, sDate, eDate);
+        Call<NewHistoryWithTotals> call = RetrofitNetMan.getRestApiService().getHistory(token, sDate, eDate, page_no);
 
         call.enqueue(new Callback<NewHistoryWithTotals>() {
             @Override
@@ -531,9 +555,9 @@ public class FragmentHistory extends Fragment {
                         mTVEmpty.setVisibility(View.VISIBLE);
                     }
                     mNSVHist.setVisibility(View.VISIBLE);
+                    isDated = true;
                     adapter();
-                }
-                else {
+                } else {
                     startActivity(new Intent(requireContext(), MainActivity.class));
                 }
                 mProgressBarHistFull.setVisibility(View.GONE);
@@ -551,7 +575,7 @@ public class FragmentHistory extends Fragment {
         histOrderList.clear();
         //Getting token
         String token = AppManager.getBusinessDetails().getData().getToken();
-        Call<NewHistoryWithTotals> call = RetrofitNetMan.getRestApiService().getFullHistory(token);
+        Call<NewHistoryWithTotals> call = RetrofitNetMan.getRestApiService().getFullHistory(token, page_no);
 
         call.enqueue(new Callback<NewHistoryWithTotals>() {
             @Override
@@ -587,18 +611,17 @@ public class FragmentHistory extends Fragment {
                                 Log.e(TAG, "onResponse: Cleared" + mTotalValue);
                             }
                             mNSVHist.setVisibility(View.VISIBLE);
+                            isDated = false;
                             adapter();
                         } catch (Exception exception) {
                             Log.e(TAG, "onResponse: " + exception.getMessage());
                         }
-                    }
-                    else {
+                    } else {
                         mNoHistoryImage.setVisibility(View.VISIBLE);
                         mTVEmpty.setText("No records found");
                         mTVEmpty.setVisibility(View.VISIBLE);
                     }
-                }
-                else {
+                } else {
                     startActivity(new Intent(requireContext(), MainActivity.class));
                 }
                 mProgressBarHistFull.setVisibility(View.GONE);
@@ -612,5 +635,21 @@ public class FragmentHistory extends Fragment {
     }//getFullHistoryOrders
 
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        page_no = 1;
+
+        Log.e(TAG, "onPause: ");
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        page_no = 1;
+
+        Log.e(TAG, "onDestroy: ");
+    }
 
 }

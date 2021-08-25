@@ -8,6 +8,7 @@
     android:orientation="vertical"
     tools:context=".UiViews.Activities.Frags.FragmentReady">
 
+
     <include
         android:id="@+id/action_bar_ready"
         layout="@layout/action_bar_frags"

@@ -47,7 +47,9 @@ public class FCM extends FirebaseMessagingService {
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.e(TAG, "Notification Body: " + remoteMessage.getNotification().getBody());
-            handleNotification(remoteMessage.getData().toString());
+            handleNotification(remoteMessage.getData().toString(),
+                    remoteMessage.getNotification().getBody(),
+                    remoteMessage.getData().get("type"));
         }
 
         //Check if message contains a data payload
@@ -88,10 +90,12 @@ public class FCM extends FirebaseMessagingService {
 
     //Function for handling notification
 
-    private void handleNotification(String orderId) {
+    private void handleNotification(String orderId,String message, String logoutType) {
         if (!NotificationsUtils.isAppIsInBackground(getApplicationContext())) {
             // app is in foreground, broadcast the push message
             Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
+            pushNotification.putExtra("message", message);
+            pushNotification.putExtra("type", logoutType);
             pushNotification.putExtra("idByNotification", orderId);
             LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
 

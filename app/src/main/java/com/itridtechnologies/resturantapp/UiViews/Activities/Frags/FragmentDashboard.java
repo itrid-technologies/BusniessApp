@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -89,7 +90,7 @@ public class FragmentDashboard extends Fragment {
     private ProgressBar mPBFull;
     private NestedScrollView mNSVDash;
     private LinearLayout mBusyNotify;
-    private int busyStatus = 0;
+    private int busyStatus;
     private TextView noOrders;
     private ImageView imgNoOrder;
     private int i;
@@ -222,6 +223,7 @@ public class FragmentDashboard extends Fragment {
                     Log.e(TAG, "onCreate: " + FCM.deviceToken.getValue());
 
                 } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
+
                     // new push notification is received
                     mOrderId = intent.getStringExtra("idByNotification");
                     Log.e(TAG, "onReceive: Order id " + mOrderId);
@@ -598,8 +600,6 @@ public class FragmentDashboard extends Fragment {
                     //Passing values to function and setting layout
                     setTimeLayout(mIsClosed, mOpenCloseTime, mOpenToday, mOpenDay);
 
-                } else {
-                    startActivity(new Intent(requireContext(), MainActivity.class));
                 }
             }
 
@@ -672,8 +672,6 @@ public class FragmentDashboard extends Fragment {
             public void onResponse(@NotNull Call<ActionResponse> caall, @NotNull Response<ActionResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     AppManager.saveActionDetails(response.body());
-                } else {
-                    startActivity(new Intent(requireContext(), MainActivity.class));
                 }
             }
 
@@ -856,8 +854,6 @@ public class FragmentDashboard extends Fragment {
                         imgNoOrder.setVisibility(View.VISIBLE);
                     }
 
-                } else {
-                    startActivity(new Intent(requireContext(), MainActivity.class));
                 }
 
             }
@@ -997,8 +993,6 @@ public class FragmentDashboard extends Fragment {
             public void onResponse(@NotNull Call<SettingResponse> call, @NotNull Response<SettingResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     setBusy(response.body().getMessage().get(0).getBusyMode());
-                } else {
-                    startActivity(new Intent(requireContext(), MainActivity.class));
                 }
             }
 
@@ -1029,6 +1023,10 @@ public class FragmentDashboard extends Fragment {
             @Override
             public void onResponse(@NotNull Call<UpdateSettingResponse> call1, @NotNull Response<UpdateSettingResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
+
+                    //resetting busy status value
+                    resetBusyStatus();
+
 //                    AppManager.SnackBar((AppCompatActivity) mActivity, response.body().getMessage());
                     if (mBusyMode.isChecked()) {
 
@@ -1048,7 +1046,6 @@ public class FragmentDashboard extends Fragment {
 
                             }
                         });
-
                         mBusyNotify.startAnimation(anim_in);
 
                     } else if (!mBusyMode.isChecked()) {
@@ -1077,16 +1074,11 @@ public class FragmentDashboard extends Fragment {
                     Log.e(TAG, "onResponse: " + response.message());
 
 
-                } else if (response.code() == 400) {
+                } else {
 
-                    if (response.body() != null) {
-                        AppManager.SnackBar((AppCompatActivity) mActivity, response.body().getMessage());
-                    }
-                    else {
-                        AppManager.SnackBar((AppCompatActivity) mActivity, response.message());
-                    }
-
-                    if (mBusyMode.isChecked()) {
+                    ///Setting delivery Switch
+                    if (busyStatus == 1) {
+                        mBusyMode.setChecked(true);
 
 
                         anim_in.setAnimationListener(new Animation.AnimationListener() {
@@ -1108,9 +1100,8 @@ public class FragmentDashboard extends Fragment {
 
                         mBusyNotify.startAnimation(anim_in);
 
-
-                    } else if (!mBusyMode.isChecked()) {
-
+                    } else if (busyStatus == 0) {
+                        mBusyMode.setChecked(false);
 
                         anim_out.setAnimationListener(new Animation.AnimationListener() {
                             @Override
@@ -1132,43 +1123,32 @@ public class FragmentDashboard extends Fragment {
                         mBusyNotify.startAnimation(anim_out);
                     }
 
-                } else {
                     if (response.body() != null) {
                         AppManager.SnackBar((AppCompatActivity) mActivity, response.body().getMessage());
-                    }
-                    else {
+                    } else {
                         AppManager.SnackBar((AppCompatActivity) mActivity, response.message());
                     }
-                    mBusyMode.setChecked(false);
-
-                    anim_out.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            mBusyNotify.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
-
-                        }
-                    });
-
-                    mBusyNotify.startAnimation(anim_out);
                 }
             }
 
             @Override
             public void onFailure(@NotNull Call<UpdateSettingResponse> call1, @NotNull Throwable t) {
                 Log.e(TAG, "onFailure: " + t.getMessage());
-                    AppManager.SnackBar((AppCompatActivity) mActivity, t.getMessage());
+                AppManager.SnackBar((AppCompatActivity) mActivity, t.getMessage());
             }
         });
     }
+
+    private void resetBusyStatus() {
+
+        if (busyStatus == 1) {
+            busyStatus = 0;
+        } else {
+            busyStatus = 1;
+        }
+
+    }
+
 
     //Function to Set Busy Mode
     private void setBusy(int busy) {
@@ -1176,7 +1156,6 @@ public class FragmentDashboard extends Fragment {
         ///Setting delivery Switch
         if (busyStatus == 1) {
             mBusyMode.setChecked(true);
-
 
             anim_in.setAnimationListener(new Animation.AnimationListener() {
                 @Override

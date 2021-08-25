@@ -47,6 +47,15 @@ public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.deta
         this.mCtx = mCtx;
     }
 
+
+    public void AddData(List<OrdersItem> list){
+
+        prepareList.addAll(list);
+        notifyDataSetChanged();
+
+    }
+
+
     public void setOnItemClickListener(itemClickListener listener) {
         mListener = listener;
     }

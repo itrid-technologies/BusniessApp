@@ -27,6 +27,10 @@ public class MenuModel {
         this.mAvailabilityStatus = mAvailabilityStatus;
     }
 
+    public void setmYesNo(int mYesNo) {
+        this.mYesNo = mYesNo;
+    }
+
     public String getId() {
         return id;
     }

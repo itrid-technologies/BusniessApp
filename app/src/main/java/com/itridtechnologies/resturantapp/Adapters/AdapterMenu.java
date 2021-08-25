@@ -83,11 +83,6 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
         holder.mItemName.setText(mMenuItem.getmItemName());
         List<AddonModel> mOrderAddon = new ArrayList<>();
 
-        Log.e(TAG, "onBindViewHolder: yes or no " + mMenuItem.getmYesNo());
-
-        if (mMenuItem.getmYesNo() == 1) {
-            holder.mSwitchItem.setChecked(true);
-        }
 
         if (mMenuItem.getId() != null) {
             //Setting on click listener
@@ -110,6 +105,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
                                     for (int i = 0; i < response.body().getData().size(); i++) {
                                         Log.e(TAG, "onResponse: addon respomse" + response.body().getData().size());
                                         mOrderAddon.add(new AddonModel(
+                                                response.body().getData().get(i).getId(),
                                                 response.body().getData().get(i).getName(),
                                                 response.body().getData().get(i).getAvailability(),
                                                 response.body().getData().get(i).getAddon()
@@ -177,7 +173,6 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
         }
 
         try {
-
             //validatyin chevron
             if (!mMenuItem.getmAddOnAvailable().equals("null")) {
                 holder.mShowDetails.setVisibility(View.VISIBLE);
@@ -198,14 +193,10 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
 
         Log.e(TAG, "onBindViewHolder: Menu availablitiy status" + mMenuItem.getmYesNo());
 
-        if (mMenuItem.getmYesNo() == 0) {
-            holder.itemView.setEnabled(true);
-            holder.mSwitchItem.setChecked(false);
-        } else {
-            holder.itemView.setEnabled(true);
-            holder.mSwitchItem.setChecked(true);
-//            holder.mShowDetails.setVisibility(View.GONE);
-        }
+        Log.e(TAG, "onBindViewHolder: yes or no " + mMenuItem.getmYesNo());
+
+        //            holder.mShowDetails.setVisibility(View.GONE);
+        holder.mSwitchItem.setChecked(mMenuItem.getmYesNo() != 0);
 
         /////Hiding If Not Available
 //        String avalibilityStatus = mMenuItem.getmAvailabilityStatus();
@@ -235,6 +226,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
 
             JsonObject obj = new JsonObject();
             holder.mSwitchItem.setEnabled(false);
+
             if (mMenuItem.getmYesNo() == 0) {
                 obj.addProperty("action", "1");
             } else {
@@ -243,6 +235,8 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
 
             obj.addProperty("actionType", "item");
             Log.e(TAG, "onBindViewHolder: menu " + mMenuItem.getmMenuid());
+
+
             Call<MenuItemAvailableResponse> call = RetrofitNetMan.getRestApiService().itemAvailable(token, String.valueOf(mMenuItem.getmMenuid()), obj);
             call.enqueue(new Callback<MenuItemAvailableResponse>() {
                 @Override
@@ -253,11 +247,21 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
                         Snackbar.make(holder.view, " " + response.body().getMessage(), 2000)
                                 .setBackgroundTint(mCtx.getResources().getColor(R.color.theme_color))
                                 .show();
+
+                        if(mMenuItem.getmYesNo() == 1)
+                        {
+                            mMenuItem.setmYesNo(0);
+                        }
+                        else {
+                            mMenuItem.setmYesNo(1);
+                        }
+
+                        holder.mSwitchItem.setEnabled(true);
+
                         Log.e(TAG, "onResponse: " + response.message());
                     } else {
                         Snackbar.make(holder.view, response.message(), 2000).show();
                     }
-                    holder.mSwitchItem.setEnabled(true);
                 }
 
                 @Override
@@ -271,6 +275,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
         });
     }
 
+
     @Override
     public int getItemCount() {
         return menuItems.size();
@@ -280,10 +285,6 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
     public interface ItemClickListenerMenu {
         void getMenuItems(boolean hasSubItems, RecyclerView mParent1RV, int position);
     }
-
-    private void adapter() {
-
-    }//adapter
 
     public static class detailHolder extends RecyclerView.ViewHolder {
         private final TextView mItemName;

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.model.NewHistory;
+import com.itridtechnologies.resturantapp.models.Pagination.OrdersItem;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
@@ -60,6 +61,14 @@ public class AdapterHistoryFragment extends RecyclerView.Adapter<AdapterHistoryF
         int givenCurrentSeconds = cal.get(Calendar.SECOND);
         totalGivenTime = (givenCurrentHours * 3600) + (givenCurrentMinutes * 60) + givenCurrentSeconds;
     }
+
+    public void AddData(List<NewHistory> list){
+
+        histList.addAll(list);
+        notifyDataSetChanged();
+
+    }
+
 
     public void setOnItemClickListener(itemClickListener listener) {
         mListenerr = listener;

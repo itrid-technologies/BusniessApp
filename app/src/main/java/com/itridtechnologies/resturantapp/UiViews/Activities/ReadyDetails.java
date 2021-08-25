@@ -40,6 +40,7 @@ import com.itridtechnologies.resturantapp.models.newOrder.OrderTotalsItem;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 import com.itridtechnologies.resturantapp.utils.Constants;
+import com.itridtechnologies.resturantapp.utils.LogoutViaNotification;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -153,6 +154,7 @@ public class ReadyDetails extends AppCompatActivity {
 
         getOrderDetails(or);
 
+        LogoutViaNotification.logoutOnType();
         totalFun();
         Listener();
     }
@@ -672,5 +674,19 @@ public class ReadyDetails extends AppCompatActivity {
             }
         });
     }//end get
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogoutViaNotification.onResumeFun();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LogoutViaNotification.onPauseFun();
+    }
 
 }

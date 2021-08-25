@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.utils.AppManager;
+import com.itridtechnologies.resturantapp.utils.LogoutViaNotification;
 
 import zendesk.logger.Logger;
 import zendesk.messaging.android.Messaging;
@@ -27,6 +28,19 @@ public class help extends AppCompatActivity {
         Messaging.instance().showMessaging(help.this);
         Logger.setLoggable(true);
         Logger.isLoggable();
+        LogoutViaNotification.logoutOnType();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogoutViaNotification.onResumeFun();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LogoutViaNotification.onPauseFun();
     }
 
     ////Toolbar

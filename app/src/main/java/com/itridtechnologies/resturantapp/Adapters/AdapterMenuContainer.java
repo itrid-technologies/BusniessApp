@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +20,6 @@ import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.model.AddonModel;
 import com.itridtechnologies.resturantapp.model.ModiferModel;
 import com.itridtechnologies.resturantapp.models.MenuItemAvailable.MenuItemAvailableResponse;
-import com.itridtechnologies.resturantapp.models.OrderSubItems.AddonItemsItem;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 
@@ -42,6 +40,7 @@ public class AdapterMenuContainer extends RecyclerView.Adapter<AdapterMenuContai
     private final boolean haveSubItems = false;
     private final Context mCtx;
     private String token;
+    private static final String TAG = "Cannot invoke method length() on null object";
 
     public AdapterMenuContainer(List<AddonModel> addonItems, Context mCtx) {
         this.addonItems = addonItems;
@@ -65,6 +64,7 @@ public class AdapterMenuContainer extends RecyclerView.Adapter<AdapterMenuContai
 
         @SuppressLint("ResourceAsColor")
         AddonModel mAddonItem = addonItems.get(position);
+
         holder.mAddOnTitle.setText(mAddonItem.getmAddonName());
 
         Log.e("TAG", "onBindViewHolder: addon " + mAddonItem.getmAvailibility());
@@ -85,64 +85,79 @@ public class AdapterMenuContainer extends RecyclerView.Adapter<AdapterMenuContai
         holder.mRVAddon.setHasFixedSize(true);
         holder.mRVAddon.setAdapter(adapterModifier);
 
-        Log.e("TAG", "onBindViewHolder: mAddonItem.getmAvailibility()" + mAddonItem.getmAvailibility());
-
-        holder.mSwitch.setChecked(mAddonItem.getmAvailibility() == 1);
-
         ///Hitting Put Api
         holder.mSwitch.setOnClickListener(v -> {
             JsonObject obj = new JsonObject();
             holder.mSwitch.setEnabled(false);
             if (mAddonItem.getmAvailibility() == 0) {
-                obj.addProperty("action", "0");
+                obj.addProperty("action", "1");
                 obj.addProperty("actionType", "addon");
             } else {
-                obj.addProperty("action", "1");
+                obj.addProperty("action", "0");
                 obj.addProperty("actionType", "addon");
             }
 
-            Call<MenuItemAvailableResponse> call = RetrofitNetMan.getRestApiService().itemAvailable(token, String.valueOf(mAddonItem.getAddOnParent().get(0).getAddonId()), obj);
-            call.enqueue(new Callback<MenuItemAvailableResponse>() {
-                @SuppressLint("ResourceAsColor")
-                @Override
-                public void onResponse(@NotNull Call<MenuItemAvailableResponse> call, @NotNull Response<MenuItemAvailableResponse> response) {
+            try {
+                Call<MenuItemAvailableResponse> call = RetrofitNetMan.getRestApiService().itemAvailable(token, String.valueOf(mAddonItem.getAddOnParent().get(0).getAddonId()), obj);
+                call.enqueue(new Callback<MenuItemAvailableResponse>() {
+                    @SuppressLint("ResourceAsColor")
+                    @Override
+                    public void onResponse(@NotNull Call<MenuItemAvailableResponse> call, @NotNull Response<MenuItemAvailableResponse> response) {
 //                    Log.e("Id Number", pm.getMyDataString("itemId"));
-                    if (response.isSuccessful()) {
-                        Log.e("TAG", "onResponse: " + response.message() + response.code());
-                        if (response.body() != null) {
-                            Snackbar.make(holder.itemView, " " + response.body().getMessage(), 2000)
-                                    .setBackgroundTint(mCtx.getResources().getColor(R.color.theme_color))
-                                    .show();
-                        } else {
-                            Snackbar.make(holder.itemView, " " + response.message(), 2000)
-                                    .setBackgroundTint(mCtx.getResources().getColor(R.color.theme_color))
-                                    .show();
-                        }
+                        if (response.isSuccessful() && response.body()!=null) {
 
-                    } else if (response.code() == 400) {
-                        Log.e("TAG", "onResponse:hs " + response.message() + response.code());
-                        if (response.body() != null) {
-                            Snackbar.make(holder.itemView, " " + response.body().getMessage(), 2000)
-                                    .setBackgroundTint(mCtx.getResources().getColor(R.color.theme_color))
-                                    .show();
+                            //resetting availibility value
+                            if (mAddonItem.getmAvailibility() == 0) {
+                                mAddonItem.setmAvailibility(1);
+                            } else {
+                                mAddonItem.setmAvailibility(0);
+                            }
+
+                            Log.e("TAG", "onResponse: " + response.message() + response.code());
+                            if (response.body() != null) {
+                                Snackbar.make(holder.itemView, " " + response.body().getMessage(), 2000)
+                                        .setBackgroundTint(mCtx.getResources().getColor(R.color.theme_color))
+                                        .show();
+
+                                holder.mSwitch.setEnabled(true);
+
+                            } else {
+                                Snackbar.make(holder.itemView, " " + response.message(), 2000)
+                                        .setBackgroundTint(mCtx.getResources().getColor(R.color.theme_color))
+                                        .show();
+                            }
+
                         } else {
-                            Snackbar.make(holder.itemView, " " + response.message(), 2000)
-                                    .setBackgroundTint(mCtx.getResources().getColor(R.color.theme_color))
-                                    .show();
+                            Log.e("TAG", "onResponse:hs " + response.message() + response.code());
+                            if (response.body() != null) {
+                                Snackbar.make(holder.itemView, " " + response.body().getMessage(), 2000)
+                                        .setBackgroundTint(mCtx.getResources().getColor(R.color.theme_color))
+                                        .show();
+                            } else {
+                                Snackbar.make(holder.itemView, " " + response.message(), 2000)
+                                        .setBackgroundTint(mCtx.getResources().getColor(R.color.theme_color))
+                                        .show();
+                            }
+                            holder.mSwitch.setChecked(false);
                         }
-                        holder.mSwitch.setChecked(false);
                     }
-                    holder.mSwitch.setEnabled(true);
-                }
 
-                @SuppressLint("ResourceAsColor")
-                @Override
-                public void onFailure(@NotNull Call<MenuItemAvailableResponse> call, @NotNull Throwable t) {
-                    Snackbar.make(holder.itemView, " " + t.getMessage(), 2000)
-                            .setBackgroundTint(mCtx.getResources().getColor(R.color.theme_color))
-                            .show();
-                }
-            });
+                    @SuppressLint("ResourceAsColor")
+                    @Override
+                    public void onFailure(@NotNull Call<MenuItemAvailableResponse> call, @NotNull Throwable t) {
+                        Snackbar.make(holder.itemView, " " + t.getMessage(), 2000)
+                                .setBackgroundTint(mCtx.getResources().getColor(R.color.theme_color))
+                                .show();
+
+                        holder.mSwitch.setChecked(false);
+
+                    }
+                });
+            } catch (Exception e) {
+                holder.mSwitch.setEnabled(true);
+                Log.e(TAG, "onBindViewHolder: " + e.getMessage());
+            }
+
         });
 
     }

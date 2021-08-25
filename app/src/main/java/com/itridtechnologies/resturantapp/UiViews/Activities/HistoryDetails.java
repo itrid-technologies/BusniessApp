@@ -33,6 +33,7 @@ import com.itridtechnologies.resturantapp.models.historyagain.HistResponse;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 import com.itridtechnologies.resturantapp.utils.Constants;
+import com.itridtechnologies.resturantapp.utils.LogoutViaNotification;
 import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
 import org.jetbrains.annotations.NotNull;
@@ -92,6 +93,9 @@ public class HistoryDetails extends AppCompatActivity {
         mToolbar = findViewById(R.id.nav_bar_HD);
         //Hiding Status Bar with help of App Manager
         AppManager.hideStatusBar(this);
+
+        LogoutViaNotification.logoutOnType();
+
     }
 
     @Override
@@ -184,6 +188,13 @@ public class HistoryDetails extends AppCompatActivity {
 
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LogoutViaNotification.onPauseFun();
+    }
+
     @SuppressLint("SetTextI18n")
     public void totalFun(String totalAmount) {
         mRVTotals.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -196,7 +207,7 @@ public class HistoryDetails extends AppCompatActivity {
     //Getting Details from Server
     private void getDetails(String position) {
         int pos = Integer.parseInt(position);
-        Call<NewHistoryWithTotals> call = RetrofitNetMan.getRestApiService().getFullHistory(token);
+        Call<NewHistoryWithTotals> call = RetrofitNetMan.getRestApiService().getFullHistory(token,Integer.parseInt(pm.getMyDataString("pageNo")));
         call.enqueue(new Callback<NewHistoryWithTotals>() {
             @Override
             public void onResponse(@NotNull Call<NewHistoryWithTotals> call, @NotNull Response<NewHistoryWithTotals> response) {
@@ -345,6 +356,7 @@ public class HistoryDetails extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mOrderDetails.clear();
+        LogoutViaNotification.onResumeFun();
     }
 
 }

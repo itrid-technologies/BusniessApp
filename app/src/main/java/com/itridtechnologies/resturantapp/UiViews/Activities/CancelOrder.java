@@ -21,6 +21,7 @@ import com.itridtechnologies.resturantapp.models.CancelOrder.CancelResponse;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 import com.itridtechnologies.resturantapp.utils.Helper;
+import com.itridtechnologies.resturantapp.utils.LogoutViaNotification;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,13 +44,15 @@ public class CancelOrder extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cancel_order);
 
+        LogoutViaNotification.logoutOnType();
+
         AppManager.hideStatusBar(this);
         setVariables();
         toolbarFun();
         TextWatchFun();
         mOrderNo = getIntent().getStringExtra("orderNo");
 
-        mToolbar.setTitle("Cancel Order #"+mOrderNo);
+        mToolbar.setTitle("Cancel Order #" + mOrderNo);
         mCancelOrder.setBackgroundColor(getResources().getColor(R.color.disable_grey));
         mCancelOrder.setEnabled(false);
         mErrorMsg.setVisibility(View.INVISIBLE);
@@ -63,8 +66,8 @@ public class CancelOrder extends AppCompatActivity {
                                 mCancellationMessage.getText().toString().trim()
                         );
 
-            Intent intent = new Intent(CancelOrder.this,OrderIssues.class);
-            intent.putExtra("orderNo",mOrderNo);
+            Intent intent = new Intent(CancelOrder.this, OrderIssues.class);
+            intent.putExtra("orderNo", mOrderNo);
             startActivity(intent);
 
         });
@@ -72,10 +75,22 @@ public class CancelOrder extends AppCompatActivity {
     }//OC
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        LogoutViaNotification.onResumeFun();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LogoutViaNotification.onPauseFun();
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent = new Intent(CancelOrder.this,OrderIssues.class);
-        intent.putExtra("orderNo",mOrderNo);
+        Intent intent = new Intent(CancelOrder.this, OrderIssues.class);
+        intent.putExtra("orderNo", mOrderNo);
         startActivity(intent);
     }
 
@@ -116,7 +131,7 @@ public class CancelOrder extends AppCompatActivity {
     public void toolbarFun() {
         mToolbar.setNavigationOnClickListener(v -> {
             Intent intent = new Intent(CancelOrder.this, OrderIssues.class);
-            intent.putExtra("orderNo",mOrderNo);
+            intent.putExtra("orderNo", mOrderNo);
             startActivity(intent);
         });
     }
@@ -153,6 +168,7 @@ public class CancelOrder extends AppCompatActivity {
             @Override
             public void onResponse(@NotNull Call<CancelResponse> call, @NotNull Response<CancelResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
+
                     AppManager.intent(BasicActvity.class);
 
                 } else if (response.code() == 400) {

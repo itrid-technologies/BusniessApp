@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -28,6 +29,7 @@ import com.itridtechnologies.resturantapp.models.MenuCats.MenuCatsResponse;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 import com.itridtechnologies.resturantapp.utils.Helper;
+import com.itridtechnologies.resturantapp.utils.LogoutViaNotification;
 import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
 import org.jetbrains.annotations.NotNull;
@@ -69,6 +71,7 @@ public class Menu extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         pm = new PreferencesManager(Menu.this);
+        LogoutViaNotification.logoutOnType();
         //find views
         setVariables();
         getCategoriesApi();
@@ -80,9 +83,9 @@ public class Menu extends AppCompatActivity {
         //Pull to Swipe
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
 
+            Toast.makeText(getApplicationContext(), "refresginh", Toast.LENGTH_SHORT).show();
+
             int currentPos = mTabLayout.getSelectedTabPosition();
-            final Handler handler = new Handler();
-            handler.postDelayed(() -> mSwipeRefreshLayout.setRefreshing(false), 2000);
             mMenuAddonsList.clear();
             menuItemList.clear();
             Log.e(TAG, "onCreate: refreshed ");
@@ -247,6 +250,8 @@ public class Menu extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     }
 
+                    mSwipeRefreshLayout.setRefreshing(false);
+
                     Log.e(TAG, "onResponse:succcess");
                 }
 
@@ -317,7 +322,6 @@ public class Menu extends AppCompatActivity {
                                 Log.e(TAG, "onResponse: value is null");
                                 description = "";
                             }
-
 
                             Log.e(TAG, "onResponse: Item available" + response.body().getData().get(pos).getChildren().get(i).getAvailability());
 
@@ -445,6 +449,19 @@ public class Menu extends AppCompatActivity {
 //                AppManager.SnackBar(Menu.this,"No Data Found");
 //            }
         }));
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogoutViaNotification.onResumeFun();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LogoutViaNotification.onPauseFun();
     }
 
     @Override

@@ -37,6 +37,7 @@ import com.itridtechnologies.resturantapp.models.receiptOrder.MainOrdersDetails;
 import com.itridtechnologies.resturantapp.models.receiptOrder.RecieptMainObject;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
+import com.itridtechnologies.resturantapp.utils.LogoutViaNotification;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -135,6 +136,7 @@ public class Reciept extends AppCompatActivity {
         // adding beep sound
         mediaPlayer = MediaPlayer.create(this, R.raw.notification);
 
+        LogoutViaNotification.logoutOnType();
     }
 
 
@@ -434,6 +436,19 @@ public class Reciept extends AppCompatActivity {
         photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);
         String businessName = AppManager.getBusinessDetails().getData().getResults().getBusinessName();
         photoPrinter.printBitmap(businessName + " order # " + orderId, bitmap);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogoutViaNotification.onResumeFun();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LogoutViaNotification.onPauseFun();
     }
 
 }

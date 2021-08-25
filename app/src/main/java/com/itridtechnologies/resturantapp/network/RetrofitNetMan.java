@@ -97,19 +97,21 @@ public class RetrofitNetMan {
         );
 
         //Api to get History Details
-        @GET("business/order/history?page=1")
+        @GET("business/order/history?")
         Call<NewHistoryWithTotals> getFullHistory(
-                @Header("x-access-token") String token
+                @Header("x-access-token") String token,
+                @Query("page") int page
         );
 
         //
         //Api to get History Details
         //history?page=1&start=2021-03-14&end=2021-05-14
-        @GET("business/order/history?page=1")
+        @GET("business/order/history?")
         Call<NewHistoryWithTotals> getHistory(
                 @Header("x-access-token") String token,
                 @Query("start") String Start,
-                @Query("end") String End
+                @Query("end") String End,
+                @Query("page") int page
         );
 
 
@@ -198,9 +200,10 @@ public class RetrofitNetMan {
 
 
         ////New Order with state ready
-        @GET("business/orders?state=ready&page=1")
+        @GET("business/orders?state=ready&")
         Call<PaginationResponse> getPaginationReadyOrders(
-                @Header("x-access-token") String token
+                @Header("x-access-token") String token,
+                @Query("page") int page
         );
 
         ////New Order with state preparing

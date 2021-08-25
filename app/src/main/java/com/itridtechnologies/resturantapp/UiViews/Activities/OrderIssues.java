@@ -16,6 +16,7 @@ import android.view.WindowManager;
 
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.models.orderHistory.Order;
+import com.itridtechnologies.resturantapp.utils.LogoutViaNotification;
 import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
 public class OrderIssues extends AppCompatActivity {
@@ -32,6 +33,7 @@ public class OrderIssues extends AppCompatActivity {
         setContentView(R.layout.activity_order_issues);
         pm = new PreferencesManager(OrderIssues.this);
         checkVersions();
+        LogoutViaNotification.logoutOnType();
         setVariables();
         toolbarFun();
         setBtns();
@@ -120,5 +122,19 @@ public class OrderIssues extends AppCompatActivity {
         }
         win.setAttributes(winParams);
     }//setstatus
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogoutViaNotification.onResumeFun();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LogoutViaNotification.onPauseFun();
+    }
 
 }

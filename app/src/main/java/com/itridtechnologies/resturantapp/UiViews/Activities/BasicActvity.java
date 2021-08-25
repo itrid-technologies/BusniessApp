@@ -1,26 +1,30 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.UiViews.Activities.Frags.FragmentDashboard;
 import com.itridtechnologies.resturantapp.UiViews.Activities.Frags.FragmentHistory;
 import com.itridtechnologies.resturantapp.UiViews.Activities.Frags.FragmentProcessing;
 import com.itridtechnologies.resturantapp.UiViews.Activities.Frags.FragmentReady;
-import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.utils.AppManager;
+import com.itridtechnologies.resturantapp.utils.LogoutViaNotification;
 import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
 public class BasicActvity extends AppCompatActivity {
 
     private static final String TAG = "BasicActvity";
     private PreferencesManager pm;
+    //For notifications
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     @SuppressLint("UseCompatLoadingForColorStateLists")
     @Override
@@ -30,6 +34,8 @@ public class BasicActvity extends AppCompatActivity {
 
         String str = getIntent().getStringExtra("AOR");
         pm = new PreferencesManager(this);
+
+        LogoutViaNotification.logoutOnType();
 
         ///Saving Order Number on Shared Preference
         pm.saveMyData("orderNo","0");
@@ -141,6 +147,22 @@ public class BasicActvity extends AppCompatActivity {
         });
 
     }//OC
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        LogoutViaNotification.onResumeFun();
+
+    }//Onresume
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LogoutViaNotification.onPauseFun();
+
+    }
 
     @Override
     public void onBackPressed() {
