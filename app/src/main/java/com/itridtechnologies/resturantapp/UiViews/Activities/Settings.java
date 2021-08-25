@@ -101,7 +101,16 @@ public class Settings extends AppCompatActivity {
         //getting value of increment decrement from preference
         //Increment Degrement value
         String mAcceptOrderCopies = pm.getMyDataString("acceptedCopies");
+        if (mAcceptOrderCopies.equals(""))
+        {
+            mAcceptOrderCopies = "0";
+        }
+
         String mRejectOrderCopies = pm.getMyDataString("rejectedCopies");
+        if (mRejectOrderCopies.equals(""))
+        {
+            mRejectOrderCopies = "0";
+        }
 
         mRejectOrder.setText(mRejectOrderCopies);
         mAcceptOrder.setText(mAcceptOrderCopies);
@@ -552,7 +561,7 @@ public class Settings extends AppCompatActivity {
         mAddAcceptOrder.setOnClickListener(v -> {
             mAcceptNumber = mAcceptNumber + 1;
             mAcceptOrder.setText(Integer.toString(mAcceptNumber));
-            mSubAcceptOrder.setImageResource(R.drawable.ic_remove_gray);
+            mSubAcceptOrder.setImageResource(R.drawable.ic_remove);
             mSubAcceptOrder.setEnabled(true);
         });
         //Setting Decreasing accept order button
@@ -573,7 +582,7 @@ public class Settings extends AppCompatActivity {
         mAddRejectOrder.setOnClickListener(v -> {
             mRejectNumber = mRejectNumber + 1;
             mRejectOrder.setText(Integer.toString(mRejectNumber));
-            mSubRejectOrder.setImageResource(R.drawable.ic_remove_gray);
+            mSubRejectOrder.setImageResource(R.drawable.ic_remove);
             mSubRejectOrder.setEnabled(true);
         });
 

@@ -57,42 +57,17 @@ public class CancelOrder extends AppCompatActivity {
         mCancelOrder.setEnabled(false);
         mErrorMsg.setVisibility(View.INVISIBLE);
 
-
         mCancelOrder.setOnClickListener(v -> {
-            if (Helper.BUSINESS_ID != -1)
-                cancelBusinessOrder
-                        (
-                                mOrderNo,
-                                mCancellationMessage.getText().toString().trim()
-                        );
-
-            Intent intent = new Intent(CancelOrder.this, OrderIssues.class);
-            intent.putExtra("orderNo", mOrderNo);
-            startActivity(intent);
+//            if (Helper.BUSINESS_ID != -1)
+            cancelBusinessOrder
+                    (
+                            mOrderNo,
+                            mCancellationMessage.getText().toString().trim()
+                    );
 
         });
 
     }//OC
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        LogoutViaNotification.onResumeFun();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        LogoutViaNotification.onPauseFun();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(CancelOrder.this, OrderIssues.class);
-        intent.putExtra("orderNo", mOrderNo);
-        startActivity(intent);
-    }
 
     ///setting textwatcher to check the cacelaation message
     public void TextWatchFun() {
@@ -168,12 +143,17 @@ public class CancelOrder extends AppCompatActivity {
             @Override
             public void onResponse(@NotNull Call<CancelResponse> call, @NotNull Response<CancelResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    AppManager.SnackBar(CancelOrder.this, response.body().getMessage());
+                    Intent intent = new Intent(CancelOrder.this, OrderIssues.class);
+                    intent.putExtra("orderNo", mOrderNo);
+                    startActivity(intent);
 
-                    AppManager.intent(BasicActvity.class);
-
-                } else if (response.code() == 400) {
-
-                    Toast.makeText(CancelOrder.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (response.body() != null) {
+                        AppManager.SnackBar(CancelOrder.this, response.body().getMessage());
+                    } else {
+                        AppManager.SnackBar(CancelOrder.this, response.message());
+                    }
                 }
             }//res
 
@@ -183,5 +163,25 @@ public class CancelOrder extends AppCompatActivity {
             }
         });
     }//end order
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LogoutViaNotification.onResumeFun();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LogoutViaNotification.onPauseFun();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(CancelOrder.this, OrderIssues.class);
+        intent.putExtra("orderNo", mOrderNo);
+        startActivity(intent);
+    }
 
 }//end class
