@@ -6,9 +6,6 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.itridtechnologies.resturantapp.models.OrderSubItems.AddonItemsItem;
-import com.itridtechnologies.resturantapp.models.OrderSubItems.DataItem;
-import com.itridtechnologies.resturantapp.models.OrderSubItems.OrderAddonsItem;
 import com.itridtechnologies.resturantapp.models.Pagination.OrdersItem;
 import com.itridtechnologies.resturantapp.models.newOrder.OrderAddressItem;
 import com.itridtechnologies.resturantapp.models.newOrder.OrderItemsItem;

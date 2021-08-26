@@ -54,7 +54,7 @@ public class AdapterBusinessOrders extends RecyclerView.Adapter<AdapterBusinessO
         holder.rvSubItems.setAdapter(adapterSubItems);
 
         holder.itemName.setText(orderitem.getItemName());
-        holder.itemPrice.setText(Constants.CURRENCY_SIGN + " " + format.format(Double.parseDouble(orderitem.getItemPrice())));
+        holder.itemPrice.setText(Constants.CURRENCY_SIGN + " " + format.format(Double.parseDouble(orderitem.getItemTotal())));
         holder.itemQty.setText(String.valueOf(orderitem.getItemQty()));
 
     }

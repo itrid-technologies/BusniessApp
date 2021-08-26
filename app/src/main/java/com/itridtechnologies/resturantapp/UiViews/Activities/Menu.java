@@ -83,8 +83,6 @@ public class Menu extends AppCompatActivity {
         //Pull to Swipe
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
 
-            Toast.makeText(getApplicationContext(), "refresginh", Toast.LENGTH_SHORT).show();
-
             int currentPos = mTabLayout.getSelectedTabPosition();
             mMenuAddonsList.clear();
             menuItemList.clear();

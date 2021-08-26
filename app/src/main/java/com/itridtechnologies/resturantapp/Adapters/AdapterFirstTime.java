@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.models.Pagination.OrdersItem;
 import com.itridtechnologies.resturantapp.models.newOrder.OrderItem;
+import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -31,30 +32,13 @@ public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.deta
     private final List<OrdersItem> prepareList;
     private final Context mCtx;
     private itemClickListener mListener;
-
-
-    //Variables to pass data
-    private String mCustomerName;
-    private String mOrderNumber;
-    private String mTotalItems;
-    private String mTotalAmount;
-    private String mType;
-    private String mStatus;
-    private SimpleDateFormat sdf;
+    private PreferencesManager pm;
 
     public AdapterFirstTime(List<OrdersItem> prepareList, Context mCtx) {
         this.prepareList = prepareList;
         this.mCtx = mCtx;
+        pm = new PreferencesManager(mCtx);
     }
-
-
-    public void AddData(List<OrdersItem> list){
-
-        prepareList.addAll(list);
-        notifyDataSetChanged();
-
-    }
-
 
     public void setOnItemClickListener(itemClickListener listener) {
         mListener = listener;
@@ -69,7 +53,7 @@ public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.deta
         return new AdapterFirstTime.detailHolder(view, mListener);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "UseCompatLoadingForDrawables"})
     @Override
     public void onBindViewHolder(@NonNull @NotNull detailHolder holder, int position) {
 
@@ -79,76 +63,75 @@ public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.deta
         int orderType;
         orderType = mOrderInfo.getOrderType();
 
-        if (orderType == 1) {
-            if (isRiderAssigned == 1) {
-                holder.mRider.setText("Bilal is Coming in 10 minutes");
-            } else {
-                holder.mRider.setText("Waiting for courier");
-            }
-        } else if (orderType == 0) {
-            holder.mRider.setText(
-                    "Waiting for " + mOrderInfo.getFirstName()
-                            + " " + mOrderInfo.getLastName()
-                            + " to Collect"
-            );
-        } else {
-            holder.mRider.setText(
-                    mOrderInfo.getItemCount() + " items (Rs. 140.00)"
-            );
+        String customerName = prepareList.get(position).getFirstName() + " " + prepareList.get(position).getLastName();
+        String orderNumber = String.valueOf(mOrderInfo.getId());
+        int paymentStatus = mOrderInfo.getPaymentStatus();
+        String itemTotal = String.valueOf(mOrderInfo.getItemCount());
+
+        //Payment Status 200 OK
+        if (paymentStatus == 0) {
+            holder.mStatus.setText("Unpaid");
+        } else if (paymentStatus == 1) {
+            holder.mStatus.setText("Paid");
+            holder.mStatus.setBackground(mCtx.getResources().getDrawable(R.drawable.paid_background));
         }
 
-        //Saving Data to pass
-        mCustomerName = mOrderInfo.getFirstName() + " " + mOrderInfo.getLastName();
-        mOrderNumber = String.valueOf(mOrderInfo.getId());
-        mTotalItems = String.valueOf(mOrderInfo.getItemCount());
-        mTotalAmount = "100.00";
-        mType = String.valueOf(mOrderInfo.getOrderType());
-        mStatus = String.valueOf(mOrderInfo.getPaymentStatus());
+        pm.saveMyData("PAYMENT_STATUS_KEY" + mOrderInfo.getId(), String.valueOf(orderType));
+        int orderTypePM = Integer.parseInt(pm.getMyDataString("PAYMENT_STATUS_KEY" + mOrderInfo.getId()));
 
-        String time = prepareList.get(position).getDateAdded();
+        if (orderTypePM == 1)
+        {
+//            holder.mStatus.setVisibility(View.GONE);
+        }
+
+        ///Setting data in Textfields On screen
+        holder.mOrderNumber.setText(orderNumber);
+
+        if (orderType == 1) {
+
+            holder.mType.setText("Delivery");
+
+            if (isRiderAssigned == 1) {
+                holder.mCustomerName.setText(customerName);
+                holder.mRider.setText("RIDER_NAME is Coming in ARRIVING_TIME minutes");
+            } else {
+                holder.mCustomerName.setText(customerName);
+                holder.mRider.setText(itemTotal + " items (Rs. N/A)");
+            }
+
+        }//end if (orderType == 1)
+        else if (orderType == 0) {
+
+            holder.mType.setText("Pickup");
+
+            //setting item count and amount
+            holder.mRider.setText(itemTotal + " items (Rs. N/A)");
+
+            //Setting customer name with waiting tag
+            holder.mCustomerName.setText("Waiting For " + customerName + " To Collect");
+
+        }//end else if (orderType == 0)
+        else {
+
+            holder.mCustomerName.setText(customerName);
+
+            holder.mRider.setText(
+                    mOrderInfo.getItemCount() + " items (Rs. N/A)"
+            );
+
+            holder.mType.setText("Deliver with own rider");
+
+        }
+
+        String time = prepareList.get(position).getPickuptime();
         String[] minTime = time.split("T");
         Log.e(TAG, "onBindViewHolder: time 1 " + minTime[1]);
         Log.e(TAG, "onBindViewHolder: time 1 " + minTime[1]);
 
         holder.mOrderTime.setText(minTime[1].substring(0, minTime[1].length() - 8));
 
-        //Payment Status
-        if (String.valueOf(mOrderInfo.getPaymentStatus()).trim().equals("0")) {
-            holder.mStatus.setText(mStatus);
-            mStatus = "Unpaid";
-        } else if (String.valueOf(mOrderInfo.getPaymentStatus()).trim().equals("1")) {
-            mStatus = "Paid";
-            holder.mStatus.setText(mStatus);
-        }
-
-        ///Setting the String name of Order Type 0,1,2
-        if (mType.trim().equals("0")) {
-            mType = "PickUp";
-        } else if (mType.trim().equals("1")) {
-            mType = "Delivery";
-        } else {
-            mType = "Deliver with own courier";
-        }
-
-        sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-
-        ///Seeting data in Textfields On screen
-        holder.mOrderNumber.setText(mOrderNumber);
-        holder.mStatus.setText(mStatus);
-        holder.mCustomerName.setText(mCustomerName);
-        holder.mType.setText(mType);
-
-
-        //making invisible payment status if order type is delivery
-        if (holder.mType.getText().toString().trim().equals("Delivery")) {
-            holder.mStatus.setVisibility(View.INVISIBLE);
-        }
-        //Checking If its status is paid
-        if (holder.mStatus.getText().toString().equals("Paid")) {
-            holder.mStatus.setBackground(mCtx.getResources().getDrawable(R.drawable.paid_background));
-        }
 
     }
 
@@ -157,12 +140,21 @@ public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.deta
         return prepareList.size();
     }
 
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void AddData(List<OrdersItem> list) {
+
+        prepareList.addAll(list);
+        notifyDataSetChanged();
+
+    }
+
     //my listener interface
     public interface itemClickListener {
         void onItemClick(int position);
     }
 
-    public class detailHolder extends RecyclerView.ViewHolder {
+    public static class detailHolder extends RecyclerView.ViewHolder {
         private final TextView mOrderNumber;
         private final TextView mCustomerName;
         private final TextView mOrderTime;

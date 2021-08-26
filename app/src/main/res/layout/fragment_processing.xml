@@ -19,6 +19,7 @@
         android:id="@+id/PBProcess"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        tools:visibility="gone"
         android:layout_gravity="center"
         android:layout_marginTop="300dp" />
 
@@ -27,6 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fillViewport="true"
+        tools:visibility="visible"
         android:visibility="gone">
 
         <TableLayout
@@ -71,12 +73,24 @@
                     android:id="@+id/in_progress_orders_recycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scrollbars="vertical"
-                    tools:listitem="@layout/processing_orders_container" />
+                    android:scrollbars="vertical" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="30dp" />
+
+            </TableRow>
+            <TableRow>
+
+
+                <ProgressBar
+                    android:id="@+id/PBProcessPagination"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp" />
             </TableRow>
         </TableLayout>
     </androidx.core.widget.NestedScrollView>
@@ -106,5 +120,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ic_noOrder" />
+
+
 
 </LinearLayout>

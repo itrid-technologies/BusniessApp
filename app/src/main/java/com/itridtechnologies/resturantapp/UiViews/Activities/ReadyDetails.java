@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -18,13 +17,11 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
 
 import com.itridtechnologies.resturantapp.Adapters.AdapterBusinessOrders;
 import com.itridtechnologies.resturantapp.Adapters.AdapterTotal;
 import com.itridtechnologies.resturantapp.ClassRoom.RoomDB;
 import com.itridtechnologies.resturantapp.R;
-import com.itridtechnologies.resturantapp.Work.OrderWorker;
 import com.itridtechnologies.resturantapp.model.OrderDetailModel;
 import com.itridtechnologies.resturantapp.model.TotalModel;
 import com.itridtechnologies.resturantapp.models.OrderDelivered.SetToDelivered;
@@ -34,12 +31,9 @@ import com.itridtechnologies.resturantapp.models.OrderSubItems.OrderAddonsItem;
 import com.itridtechnologies.resturantapp.models.OrderSubItems.SubItems;
 import com.itridtechnologies.resturantapp.models.Pagination.OrdersItem;
 import com.itridtechnologies.resturantapp.models.newOrder.NewOrderResponse;
-import com.itridtechnologies.resturantapp.models.newOrder.OrderAddressItem;
 import com.itridtechnologies.resturantapp.models.newOrder.OrderItemsItem;
-import com.itridtechnologies.resturantapp.models.newOrder.OrderTotalsItem;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
-import com.itridtechnologies.resturantapp.utils.Constants;
 import com.itridtechnologies.resturantapp.utils.LogoutViaNotification;
 
 import org.jetbrains.annotations.NotNull;
@@ -76,7 +70,7 @@ public class ReadyDetails extends AppCompatActivity {
     private String mCellNumber;
     private RecyclerView mReadyOrderRV;
     private ProgressBar mPBReadyOrder;
-    private double orderTotal = 0;
+    private double orderTotal = 00.0000;
     String token = AppManager.getBusinessDetails().getData().getToken();
     private int mIsPickUp;
     private List<TotalModel> mTotalList = new ArrayList<>();
@@ -149,9 +143,6 @@ public class ReadyDetails extends AppCompatActivity {
         mToolbar.setTitle("#" + or);
         //Calling API for Order Details
 
-        //Calling API for Order Details
-
-
         getOrderDetails(or);
 
         LogoutViaNotification.logoutOnType();
@@ -172,9 +163,9 @@ public class ReadyDetails extends AppCompatActivity {
             startActivity(intent);
         });
 
-        mOrderItem = getOrderFromDB(or);
-        OrderAddressItem mOrderAddress = getOrderAddressFromDB(or);
-        OrderTotalsItem mOrderTotal = getOrderTotalFromDB(or);
+//        mOrderItem = getOrderFromDB(or);
+//        OrderAddressItem mOrderAddress = getOrderAddressFromDB(or);
+//        OrderTotalsItem mOrderTotal = getOrderTotalFromDB(or);
 
     }
 
@@ -187,9 +178,15 @@ public class ReadyDetails extends AppCompatActivity {
             public void onResponse(@NotNull Call<SetToDelivered> call12, @NotNull Response<SetToDelivered> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     ///Update Database
-                    updateDatabase();
+                    mDelivered.setEnabled(true);
+                    Intent intent = new Intent(ReadyDetails.this, BasicActvity.class);
+                    intent.putExtra("AOR", "History");
+                    startActivity(intent);
                 } else if (response.code() == 400) {
                     mDelivered.setEnabled(true);
+                    if (response.body() != null) {
+                        AppManager.SnackBar(ReadyDetails.this,response.body().getMessage());
+                    }
                     Log.e("TAG", "onResponse: " + response.message());
                 } else {
                     mDelivered.setEnabled(true);
@@ -205,55 +202,55 @@ public class ReadyDetails extends AppCompatActivity {
         });
     }
 
-    private void updateDatabase() {
-
-        Constants.ORDER_ITEM = new OrdersItem(
-                mOrderItem.getPickuptime(),
-//                String.valueOf(mRemainTime),
-//                mSavingTime,
-                mOrderItem.getBusinessTax(),
-                mOrderItem.getDateAdded(),
-                mOrderItem.getMinPreTime(),
-                mOrderItem.getMaxPreTime(),
-                mOrderItem.getCourierNotes(),
-                mOrderItem.getBusinessId(),
-                mOrderItem.getId(),
-                "Delivered",
-                mOrderItem.getOrderType(),
-                mOrderItem.getFirstName(),
-                mOrderItem.getBusinessRevShare(),
-                mOrderItem.getItemCount(),
-                mOrderItem.getBusinessName(),
-                mOrderItem.getBusinessNotes(),
-                mOrderItem.getPaymentStatus(),
-                mOrderItem.getLastName(),
-                mOrderItem.getAction(),
-                mOrderItem.getDateAdded(),
-                mOrderItem.getPaymentType(),
-                mOrderItem.getDelay(),
-                mOrderItem.getDateModified(),
-                mOrderItem.getPhoneNumber(),
-                mOrderItem.getCustomerId(),
-                mOrderItem.getBusinessId(),
-                mOrderItem.getStatus());
-
-
-        bgWork = new OneTimeWorkRequest.Builder(OrderWorker.class)
-                .build();
-        WorkManager.getInstance(ReadyDetails.this).enqueue(bgWork);
-
-        WorkManager.getInstance(ReadyDetails.this).getWorkInfoByIdLiveData(bgWork.getId())
-                .observe(this, info -> {
-                    if (info != null && info.getState().isFinished()) {
-                        mDelivered.setEnabled(true);
-                        Intent intent = new Intent(ReadyDetails.this, BasicActvity.class);
-                        intent.putExtra("AOR", "History");
-                        startActivity(intent);
-                    } else {
-                        Log.e(TAG, "onResponse: no info returning from live data");
-                    }
-                });
-    }//update Database
+//    private void updateDatabase() {
+//
+//        Constants.ORDER_ITEM = new OrdersItem(
+//                mOrderItem.getPickuptime(),
+////                String.valueOf(mRemainTime),
+////                mSavingTime,
+//                mOrderItem.getBusinessTax(),
+//                mOrderItem.getDateAdded(),
+//                mOrderItem.getMinPreTime(),
+//                mOrderItem.getMaxPreTime(),
+//                mOrderItem.getCourierNotes(),
+//                mOrderItem.getBusinessId(),
+//                mOrderItem.getId(),
+//                "Delivered",
+//                mOrderItem.getOrderType(),
+//                mOrderItem.getFirstName(),
+//                mOrderItem.getBusinessRevShare(),
+//                mOrderItem.getItemCount(),
+//                mOrderItem.getBusinessName(),
+//                mOrderItem.getBusinessNotes(),
+//                mOrderItem.getPaymentStatus(),
+//                mOrderItem.getLastName(),
+//                mOrderItem.getAction(),
+//                mOrderItem.getDateAdded(),
+//                mOrderItem.getPaymentType(),
+//                mOrderItem.getDelay(),
+//                mOrderItem.getDateModified(),
+//                mOrderItem.getPhoneNumber(),
+//                mOrderItem.getCustomerId(),
+//                mOrderItem.getBusinessId(),
+//                mOrderItem.getStatus());
+//
+//
+//        bgWork = new OneTimeWorkRequest.Builder(OrderWorker.class)
+//                .build();
+//        WorkManager.getInstance(ReadyDetails.this).enqueue(bgWork);
+//
+//        WorkManager.getInstance(ReadyDetails.this).getWorkInfoByIdLiveData(bgWork.getId())
+//                .observe(this, info -> {
+//                    if (info != null && info.getState().isFinished()) {
+//                        mDelivered.setEnabled(true);
+//                        Intent intent = new Intent(ReadyDetails.this, BasicActvity.class);
+//                        intent.putExtra("AOR", "History");
+//                        startActivity(intent);
+//                    } else {
+//                        Log.e(TAG, "onResponse: no info returning from live data");
+//                    }
+//                });
+//    }//update Database
 
 
     //Getting order details from api
@@ -366,7 +363,7 @@ public class ReadyDetails extends AppCompatActivity {
 
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "UseCompatLoadingForDrawables"})
     public void UpdateUI(String bNote, String dNote
             , int orderType, String fName, String lName, String pNo
             , String status, String Address
@@ -393,17 +390,20 @@ public class ReadyDetails extends AppCompatActivity {
         if (!status.isEmpty()) {
             if (status.trim().equals("1")) {
                 mPaymentStatus.setText("Paid");
+                mPaymentStatus.setBackground(getApplicationContext().getResources().getDrawable(R.drawable.paid_background));
             } else {
                 mPaymentStatus.setText("Unpaid");
             }
         }
 
-        //Total and subtotal AMoutn
-        if (tPrice != null) {
-            mTVSubTotalAmount.setText(Constants.CURRENCY_SIGN + " " + format.format(tPrice));
-        } else {
-            mTVSubTotalAmount.setText(Constants.CURRENCY_SIGN + " " + "0");
-        }
+        Log.e(TAG, "UpdateUI: amount " + tPrice );
+
+//        //Total and subtotal AMoutn
+//        if (tPrice != null) {
+//            mTVSubTotalAmount.setText(Constants.CURRENCY_SIGN + " " + format.format(tPrice));
+//        } else {
+//            mTVSubTotalAmount.setText(Constants.CURRENCY_SIGN + " " + "0");
+//        }
 
         //set business & delivery notes
         if (!bNote.isEmpty()) {
@@ -426,6 +426,7 @@ public class ReadyDetails extends AppCompatActivity {
         } else if (orderType == 0) {
             Log.e(TAG, "UpdateUI: Self type " + orderType);
             mRiderRow.setVisibility(View.GONE);
+            mPaymentRow.setVisibility(View.VISIBLE);
             mAddressCell.setVisibility(View.GONE);
         }
         //set Payment status visible when type is delivery
@@ -472,17 +473,17 @@ public class ReadyDetails extends AppCompatActivity {
 
     }
 
-    private OrdersItem getOrderFromDB(String or) {
-        return databaseRoom.mainDao().getOrderById(Integer.parseInt(or));
-    }
-
-    private OrderAddressItem getOrderAddressFromDB(String or) {
-        return databaseRoom.mainDao().getOrderAddressById(Integer.parseInt(or));
-    }
-
-    private OrderTotalsItem getOrderTotalFromDB(String or) {
-        return databaseRoom.mainDao().getOrderTotalsById(Integer.parseInt(or));
-    }
+//    private OrdersItem getOrderFromDB(String or) {
+//        return databaseRoom.mainDao().getOrderById(Integer.parseInt(or));
+//    }
+//
+//    private OrderAddressItem getOrderAddressFromDB(String or) {
+//        return databaseRoom.mainDao().getOrderAddressById(Integer.parseInt(or));
+//    }
+//
+//    private OrderTotalsItem getOrderTotalFromDB(String or) {
+//        return databaseRoom.mainDao().getOrderTotalsById(Integer.parseInt(or));
+//    }
 
     public void totalFun() {
 
@@ -502,7 +503,6 @@ public class ReadyDetails extends AppCompatActivity {
         mPaymentStatus = findViewById(R.id.payStatus);
         mPaymentRow = findViewById(R.id.paymentStatusReadyOrder);
         mNSVReadyDetails = findViewById(R.id.nsv_readyDetails);
-        mTVSubTotalAmount = findViewById(R.id.tv_sub_total_amount_RO);
         mRCVTotals = findViewById(R.id.rv_order_totals_ready);
         mDelivered = findViewById(R.id.btn_delivered);
         mPrint = findViewById(R.id.print_ready);
@@ -560,21 +560,18 @@ public class ReadyDetails extends AppCompatActivity {
                     Log.e(TAG, "onResponse: first and last name: " + response.body().getData().getOrder().get(0).getFirstName() +
                             response.body().getData().getOrder().get(0).getLastName());
 
-                    //Calculating Total Amount
-                    for (int i = 0; i < response.body().getData().getOrderTotals().size(); i++) {
-                        mTotalList.add(new TotalModel(
-                                response.body().getData().getOrderTotals().get(i).getLabel(),
-                                response.body().getData().getOrderTotals().get(i).getValue()
-                        ));
-                        orderTotal = orderTotal + Double.parseDouble(response.body().getData().getOrderTotals().get(i).getValue());
-                        Log.e(TAG, "onResponse: order total " + orderTotal);
 
+                    if (response.body().getData().getOrderTotals().size() > 0)
+                    {                    //Calculating Total Amount
+                        for (int i = 0; i < response.body().getData().getOrderTotals().size(); i++) {
+                            mTotalList.add(new TotalModel(
+                                    response.body().getData().getOrderTotals().get(i).getLabel(),
+                                    response.body().getData().getOrderTotals().get(i).getValue()
+                            ));
+                            orderTotal = orderTotal + Double.parseDouble(response.body().getData().getOrderTotals().get(i).getValue());
+                            Log.e(TAG, "onResponse: order total " + orderTotal);
+                        }
                     }
-
-                    //Adding order values
-                    orderTotal = orderTotal + valueTotal;
-
-                    Log.e(TAG, "onResponse: totAT + " + orderTotal);
 
                     String address;
 
@@ -601,7 +598,7 @@ public class ReadyDetails extends AppCompatActivity {
                                     response.body().getData().getOrder().get(0).getFirstName(),
                                     response.body().getData().getOrder().get(0).getLastName(),
                                     response.body().getData().getOrder().get(0).getPhoneNumber(),
-                                    String.valueOf(mOrderItem.getPaymentStatus()),
+                                    String.valueOf(response.body().getData().getOrder().get(0).getPaymentStatus()),
                                     address,
                                     orderTotal,
                                     "Not Available",

@@ -87,6 +87,7 @@ public class FragmentReady extends Fragment {
     //Nested Scroll View and progress bar
     private NestedScrollView mNSV;
     private ProgressBar mPB;
+    private ProgressBar mPBPagination;
 
     //Order item
     private OrderItem mOrderItem = null;
@@ -109,6 +110,7 @@ public class FragmentReady extends Fragment {
         //Variables here
         mNSV = root.findViewById(R.id.NSVReady);
         mPB = root.findViewById(R.id.PBReady);
+        mPBPagination = root.findViewById(R.id.PBReadyPagination);
         //setting name of toolbar
         Toolbar mToolbar = root.findViewById(R.id.action_bar_ready);
 
@@ -338,7 +340,7 @@ public class FragmentReady extends Fragment {
 
     private void setUpRecFirstTime(List<OrdersItem> paginationOrders) {
 
-        manager = new LinearLayoutManager(requireContext().getApplicationContext());
+        manager = new LinearLayoutManager(requireContext());
         adapter = new AdapterFirstTime(paginationOrders, requireContext().getApplicationContext());
 
         mReadyRecyclerView.setLayoutManager(manager);
@@ -368,13 +370,7 @@ public class FragmentReady extends Fragment {
                 super.onScrollStateChanged(recyclerView, newState);
 
                 Log.e(TAG, "onScrollStateChanged: " + "");
-            }
 
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                Log.e(TAG, "onScrolled: " + "");
 
                 visibleItemCount = manager.getChildCount();
                 totalItemCount = manager.getItemCount();
@@ -385,6 +381,8 @@ public class FragmentReady extends Fragment {
                     if ((visibleItemCount + firstVisibleItem) >= totalItemCount &&
                             firstVisibleItem >= 0 && totalItemCount >= pageSize) {
 
+                        mPBPagination.setVisibility(View.VISIBLE);
+
                         page_no++;
                         Log.e(TAG, "onScrolled: " + "last item" + page_no);
 
@@ -392,6 +390,15 @@ public class FragmentReady extends Fragment {
 
                     }
                 }
+
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                Log.e(TAG, "onScrolled: " + "");
+
 
             }
         });
@@ -425,6 +432,8 @@ public class FragmentReady extends Fragment {
 
                                 isLastPage = true;
                             }
+
+                            mPBPagination.setVisibility(View.GONE);
 
                         }
 

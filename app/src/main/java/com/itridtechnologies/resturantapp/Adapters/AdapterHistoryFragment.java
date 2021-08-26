@@ -105,6 +105,7 @@ public class AdapterHistoryFragment extends RecyclerView.Adapter<AdapterHistoryF
         holder.mCustomerNameHistory.setText(mHistoryInfo.getmCustomerName());
         holder.mItemQuantityHistory.setText(mHistoryInfo.getmItemCount());
         holder.mPriceHistory.setText(mHistoryInfo.getmPrice());
+
     }
 
     @Override

@@ -21,14 +21,12 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
 
 import com.google.gson.JsonObject;
 import com.itridtechnologies.resturantapp.Adapters.AdapterBusinessOrders;
 import com.itridtechnologies.resturantapp.Adapters.AdapterTotal;
 import com.itridtechnologies.resturantapp.ClassRoom.RoomDB;
 import com.itridtechnologies.resturantapp.R;
-import com.itridtechnologies.resturantapp.Work.OrderWorker;
 import com.itridtechnologies.resturantapp.model.TotalModel;
 import com.itridtechnologies.resturantapp.models.ActionOrder.ActionResponse;
 import com.itridtechnologies.resturantapp.models.OrderSubItems.DataItem;
@@ -37,7 +35,6 @@ import com.itridtechnologies.resturantapp.models.Pagination.OrdersItem;
 import com.itridtechnologies.resturantapp.models.SetToReady.SetToReadyResponse;
 import com.itridtechnologies.resturantapp.models.newOrder.NewOrderResponse;
 import com.itridtechnologies.resturantapp.models.newOrder.OrderItemsItem;
-import com.itridtechnologies.resturantapp.models.newOrder.OrderTotalsItem;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 import com.itridtechnologies.resturantapp.utils.Constants;
@@ -59,7 +56,7 @@ public class NewOrder extends AppCompatActivity {
     private TableRow mPaymentStatusLayout;
     private TextView mTVDeliveryNote;
     private TextView mPayStatus;
-    private TextView mTotalPayment;
+//    private TextView mTotalPayment;
     private TableRow mETDeliveryNote;
     private TableRow mETDeliveryTitle;
     private TableRow mOrderNoteTitle;
@@ -256,58 +253,58 @@ public class NewOrder extends AppCompatActivity {
         });
     }//clickListeners
 
-    private void updateDB() {
-
-        Constants.ORDER_ITEM = new OrdersItem(
-                mOrderItem.getPickuptime(),
-//                        String.valueOf(mRemainTime),
-//                        mSavingTime,
-                mOrderItem.getBusinessTax(),
-                mOrderItem.getDateAdded(),
-                mOrderItem.getMinPreTime(),
-                mOrderItem.getMaxPreTime(),
-                mOrderItem.getCourierNotes(),
-                mOrderItem.getBusinessId(),
-                mOrderItem.getId(),
-                "Preparing",
-                mOrderItem.getOrderType(),
-                mOrderItem.getFirstName(),
-                mOrderItem.getBusinessRevShare(),
-                mOrderItem.getItemCount(),
-                mOrderItem.getBusinessName(),
-                mOrderItem.getBusinessNotes(),
-                mOrderItem.getPaymentStatus(),
-                mOrderItem.getLastName(),
-                mOrderItem.getAction(),
-                mOrderItem.getDateAdded(),
-                mOrderItem.getPaymentType(),
-                mOrderItem.getDelay(),
-                mOrderItem.getDateModified(),
-                mOrderItem.getPhoneNumber(),
-                mOrderItem.getCustomerId(),
-                mOrderItem.getBusinessId(),
-                mOrderItem.getStatus()
-        );
-
-        bgWork = new OneTimeWorkRequest.Builder(OrderWorker.class)
-                .build();
-        WorkManager.getInstance(NewOrder.this).enqueue(bgWork);
-
-        WorkManager.getInstance(NewOrder.this).getWorkInfoByIdLiveData(bgWork.getId())
-                .observe(this,
-                        info -> {
-                            if (info != null && info.getState().isFinished()) {
-                                mBtnAccept.setEnabled(true);
-                                Log.e(TAG, "clickListeners: " + Constants.ORDER_ITEM);
-                                Intent intent = new Intent(NewOrder.this, BasicActvity.class);
-                                intent.putExtra("AOR", "Accepted");
-                                startActivity(intent);
-                            } else {
-                                Log.e(TAG, "onResponse: no info returning from live data");
-                            }
-                        });
-
-    }//updateDB
+//    private void updateDB() {
+//
+//        Constants.ORDER_ITEM = new OrdersItem(
+//                mOrderItem.getPickuptime(),
+////                        String.valueOf(mRemainTime),
+////                        mSavingTime,
+//                mOrderItem.getBusinessTax(),
+//                mOrderItem.getDateAdded(),
+//                mOrderItem.getMinPreTime(),
+//                mOrderItem.getMaxPreTime(),
+//                mOrderItem.getCourierNotes(),
+//                mOrderItem.getBusinessId(),
+//                mOrderItem.getId(),
+//                "Preparing",
+//                mOrderItem.getOrderType(),
+//                mOrderItem.getFirstName(),
+//                mOrderItem.getBusinessRevShare(),
+//                mOrderItem.getItemCount(),
+//                mOrderItem.getBusinessName(),
+//                mOrderItem.getBusinessNotes(),
+//                mOrderItem.getPaymentStatus(),
+//                mOrderItem.getLastName(),
+//                mOrderItem.getAction(),
+//                mOrderItem.getDateAdded(),
+//                mOrderItem.getPaymentType(),
+//                mOrderItem.getDelay(),
+//                mOrderItem.getDateModified(),
+//                mOrderItem.getPhoneNumber(),
+//                mOrderItem.getCustomerId(),
+//                mOrderItem.getBusinessId(),
+//                mOrderItem.getStatus()
+//        );
+//
+//        bgWork = new OneTimeWorkRequest.Builder(OrderWorker.class)
+//                .build();
+//        WorkManager.getInstance(NewOrder.this).enqueue(bgWork);
+//
+//        WorkManager.getInstance(NewOrder.this).getWorkInfoByIdLiveData(bgWork.getId())
+//                .observe(this,
+//                        info -> {
+//                            if (info != null && info.getState().isFinished()) {
+//                                mBtnAccept.setEnabled(true);
+//                                Log.e(TAG, "clickListeners: " + Constants.ORDER_ITEM);
+//                                Intent intent = new Intent(NewOrder.this, BasicActvity.class);
+//                                intent.putExtra("AOR", "Accepted");
+//                                startActivity(intent);
+//                            } else {
+//                                Log.e(TAG, "onResponse: no info returning from live data");
+//                            }
+//                        });
+//
+//    }//updateDB
 
     private void btnAccRejApi(String orderId, String actionKey, int key) {
 
@@ -325,7 +322,12 @@ public class NewOrder extends AppCompatActivity {
                     AppManager.saveActionDetails(response.body());
 
                     if (key == 1) {
-                        updateDB();
+
+                        Intent intent = new Intent(NewOrder.this, BasicActvity.class);
+                        intent.putExtra("AOR", "Accepted");
+                        startActivity(intent);
+
+//                        updateDB();
                     } else {
                         Intent intent = new Intent(NewOrder.this, BasicActvity.class);
                         intent.putExtra("AOR", "Rejected");
@@ -356,7 +358,10 @@ public class NewOrder extends AppCompatActivity {
             @Override
             public void onResponse(@NotNull Call<SetToReadyResponse> caall, @NotNull Response<SetToReadyResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    updateDBPreparing();
+//                    updateDBPreparing();
+                    Intent intent = new Intent(NewOrder.this, BasicActvity.class);
+                    intent.putExtra("AOR", "Ready");
+                    startActivity(intent);
                 } else {
                     mBtnReadyOrder.setEnabled(true);
                 }
@@ -371,55 +376,55 @@ public class NewOrder extends AppCompatActivity {
     }//end order
 
     //updateDbforPreparing
-    private void updateDBPreparing() {
-        Constants.ORDER_ITEM = new OrdersItem(
-                mOrderItem.getPickuptime(),
-//                    String.valueOf(mRemainTime),
-//                    mSavingTime,
-                mOrderItem.getBusinessTax(),
-                mOrderItem.getDateAdded(),
-                mOrderItem.getMinPreTime(),
-                mOrderItem.getMaxPreTime(),
-                mOrderItem.getCourierNotes(),
-                mOrderItem.getBusinessId(),
-                mOrderItem.getId(),
-                "Ready",
-                mOrderItem.getOrderType(),
-                mOrderItem.getFirstName(),
-                mOrderItem.getBusinessRevShare(),
-                mOrderItem.getItemCount(),
-                mOrderItem.getBusinessName(),
-                mOrderItem.getBusinessNotes(),
-                mOrderItem.getPaymentStatus(),
-                mOrderItem.getLastName(),
-                mOrderItem.getAction(),
-                mOrderItem.getDateAdded(),
-                mOrderItem.getPaymentType(),
-                mOrderItem.getDelay(),
-                mOrderItem.getDateModified(),
-                mOrderItem.getPhoneNumber(),
-                mOrderItem.getCustomerId(),
-                mOrderItem.getBusinessId(),
-                mOrderItem.getStatus()
-        );
-
-        bgWork = new OneTimeWorkRequest.Builder(OrderWorker.class)
-                .build();
-        WorkManager.getInstance(NewOrder.this).enqueue(bgWork);
-
-        WorkManager.getInstance(NewOrder.this).getWorkInfoByIdLiveData(bgWork.getId())
-                .observe(this, info -> {
-                    if (info != null && info.getState().isFinished()) {
-                        mBtnReadyOrder.setEnabled(true);
-                        Log.e(TAG, "clickListeners: " + Constants.ORDER_ITEM);
-                        Intent intent = new Intent(NewOrder.this, BasicActvity.class);
-                        intent.putExtra("AOR", "Ready");
-                        startActivity(intent);
-                    } else {
-                        Log.e(TAG, "onResponse: no info returning from live data");
-                    }
-                });
-    }//updateDBPreparing
+//    private void updateDBPreparing() {
+//        Constants.ORDER_ITEM = new OrdersItem(
+//                mOrderItem.getPickuptime(),
+////                    String.valueOf(mRemainTime),
+////                    mSavingTime,
+//                mOrderItem.getBusinessTax(),
+//                mOrderItem.getDateAdded(),
+//                mOrderItem.getMinPreTime(),
+//                mOrderItem.getMaxPreTime(),
+//                mOrderItem.getCourierNotes(),
+//                mOrderItem.getBusinessId(),
+//                mOrderItem.getId(),
+//                "Ready",
+//                mOrderItem.getOrderType(),
+//                mOrderItem.getFirstName(),
+//                mOrderItem.getBusinessRevShare(),
+//                mOrderItem.getItemCount(),
+//                mOrderItem.getBusinessName(),
+//                mOrderItem.getBusinessNotes(),
+//                mOrderItem.getPaymentStatus(),
+//                mOrderItem.getLastName(),
+//                mOrderItem.getAction(),
+//                mOrderItem.getDateAdded(),
+//                mOrderItem.getPaymentType(),
+//                mOrderItem.getDelay(),
+//                mOrderItem.getDateModified(),
+//                mOrderItem.getPhoneNumber(),
+//                mOrderItem.getCustomerId(),
+//                mOrderItem.getBusinessId(),
+//                mOrderItem.getStatus()
+//        );
+//
+//        bgWork = new OneTimeWorkRequest.Builder(OrderWorker.class)
+//                .build();
+//        WorkManager.getInstance(NewOrder.this).enqueue(bgWork);
+//
+//        WorkManager.getInstance(NewOrder.this).getWorkInfoByIdLiveData(bgWork.getId())
+//                .observe(this, info -> {
+//                    if (info != null && info.getState().isFinished()) {
+//                        mBtnReadyOrder.setEnabled(true);
+//                        Log.e(TAG, "clickListeners: " + Constants.ORDER_ITEM);
+//                        Intent intent = new Intent(NewOrder.this, BasicActvity.class);
+//                        intent.putExtra("AOR", "Ready");
+//                        startActivity(intent);
+//                    } else {
+//                        Log.e(TAG, "onResponse: no info returning from live data");
+//                    }
+//                });
+//    }//updateDBPreparing
 
     public void changingView() {
 
@@ -459,27 +464,27 @@ public class NewOrder extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         changingView();
-        mOrderItem = getOrderFromDB(or);
-        OrderTotalsItem mOrderTotalItem = getOrderTotalsFromDB(Integer.parseInt(or));
-        List<OrderItemsItem> mOrderItemItem = getOrderItemsFromDB(or);
+//        mOrderItem = getOrderFromDB(or);
+//        OrderTotalsItem mOrderTotalItem = getOrderTotalsFromDB(Integer.parseInt(or));
+//        List<OrderItemsItem> mOrderItemItem = getOrderItemsFromDB(or);
 
     }
 
-    ///Getting order details
-    private OrdersItem getOrderFromDB(String or) {
-        return databaseRoom.mainDao().getOrderById(Integer.parseInt(or));
-    }
-
-    //Geting Order Totals
-    private OrderTotalsItem getOrderTotalsFromDB(int or) {
-        Log.e(TAG, "getOrderTotalsFromDB: " + databaseRoom.mainDao().getOrderTotalsById(or));
-        return databaseRoom.mainDao().getOrderTotalsById(or);
-    }
-
-    //Getting order Items
-    private List<OrderItemsItem> getOrderItemsFromDB(String or) {
-        return databaseRoom.mainDao().getOrderItemsById(Integer.parseInt(or));
-    }
+//    ///Getting order details
+//    private OrdersItem getOrderFromDB(String or) {
+//        return databaseRoom.mainDao().getOrderById(Integer.parseInt(or));
+//    }
+//
+//    //Geting Order Totals
+//    private OrderTotalsItem getOrderTotalsFromDB(int or) {
+//        Log.e(TAG, "getOrderTotalsFromDB: " + databaseRoom.mainDao().getOrderTotalsById(or));
+//        return databaseRoom.mainDao().getOrderTotalsById(or);
+//    }
+//
+//    //Getting order Items
+//    private List<OrderItemsItem> getOrderItemsFromDB(String or) {
+//        return databaseRoom.mainDao().getOrderItemsById(Integer.parseInt(or));
+//    }
 
     //Setting variables
     public void setVariable() {
@@ -503,7 +508,7 @@ public class NewOrder extends AppCompatActivity {
         edtBusinessNote = findViewById(R.id.edt_business_note);
         mCustName = findViewById(R.id.tv_in_progress_customer_name_PD);
         mPayStatus = findViewById(R.id.tv_pay_status);
-        mTotalPayment = findViewById(R.id.tv_total_amount);
+//        mTotalPayment = findViewById(R.id.tv_total_amount);
         mPrepareTimeTV = findViewById(R.id.time_prepare_tv);
         //Linear Layout
         mLLReady = findViewById(R.id.ll_ready_btns);
@@ -557,7 +562,7 @@ public class NewOrder extends AppCompatActivity {
     }
 
     //Updating UI
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "UseCompatLoadingForDrawables"})
     private void UpdateUI(String bNote, String dNote
             , int orderType, String fName, String lName, String pNo
             , String status, Double tPrice, String partner
@@ -637,7 +642,7 @@ public class NewOrder extends AppCompatActivity {
             }
         }
 
-        mTotalPayment.setText(Constants.CURRENCY_SIGN + " " + tPrice);
+//        mTotalPayment.setText(Constants.CURRENCY_SIGN + " " + tPrice);
 
 
         //Adding Totals
@@ -673,14 +678,18 @@ public class NewOrder extends AppCompatActivity {
                         Log.e(TAG, "onResponse: first and last name: " + response.body().getData().getOrder().get(0).getFirstName() +
                                 response.body().getData().getOrder().get(0).getLastName());
 
-                        //Calculating Total Amount
-                        for (int i = 0; i < response.body().getData().getOrderTotals().size(); i++) {
-                            mTotalsList.add(new TotalModel(
-                                    response.body().getData().getOrderTotals().get(i).getLabel(),
-                                    response.body().getData().getOrderTotals().get(i).getValue()
-                            ));
-                            orderTotal = orderTotal + Double.parseDouble(response.body().getData().getOrderTotals().get(i).getValue());
-                            Log.e(TAG, "onResponse: order total " + orderTotal);
+                        if (response.body().getData().getOrderTotals().size() > 0)
+                        {
+                            //Calculating Total Amount
+                            for (int i = 0; i < response.body().getData().getOrderTotals().size(); i++) {
+                                mTotalsList.add(new TotalModel(
+                                        response.body().getData().getOrderTotals().get(i).getLabel(),
+                                        response.body().getData().getOrderTotals().get(i).getValue()
+                                ));
+                                orderTotal = orderTotal + Double.parseDouble(response.body().getData().getOrderTotals().get(i).getValue());
+                                Log.e(TAG, "onResponse: order total " + orderTotal);
+                            }
+
                         }
 
 //                        orderTotal = orderTotal + valueTotal;
@@ -702,40 +711,40 @@ public class NewOrder extends AppCompatActivity {
 
                         ///Inserting new order basic information data in database
                         Log.e(TAG, "onResponse: Data inserting");
-                        Constants.ORDER_ITEM = new OrdersItem(
-                                response.body().getData().getOrder().get(0).getPickuptime(),
-//                                String.valueOf(mRemainTime),
-//                                String.valueOf(currentTime),
-                                "200",
-                                response.body().getData().getOrder().get(0).getDateAdded(),
-                                response.body().getData().getOrder().get(0).getMinPreTime(),
-                                response.body().getData().getOrder().get(0).getMaxPreTime(),
-                                response.body().getData().getOrder().get(0).getCourierNotes(),
-                                response.body().getData().getOrder().get(0).getBusinessId(),
-                                response.body().getData().getOrder().get(0).getId(),
-                                "Pending",
-                                response.body().getData().getOrder().get(0).getOrderType(),
-                                response.body().getData().getOrder().get(0).getFirstName(),
-                                response.body().getData().getOrder().get(0).getBusinessRevShare(),
-                                response.body().getData().getOrder().get(0).getItemCount(),
-                                response.body().getData().getOrder().get(0).getBusinessName(),
-                                response.body().getData().getOrder().get(0).getBusinessNotes(),
-                                response.body().getData().getOrder().get(0).getPaymentStatus(),
-                                response.body().getData().getOrder().get(0).getLastName(),
-                                response.body().getData().getOrder().get(0).getAction(),
-                                response.body().getData().getOrder().get(0).getDateAdded(),
-                                response.body().getData().getOrder().get(0).getPaymentType(),
-                                response.body().getData().getOrder().get(0).getDelay(),
-                                response.body().getData().getOrder().get(0).getDateModified(),
-                                response.body().getData().getOrder().get(0).getPhoneNumber(),
-                                response.body().getData().getOrder().get(0).getCustomerId(),
-                                response.body().getData().getOrder().get(0).getBusinessId(),
-                                response.body().getData().getOrder().get(0).getStatus()
-                        );
+//                        Constants.ORDER_ITEM = new OrdersItem(
+//                                response.body().getData().getOrder().get(0).getPickuptime(),
+////                                String.valueOf(mRemainTime),
+////                                String.valueOf(currentTime),
+//                                "200",
+//                                response.body().getData().getOrder().get(0).getDateAdded(),
+//                                response.body().getData().getOrder().get(0).getMinPreTime(),
+//                                response.body().getData().getOrder().get(0).getMaxPreTime(),
+//                                response.body().getData().getOrder().get(0).getCourierNotes(),
+//                                response.body().getData().getOrder().get(0).getBusinessId(),
+//                                response.body().getData().getOrder().get(0).getId(),
+//                                "Pending",
+//                                response.body().getData().getOrder().get(0).getOrderType(),
+//                                response.body().getData().getOrder().get(0).getFirstName(),
+//                                response.body().getData().getOrder().get(0).getBusinessRevShare(),
+//                                response.body().getData().getOrder().get(0).getItemCount(),
+//                                response.body().getData().getOrder().get(0).getBusinessName(),
+//                                response.body().getData().getOrder().get(0).getBusinessNotes(),
+//                                response.body().getData().getOrder().get(0).getPaymentStatus(),
+//                                response.body().getData().getOrder().get(0).getLastName(),
+//                                response.body().getData().getOrder().get(0).getAction(),
+//                                response.body().getData().getOrder().get(0).getDateAdded(),
+//                                response.body().getData().getOrder().get(0).getPaymentType(),
+//                                response.body().getData().getOrder().get(0).getDelay(),
+//                                response.body().getData().getOrder().get(0).getDateModified(),
+//                                response.body().getData().getOrder().get(0).getPhoneNumber(),
+//                                response.body().getData().getOrder().get(0).getCustomerId(),
+//                                response.body().getData().getOrder().get(0).getBusinessId(),
+//                                response.body().getData().getOrder().get(0).getStatus()
+//                        );
+//
 
-
-                    } catch (Exception ignored) {
-                        Log.e(TAG, "onResponse: " + ignored.getMessage());
+                    } catch (Exception ignred) {
+                        Log.e(TAG, "onResponse: " + ignred.getMessage());
                     }
                 } else {
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -791,7 +800,6 @@ public class NewOrder extends AppCompatActivity {
             startActivity(intent);
         });
     }//callfun..
-
 
     @Override
     protected void onResume() {

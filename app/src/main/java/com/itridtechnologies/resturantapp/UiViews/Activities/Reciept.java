@@ -64,7 +64,6 @@ public class Reciept extends AppCompatActivity {
     private TextView mCustomerAddress;
     private TextView mCustomerNumber;
     private TextView mBussinessName;
-    private TextView mTotal;
     private RecyclerView mRCVReciept;
     private FloatingActionButton fab;
     private ProgressBar mPBReciept;
@@ -277,7 +276,6 @@ public class Reciept extends AppCompatActivity {
         mCustomerAddress = findViewById(R.id.customerAddress);
         mCustomerNumber = findViewById(R.id.customerMobile);
         mBussinessName = findViewById(R.id.businessName);
-        mTotal = findViewById(R.id.tv_total_reciept);
         mRCVReciept = findViewById(R.id.rcv_reciept);
         fab = findViewById(R.id.fab);
         mPBReciept = findViewById(R.id.pb_reciept);
@@ -403,7 +401,6 @@ public class Reciept extends AppCompatActivity {
             mPaidUnpaid.setText("ORDER IS PAID");
         }
 
-        mTotal.setText(String.valueOf(mTotalAmount));
         mCustomerNameBtm.setText(name);
         mNameHeader.setText(name);
         mOrderId.setText("#" + order);

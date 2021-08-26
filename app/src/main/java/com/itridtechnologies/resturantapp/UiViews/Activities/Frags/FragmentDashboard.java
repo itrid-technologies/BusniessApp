@@ -21,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -95,6 +94,7 @@ public class FragmentDashboard extends Fragment {
     private ImageView imgNoOrder;
     private int i;
     private static final String TAG = "FragmentDashboard";
+    private boolean isClosed;
 
     //For Snackbar
 
@@ -1149,7 +1149,14 @@ public class FragmentDashboard extends Fragment {
                     if (response.body() != null) {
                         AppManager.SnackBar((AppCompatActivity) mActivity, response.body().getMessage());
                     } else {
-                        AppManager.SnackBar((AppCompatActivity) mActivity, response.message());
+                        if (mIsClosed == 1)
+                        {
+                            AppManager.SnackBar((AppCompatActivity) mActivity, "Business is CLosed");
+                        }
+                        else {
+                            AppManager.SnackBar((AppCompatActivity) mActivity,
+                                    "Delivery or Pickup order mode must be enable.");
+                        }
                     }
                 }
             }

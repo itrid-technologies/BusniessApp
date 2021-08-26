@@ -45,7 +45,7 @@ public class AdapterTotal extends RecyclerView.Adapter<AdapterTotal.detailHolder
         TotalModel totalModel = totalModelList.get(position);
         DecimalFormat format = new DecimalFormat("0.00");
 
-        if (position == totalModelList.size())
+        if (position == totalModelList.size()-1)
         {
             holder.mSubTotalAmount.setTypeface(null, Typeface.BOLD);
             holder.mSubTotalName.setTypeface(null, Typeface.BOLD);
@@ -63,8 +63,8 @@ public class AdapterTotal extends RecyclerView.Adapter<AdapterTotal.detailHolder
 
     public static class detailHolderr extends RecyclerView.ViewHolder {
 
-        private TextView mSubTotalName;
-        private TextView mSubTotalAmount;
+        private final TextView mSubTotalName;
+        private final TextView mSubTotalAmount;
 
         public detailHolderr(@NonNull @NotNull View itemView) {
             super(itemView);

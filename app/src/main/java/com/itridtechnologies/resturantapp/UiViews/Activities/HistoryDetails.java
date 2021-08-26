@@ -39,6 +39,7 @@ import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
+import java.text.Format;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +54,6 @@ public class HistoryDetails extends AppCompatActivity {
     //Declaring Variables
     private TextView mCustomerName;
     private TextView mAmmount;
-    private TextView mTotal;
     private TextView mOrderStatus;
     private ProgressBar mProgressHistDetails;
     private RecyclerView mRVHistoryDetail;
@@ -176,7 +176,6 @@ public class HistoryDetails extends AppCompatActivity {
         mNSVHistDetails = findViewById(R.id.nsvHistoryDetails);
         mRVHistoryDetail = findViewById(R.id.rv_hist);
         mProgressHistDetails = findViewById(R.id.pb_hist_details);
-        mTotal = findViewById(R.id.tv_sub_total_amount_HO);
         mRVTotals = findViewById(R.id.rv_totals_history);
         mCourierReview = findViewById(R.id.tv_review_for_courier);
         mCustomerReview = findViewById(R.id.tv_review_for_customer);
@@ -196,12 +195,11 @@ public class HistoryDetails extends AppCompatActivity {
     }
 
     @SuppressLint("SetTextI18n")
-    public void totalFun(String totalAmount) {
+    public void totalFun() {
         mRVTotals.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         AdapterTotal totalAdapter = new AdapterTotal(list, HistoryDetails.this);
         mRVTotals.setAdapter(totalAdapter);
         totalAdapter.notifyDataSetChanged();
-        mTotal.setText(Constants.CURRENCY_SIGN + " " + totalAmount);
     }//end total function
 
     //Getting Details from Server
@@ -212,29 +210,50 @@ public class HistoryDetails extends AppCompatActivity {
             @Override
             public void onResponse(@NotNull Call<NewHistoryWithTotals> call, @NotNull Response<NewHistoryWithTotals> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    DecimalFormat format = new DecimalFormat("0.00");
 
-                    //CALCULATING TOTAL
-                    for (int i = 0; i < response.body().getData().getResults().get(pos).getOrderTotal().size(); i++) {
-                        mTotalValue = mTotalValue + Double.parseDouble(response.body().getData().getResults().get(pos).getOrderTotal().get(i).getValue());
-                        list.add(new TotalModel(
-                                response.body().getData().getResults().get(pos).getOrderTotal().get(i).getLabel(),
-                                format.format(response.body().getData().getResults().get(pos).getOrderTotal().get(i).getValue())
-                        ));
+
+                    if (response.body().getData().getResults().get(pos).getOrderTotal().size() > 0)
+                    {
+                        //CALCULATING TOTAL
+                        for (int i = 0; i < response.body().getData().getResults().get(pos).getOrderTotal().size(); i++) {
+                            mTotalValue = mTotalValue + Double.parseDouble(response.body().getData().getResults().get(pos).getOrderTotal().get(i).getValue());
+                            list.add(new TotalModel(
+                                    response.body().getData().getResults().get(pos).getOrderTotal().get(i).getLabel(),
+                                    response.body().getData().getResults().get(pos).getOrderTotal().get(i).getValue()
+                            ));
+                        }
                     }
 
                     Log.e(TAG, "onResponse: " + mTotalAmount + mTotalValue);
 
-                    //Updating History User interface
-                    UpdateHistUI(
-                            response.body().getData().getResults().get(pos).getFirstName(),
-                            response.body().getData().getResults().get(pos).getLastName(),
-                            format.format(mTotalValue + mTotalAmount),
-                            response.body().getData().getResults().get(pos).getStatus()
-                    );
+                    int posi;
+
+                    if (response.body().getData().getResults().get(pos).getOrderTotal().size() > 0)
+                    {
+                        posi = response.body().getData().getResults().get(pos).getOrderTotal().size() - 1;
+
+                        //Updating History User interface
+                        UpdateHistUI(
+                                response.body().getData().getResults().get(pos).getFirstName(),
+                                response.body().getData().getResults().get(pos).getLastName(),
+                                response.body().getData().getResults().get(pos).getOrderTotal().get(posi).getValue(),
+                                response.body().getData().getResults().get(pos).getStatus()
+                        );
+                    }
+                    else {
+
+                        //Updating History User interface
+                        UpdateHistUI(
+                                response.body().getData().getResults().get(pos).getFirstName(),
+                                response.body().getData().getResults().get(pos).getLastName(),
+                                "00.00",
+                                response.body().getData().getResults().get(pos).getStatus()
+                        );
+                    }
+
 
                     //Total Orders
-                    totalFun(format.format(mTotalValue + mTotalAmount));
+                    totalFun();
 
                 } //Not null
             }
@@ -302,12 +321,14 @@ public class HistoryDetails extends AppCompatActivity {
         //Amount
         if (orderAmount != null) {
             Log.e(TAG, "UpdateHistUI: " + orderAmount);
-            mAmmount.setText(Constants.CURRENCY_SIGN + " " + orderAmount);
+            DecimalFormat format = new DecimalFormat("0.00");
+            mAmmount.setText(Constants.CURRENCY_SIGN + " " + format.format(Double.parseDouble(orderAmount)));
         }
         //Status
         if (status != null) {
             mOrderStatus.setText(status);
         }
+
     }
 
     //Setting Toolbar

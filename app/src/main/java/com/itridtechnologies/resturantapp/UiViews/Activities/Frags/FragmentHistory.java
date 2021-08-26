@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.beeline09.daterangepicker.date.DateRangePickerFragment;
+import com.google.android.material.snackbar.Snackbar;
 import com.itridtechnologies.resturantapp.Adapters.AdapterHistoryFragment;
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.UiViews.Activities.HistoryDetails;
@@ -64,11 +65,13 @@ public class FragmentHistory extends Fragment {
     private List<ItemsItem> mHistoryList = new ArrayList<>();
     private final ArrayList<NewHistory> histOrderList = new ArrayList<>();
     private ProgressBar mProgressBarHistFull;
+    private ProgressBar mProgressBarHistPagination;
     private NestedScrollView mNSVHist;
     private PreferencesManager pm;
     private TextView mNoRecordFound;
     private LinearLayout mLayout;
-    private boolean isDated = false;
+
+    private boolean isDated;
 
 
     //page size
@@ -121,6 +124,7 @@ public class FragmentHistory extends Fragment {
         View root = inflater.inflate(R.layout.fragment_history, container, false);
         mHistoryRecyclerView = root.findViewById(R.id.recycler_view_history);
         mProgressBarHistFull = root.findViewById(R.id.pb_hist_center);
+        mProgressBarHistPagination = root.findViewById(R.id.PBHistoryPagination);
         pm = new PreferencesManager(requireContext());
         mNSVHist = root.findViewById(R.id.nsv_history);
         mLayout = root.findViewById(R.id.noOrder);
@@ -229,13 +233,18 @@ public class FragmentHistory extends Fragment {
                             (view, yearStart, monthStart, dayStart, yearEnd, monthEnd, dayEnd) -> {
                                 mDateET.setEnabled(true);
 
-                                datee = "From: " + dayStart + "-" + monthStart + "-" + yearStart + " To : " + dayEnd + "-" + monthEnd + "-" + yearEnd;
+                                int startMonth = monthStart + 1;
+                                int endMonth = monthEnd + 1;
+                                Log.e(TAG, "onStart: month" + startMonth + endMonth);
+
+                                datee = "From: " + dayStart + "-" + startMonth + "-" + yearStart + " To : " + dayEnd + "-" + endMonth + "-" + yearEnd;
                                 mDateET.setText(datee);
+
 
                                 mDateET.setEnabled(true);
 
-                                mStartDate = yearStart + "-" + monthStart + 1 + "-" + dayStart;
-                                mEndDate = yearEnd + "-" + monthEnd + 1 + "-" + dayEnd;
+                                mStartDate = yearStart + "-" + startMonth + "-" + dayStart;
+                                mEndDate = yearEnd + "-" + endMonth + "-" + dayEnd;
 
                                 getHistoryOrders(mStartDate, mEndDate);
 
@@ -261,14 +270,19 @@ public class FragmentHistory extends Fragment {
 
                             mDateET.setEnabled(true);
 
+
+                            int startMonth = monthStart + 1;
+                            int endMonth = monthEnd + 1;
+                            Log.e(TAG, "onStart: month" + startMonth + endMonth);
+
 //                            Log.e(TAG, "onStart: " + materialDatePicker.getHeaderText());
-                            datee = "From: " + dayStart + "-" + monthStart + "-" + yearStart + " To : " + dayEnd + "-" + monthEnd + "-" + yearEnd;
+                            datee = "From: " + dayStart + "-" + startMonth + "-" + yearStart + " To : " + dayEnd + "-" + endMonth + "-" + yearEnd;
                             mDateET.setText(datee);
 
                             mDateET.setEnabled(true);
 
-                            mStartDate = yearStart + "-" + monthStart + 1 + "-" + dayStart;
-                            mEndDate = yearEnd + "-" + monthEnd + 1 + "-" + dayEnd;
+                            mStartDate = yearStart + "-" + startMonth + "-" + dayStart;
+                            mEndDate = yearEnd + "-" + endMonth + "-" + dayEnd;
 
                             getHistoryOrders(mStartDate, mEndDate);
 
@@ -348,20 +362,11 @@ public class FragmentHistory extends Fragment {
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        page_no = 1;
-
-        Log.e(TAG, "onResume: ");
-        Log.e(TAG, "onResume: i m resumed");
-    }
-
     ///Updating user Interface
     //Setting Adapter
     private void adapter() {
         try {
-            manager = new LinearLayoutManager(requireContext().getApplicationContext());
+            manager = new LinearLayoutManager(requireContext());
             adapter = new AdapterHistoryFragment(histOrderList, requireContext());
             mHistoryRecyclerView.setAdapter(adapter);
             mHistoryRecyclerView.setLayoutManager(manager);
@@ -374,10 +379,8 @@ public class FragmentHistory extends Fragment {
                 startActivity(intent);
             });
 
-
             //checking for last item LastItem
             LastItem();
-
 
         } catch (Exception ignored) {
         }
@@ -393,13 +396,6 @@ public class FragmentHistory extends Fragment {
                 super.onScrollStateChanged(recyclerView, newState);
 
                 Log.e(TAG, "onScrollStateChanged: " + "");
-            }
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                Log.e(TAG, "onScrolled: " + "");
 
                 visibleItemCount = manager.getChildCount();
                 totalItemCount = manager.getItemCount();
@@ -410,13 +406,23 @@ public class FragmentHistory extends Fragment {
                     if ((visibleItemCount + firstVisibleItem) >= totalItemCount &&
                             firstVisibleItem >= 0 && totalItemCount >= pageSize) {
 
+                        mProgressBarHistPagination.setVisibility(View.VISIBLE);
+
                         page_no++;
+
                         Log.e(TAG, "onScrolled: " + "last item" + page_no);
 
                         LoadMoreItems();
 
                     }
-                }
+                } // end if loading and islastpage
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                Log.e(TAG, "onScrolled: " + "");
 
             }
         });
@@ -427,13 +433,88 @@ public class FragmentHistory extends Fragment {
     private void LoadMoreItems() {
 
         isLoading = true;
+        Log.e(TAG, "LoadMoreItems: p" + mStartDate + mEndDate + page_no);
 
-        if(isDated)
-        {
-            getHistoryOrders(mStartDate, mEndDate);
+        if (isDated) {
+
+            Log.e(TAG, "LoadMoreItems: p undated" + mStartDate + mEndDate + page_no);
+
+            //Getting token
+            String token = AppManager.getBusinessDetails().getData().getToken();
+            Call<NewHistoryWithTotals> call = RetrofitNetMan.getRestApiService().getHistory(token, mStartDate, mEndDate, page_no);
+
+            call.enqueue(new Callback<NewHistoryWithTotals>() {
+                @Override
+                public void onResponse(@NonNull Call<NewHistoryWithTotals> call, @NonNull Response<NewHistoryWithTotals> response) {
+
+                    isLoading = false;
+
+                    if (response.isSuccessful() && response.body() != null) {
+
+                        DecimalFormat format = new DecimalFormat("0.00");
+
+                        //collect data and update UI
+                        if (!response.body().getMessage().equals("No records found")) {
+
+                            if (response.body().getData().getResults().size() > 0)
+                            {
+                                for (int i = 0; i < response.body().getData().getResults().size(); i++) {
+
+                                    //CALCULATING TOTAL
+                                    for (int j = 0; j < response.body().getData().getResults().get(i).getOrderTotal().size(); j++) {
+                                        mTotalValue = Double.parseDouble(response.body().getData().getResults().get(i).getOrderTotal().get(j).getValue());
+                                    }
+
+                                    Log.e(TAG, "onResponse: " + mTotalValue);
+
+                                    histOrderList.add(new NewHistory(
+                                            String.valueOf(response.body().getData().getResults().get(i).getId()),
+                                            response.body().getData().getResults().get(i).getFirstName() + " " +
+                                                    response.body().getData().getResults().get(i).getLastName(),
+                                            String.valueOf(response.body().getData().getResults().get(i).getItemCount()),
+                                            String.valueOf(format.format(mTotalValue)),
+                                            response.body().getData().getResults().get(i).getPickuptime()
+                                    ));
+                                    mTotalValue = 0.00;
+
+                                    Log.e(TAG, "onResponse: Cleared" + mTotalValue);
+                                }
+
+
+                                adapter.AddData(histOrderList);
+                                isLastPage = response.body().getData().getResults().size() < pageSize;
+
+                                mNoHistoryImage.setVisibility(View.GONE);
+                                mTVEmpty.setVisibility(View.GONE);
+
+                            } else {
+                                isLastPage = true;
+                                mNoHistoryImage.setVisibility(View.VISIBLE);
+                                mTVEmpty.setText("No Orders in this period");
+                                mTVEmpty.setVisibility(View.VISIBLE);
+                            }
+
+                            }
+
+                    }
+
+                    else {
+                        Log.e(TAG, "onResponse: Some went Wrong " );
+                    }
+                    mProgressBarHistFull.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<NewHistoryWithTotals> call, @NonNull Throwable t) {
+                    isLoading = false;
+                    AppManager.toast("No Or Poor Internet Connection");
+                }
+            });
         }
-        else
-        {
+        else {
+
+            Log.e(TAG, "LoadMoreItems: p" + mStartDate + mEndDate + page_no);
+
             Call<NewHistoryWithTotals> call = RetrofitNetMan.getRestApiService().getFullHistory(AppManager.getBusinessDetails().getData().getToken(), page_no);
             call.enqueue(new Callback<NewHistoryWithTotals>() {
                 @Override
@@ -455,11 +536,15 @@ public class FragmentHistory extends Fragment {
                                     Log.e(TAG, "onResponse: " + response.body().getData().getResults().size());
                                     for (int i = 0; i < response.body().getData().getResults().size(); i++) {
 
-                                        //CALCULATING TOTAL
-                                        for (int j = 0; j < response.body().getData().getResults().get(i).getOrderTotal().size(); j++) {
-                                            mTotalValue = mTotalValue + Double.parseDouble(response.body().getData().getResults().get(i).getOrderTotal().get(j).getValue());
+                                        if (response.body().getData().getResults().get(i).getOrderTotal().size()>0)
+                                        {
+                                            //CALCULATING TOTAL
+                                            for (int j = 0; j < response.body().getData().getResults().get(i).getOrderTotal().size(); j++) {
+                                                mTotalValue = Double.parseDouble(response.body().getData().getResults().get(i).getOrderTotal().get(j).getValue());
+                                            }
+                                            Log.e(TAG, "onResponse: " + mTotalValue);
+
                                         }
-                                        Log.e(TAG, "onResponse: " + mTotalValue);
 
                                         histOrderList.add(new NewHistory(
                                                 String.valueOf(response.body().getData().getResults().get(i).getId()),
@@ -469,6 +554,7 @@ public class FragmentHistory extends Fragment {
                                                 String.valueOf(format.format(mTotalValue)),
                                                 response.body().getData().getResults().get(i).getPickuptime()
                                         ));
+
                                         mTotalValue = 0.00;
                                         Log.e(TAG, "onResponse: Cleared" + mTotalValue);
                                     }
@@ -477,7 +563,6 @@ public class FragmentHistory extends Fragment {
                                     isLastPage = response.body().getData().getResults().size() < pageSize;
 
                                 } else {
-
                                     isLastPage = true;
                                 }
 
@@ -485,7 +570,10 @@ public class FragmentHistory extends Fragment {
 
                         }
 
-                    } else {
+                    }
+
+
+                    else {
 
                         Log.e(TAG, "onResponse:load more " + "something is wrong");
 
@@ -503,6 +591,7 @@ public class FragmentHistory extends Fragment {
             });
         }
 
+        mProgressBarHistPagination.setVisibility(View.GONE);
 
     }
 
@@ -515,7 +604,7 @@ public class FragmentHistory extends Fragment {
 
         call.enqueue(new Callback<NewHistoryWithTotals>() {
             @Override
-            public void onResponse(Call<NewHistoryWithTotals> call, Response<NewHistoryWithTotals> response) {
+            public void onResponse(@NonNull Call<NewHistoryWithTotals> call, @NonNull Response<NewHistoryWithTotals> response) {
 
                 if (response.isSuccessful() && response.body() != null) {
 
@@ -527,27 +616,27 @@ public class FragmentHistory extends Fragment {
                         for (int i = 0; i < response.body().getData().getResults().size(); i++) {
 
                             //CALCULATING TOTAL
-                            for (int j = 0; j < response.body().getData().getResults().get(i).getOrderTotal().size(); j++) {
-                                mTotalValue = mTotalValue + Double.parseDouble(response.body().getData().getResults().get(i).getOrderTotal().get(j).getValue());
+                            if (response.body().getData().getResults().get(i).getOrderTotal().size() > 0) {
+                                for (int j = 0; j < response.body().getData().getResults().get(i).getOrderTotal().size(); j++) {
+                                    mTotalValue = mTotalValue + Double.parseDouble(response.body().getData().getResults().get(i).getOrderTotal().get(j).getValue());
+                                }
                             }
 
                             Log.e(TAG, "onResponse: " + mTotalValue);
 
+
                             histOrderList.add(new NewHistory(
                                     String.valueOf(response.body().getData().getResults().get(i).getId()),
-                                    response.body().getData().getResults().get(i).getFirstName() + " " + response.body().getData().getResults().get(i).getLastName(),
+                                    response.body().getData().getResults().get(i).getFirstName() + " " +
+                                            response.body().getData().getResults().get(i).getLastName(),
                                     String.valueOf(response.body().getData().getResults().get(i).getItemCount()),
                                     String.valueOf(format.format(mTotalValue)),
                                     response.body().getData().getResults().get(i).getPickuptime()
                             ));
-                            mTotalValue = 0.00;
-
                             Log.e(TAG, "onResponse: Cleared" + mTotalValue);
                         }
 
-
                         mNoHistoryImage.setVisibility(View.GONE);
-                        mTVEmpty.setText("No Orders in this period");
                         mTVEmpty.setVisibility(View.GONE);
                     } else {
                         mNoHistoryImage.setVisibility(View.VISIBLE);
@@ -557,14 +646,12 @@ public class FragmentHistory extends Fragment {
                     mNSVHist.setVisibility(View.VISIBLE);
                     isDated = true;
                     adapter();
-                } else {
-                    startActivity(new Intent(requireContext(), MainActivity.class));
                 }
                 mProgressBarHistFull.setVisibility(View.GONE);
             }
 
             @Override
-            public void onFailure(Call<NewHistoryWithTotals> call, Throwable t) {
+            public void onFailure(@NonNull Call<NewHistoryWithTotals> call, @NonNull Throwable t) {
                 AppManager.toast("No Or Poor Internet Connection");
             }
         });
@@ -579,7 +666,7 @@ public class FragmentHistory extends Fragment {
 
         call.enqueue(new Callback<NewHistoryWithTotals>() {
             @Override
-            public void onResponse(Call<NewHistoryWithTotals> call, Response<NewHistoryWithTotals> response) {
+            public void onResponse(@NonNull Call<NewHistoryWithTotals> call, @NonNull Response<NewHistoryWithTotals> response) {
 
                 if (response.isSuccessful() && response.body() != null) {
 
@@ -593,10 +680,13 @@ public class FragmentHistory extends Fragment {
                             Log.e(TAG, "onResponse: " + response.body().getData().getResults().size());
                             for (int i = 0; i < response.body().getData().getResults().size(); i++) {
 
-                                //CALCULATING TOTAL
-                                for (int j = 0; j < response.body().getData().getResults().get(i).getOrderTotal().size(); j++) {
-                                    mTotalValue = mTotalValue + Double.parseDouble(response.body().getData().getResults().get(i).getOrderTotal().get(j).getValue());
+                                if (response.body().getData().getResults().get(i).getOrderTotal().size() > 0) {
+                                    //CALCULATING TOTAL
+                                    for (int j = 0; j < response.body().getData().getResults().get(i).getOrderTotal().size(); j++) {
+                                        mTotalValue = Double.parseDouble(response.body().getData().getResults().get(i).getOrderTotal().get(j).getValue());
+                                    }
                                 }
+
                                 Log.e(TAG, "onResponse: " + mTotalValue);
 
                                 histOrderList.add(new NewHistory(
@@ -607,8 +697,8 @@ public class FragmentHistory extends Fragment {
                                         String.valueOf(format.format(mTotalValue)),
                                         response.body().getData().getResults().get(i).getPickuptime()
                                 ));
+
                                 mTotalValue = 0.00;
-                                Log.e(TAG, "onResponse: Cleared" + mTotalValue);
                             }
                             mNSVHist.setVisibility(View.VISIBLE);
                             isDated = false;
@@ -643,6 +733,16 @@ public class FragmentHistory extends Fragment {
         Log.e(TAG, "onPause: ");
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        page_no = 1;
+
+        Log.e(TAG, "onResume: ");
+        Log.e(TAG, "onResume: i m resumed");
+    }
+
 
     @Override
     public void onDestroy() {

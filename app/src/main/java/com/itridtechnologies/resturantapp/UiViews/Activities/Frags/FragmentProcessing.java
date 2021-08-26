@@ -56,6 +56,7 @@ public class FragmentProcessing extends Fragment {
     //Variables here
     private RecyclerView mRecyclerView;
     private ProgressBar mPBFull;
+    private ProgressBar mPBPagination;
     private NestedScrollView mNSVProgress;
     ///Room database
     RoomDB databaseRoom;
@@ -97,6 +98,7 @@ public class FragmentProcessing extends Fragment {
         View root = inflater.inflate(R.layout.fragment_processing, container, false);
         mRecyclerView = root.findViewById(R.id.in_progress_orders_recycler);
         mPBFull = root.findViewById(R.id.PBProcess);
+        mPBPagination = root.findViewById(R.id.PBProcessPagination);
         mNSVProgress = root.findViewById(R.id.nsv_process);
         Toolbar mToolbar = root.findViewById(R.id.nav_bar_PO);
 
@@ -228,40 +230,7 @@ public class FragmentProcessing extends Fragment {
                     if (!response.body().getMessage().equals("No records found")) {
                         //collect data & update ui
 
-//                        for (int i = 0; i < response.body().getData().getOrders().size(); i++) {
-//                            mNewPageOrderItemList.add(new OrdersItem(
-//                                    response.body().getData().getOrders().get(i).getPickuptime(),
-//                                    response.body().getData().getOrders().get(i).getBusinessTax(),
-//                                    response.body().getData().getOrders().get(i).getActionDate(),
-//                                    response.body().getData().getOrders().get(i).getMinPreTime(),
-//                                    response.body().getData().getOrders().get(i).getMaxPreTime(),
-//                                    response.body().getData().getOrders().get(i).getCourierNotes(),
-//                                    response.body().getData().getOrders().get(i).getAction(),
-//                                    response.body().getData().getOrders().get(i).getId(),
-//                                    response.body().getData().getOrders().get(i).getState(),
-//                                    response.body().getData().getOrders().get(i).getOrderType(),
-//                                    response.body().getData().getOrders().get(i).getFirstName(),
-//                                    response.body().getData().getOrders().get(i).getBusinessRevShare(),
-//                                    response.body().getData().getOrders().get(i).getItemCount(),
-//                                    response.body().getData().getOrders().get(i).getBusinessName(),
-//                                    response.body().getData().getOrders().get(i).getBusinessNotes(),
-//                                    response.body().getData().getOrders().get(i).getPaymentStatus(),
-//                                    response.body().getData().getOrders().get(i).getLastName(),
-//                                    response.body().getData().getOrders().get(i).getOtp(),
-//                                    response.body().getData().getOrders().get(i).getDateAdded(),
-//                                    response.body().getData().getOrders().get(i).getPaymentType(),
-//                                    response.body().getData().getOrders().get(i).getDelay(),
-//                                    response.body().getData().getOrders().get(i).getDateModified(),
-//                                    response.body().getData().getOrders().get(i).getPhoneNumber(),
-//                                    response.body().getData().getOrders().get(i).getCustomerId(),
-//                                    response.body().getData().getOrders().get(i).getBusinessId(),
-//                                    response.body().getData().getOrders().get(i).getStatus()
-//                            ));
-//                        }
-
-                        mNewPageOrderItemList = response.body().getData().getOrders();
-
-                        setUpRecFirstTime(mNewPageOrderItemList);
+                        setUpRecFirstTime(response.body().getData().getOrders());
 
                         try {
 //                            if (!mNewPageOrderItemList.isEmpty()) {
@@ -339,22 +308,30 @@ public class FragmentProcessing extends Fragment {
     }
 
     private void setUpRecFirstTime(List<OrdersItem> paginationOrders) {
-        manager = new LinearLayoutManager(requireContext().getApplicationContext());
-        adapter = new AdapterFirstTime(paginationOrders, requireContext().getApplicationContext());
-        mRecyclerView.setLayoutManager(manager);
-        mRecyclerView.setAdapter(adapter);
 
-        adapter.setOnItemClickListener(position -> {
-            Intent intent = new Intent(requireContext(), NewOrder.class);
-            Log.e(TAG, "setUpRecView: " + paginationOrders.get(position).getId());
-            intent.putExtra("orderId", String.valueOf(paginationOrders.get(position).getId()));
-            intent.putExtra("detailType", "processing");
-            startActivity(intent);
-        });
+        try {
+            manager = new LinearLayoutManager(requireContext());
+            adapter = new AdapterFirstTime(paginationOrders, requireContext().getApplicationContext());
 
-        //checking for last item LastItem
-        LastItem();
+            mRecyclerView.setLayoutManager(manager);
+            mRecyclerView.setAdapter(adapter);
 
+            adapter.setOnItemClickListener(position -> {
+                Intent intent = new Intent(requireContext(), NewOrder.class);
+                Log.e(TAG, "setUpRecView: " + paginationOrders.get(position).getId());
+                intent.putExtra("orderId", String.valueOf(paginationOrders.get(position).getId()));
+                intent.putExtra("detailType", "processing");
+                startActivity(intent);
+            });
+
+            //checking for last item LastItem
+            LastItem();
+
+
+        }catch (Exception e)
+        {
+            Log.e(TAG, "setUpRecFirstTime: " + e.getMessage() );
+        }
 
     }//end setup
 
@@ -367,15 +344,10 @@ public class FragmentProcessing extends Fragment {
                 super.onScrollStateChanged(recyclerView, newState);
 
                 Log.e(TAG, "onScrollStateChanged: " + "");
-            }
 
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                Log.e(TAG, "onScrolled: " + "");
 
                 visibleItemCount = manager.getChildCount();
+                Log.e(TAG, "onScrolled: " + manager.getChildCount() );
                 totalItemCount = manager.getItemCount();
                 firstVisibleItem = manager.findFirstVisibleItemPosition();
 
@@ -387,10 +359,21 @@ public class FragmentProcessing extends Fragment {
                         page_no++;
                         Log.e(TAG, "onScrolled: " + "last item" + page_no);
 
+                        mPBPagination.setVisibility(View.VISIBLE);
+
                         LoadMoreItems();
 
                     }
                 }
+
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                Log.e(TAG, "onScrolled: " + "sdf");
+
 
             }
         });
@@ -423,7 +406,10 @@ public class FragmentProcessing extends Fragment {
                             } else {
 
                                 isLastPage = true;
+                                Toast.makeText(requireContext(), "All caught up", Toast.LENGTH_SHORT).show();
                             }
+
+                            mPBPagination.setVisibility(View.GONE);
 
                         }
 
@@ -438,7 +424,7 @@ public class FragmentProcessing extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<PaginationResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<PaginationResponse> call, @NonNull Throwable t) {
 
                 Log.e(TAG, "onFailure: " + t.getMessage());
                 isLoading = false;
