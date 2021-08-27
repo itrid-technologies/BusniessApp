@@ -85,8 +85,17 @@ public class AdapterHistoryFragment extends RecyclerView.Adapter<AdapterHistoryF
     @Override
     public void onBindViewHolder(@NonNull AdapterHistoryFragment.detailHolder holder, int position) {
         ResultsItem mHistoryInfo = histList.get(position);
-        sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+        String time = mHistoryInfo.getDateAdded();
+        //spplitting to get date
+        String[] minTime = time.split("T");
+
+        String[] date = minTime[0].split("-");
+
+        holder.mOrderTimeHistory.setText(date[2] + "/" + date[1] + "/" + date[0]);
+//
+//        sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+//        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 //        try {
 //            Date time = sdf.parse(mHistoryInfo.getPickuptime());
 //            Log.e(TAG, "onBindViewHolder: " + time);

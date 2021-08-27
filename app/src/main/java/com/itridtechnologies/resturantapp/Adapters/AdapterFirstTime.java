@@ -76,16 +76,13 @@ public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.deta
             holder.mStatus.setBackground(mCtx.getResources().getDrawable(R.drawable.paid_background));
         }
 
-
         ///Setting data in Textfields On screen
         holder.mOrderNumber.setText("#" + orderNumber);
 
         if (mOrderInfo.getOrderType() == 1) {
 
             holder.mType.setText("Delivery");
-
-            holder.mStatus.setVisibility(View.INVISIBLE);
-
+//            holder.mStatus.setVisibility(View.INVISIBLE);
             if (isRiderAssigned == 1) {
                 holder.mCustomerName.setText(customerName);
                 holder.mRider.setText("RIDER_NAME is Coming in ARRIVING_TIME minutes");
