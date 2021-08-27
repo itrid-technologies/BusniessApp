@@ -30,6 +30,7 @@ import com.itridtechnologies.resturantapp.models.HistoryOrderDetails.HistOrderDe
 import com.itridtechnologies.resturantapp.models.HistoryOrderDetails.OrderAddonsItem;
 import com.itridtechnologies.resturantapp.models.historyNew.NewHistoryWithTotals;
 import com.itridtechnologies.resturantapp.models.historyagain.HistResponse;
+import com.itridtechnologies.resturantapp.models.newOrder.NewOrderResponse;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 import com.itridtechnologies.resturantapp.utils.Constants;
@@ -60,6 +61,7 @@ public class HistoryDetails extends AppCompatActivity {
     private RecyclerView mRVTotals;
     private PreferencesManager pm;
 
+    private double orderTotal = 0;
     //Reviews
     private TextView mCustomerReview;
     private TextView mCourierReview;
@@ -101,9 +103,10 @@ public class HistoryDetails extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        or = pm.getMyDataString("orderIdHis");
+
+        or = getIntent().getStringExtra("orderIdHis");
         Log.e(TAG, "onStart: id # " + or);
-        pos = pm.getMyDataString("orderHisPos");
+        pos = getIntent().getStringExtra("orderHisPos");
 
         toolbarFun();
         setVariables();
@@ -202,72 +205,101 @@ public class HistoryDetails extends AppCompatActivity {
         totalAdapter.notifyDataSetChanged();
     }//end total function
 
-    //Getting Details from Server
-    private void getDetails(String position) {
-        int pos = Integer.parseInt(position);
-        Call<NewHistoryWithTotals> call = RetrofitNetMan.getRestApiService().getFullHistory(token,Integer.parseInt(pm.getMyDataString("pageNo")));
-        call.enqueue(new Callback<NewHistoryWithTotals>() {
+
+
+    ///Api link with id
+    //method to get business orders from server
+    private void getNewBusinessOrders(String orderId) {
+
+        Log.e(TAG, "onCreate: Order id inside API " + orderId);
+        Call<NewOrderResponse> call = RetrofitNetMan.getRestApiService().getOrders(token, orderId);
+        call.enqueue(new Callback<NewOrderResponse>() {
             @Override
-            public void onResponse(@NotNull Call<NewHistoryWithTotals> call, @NotNull Response<NewHistoryWithTotals> response) {
+            public void onResponse(@NotNull Call<NewOrderResponse> call, @NotNull Response<NewOrderResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
 
+                    //collect data & update ui
+                    try {
+                        Log.e(TAG, "onResponse: first and last name: " + response.body().getData().getOrder().get(0).getFirstName() +
+                                response.body().getData().getOrder().get(0).getLastName());
 
-                    if (response.body().getData().getResults().get(pos).getOrderTotal().size() > 0)
-                    {
-                        //CALCULATING TOTAL
-                        for (int i = 0; i < response.body().getData().getResults().get(pos).getOrderTotal().size(); i++) {
-                            mTotalValue = mTotalValue + Double.parseDouble(response.body().getData().getResults().get(pos).getOrderTotal().get(i).getValue());
-                            list.add(new TotalModel(
-                                    response.body().getData().getResults().get(pos).getOrderTotal().get(i).getLabel(),
-                                    response.body().getData().getResults().get(pos).getOrderTotal().get(i).getValue()
-                            ));
+                        if (response.body().getData().getOrderTotals().size() > 0)
+                        {
+                            //Calculating Total Amount
+                            for (int i = 0; i < response.body().getData().getOrderTotals().size(); i++) {
+                                list.add(new TotalModel(
+                                        response.body().getData().getOrderTotals().get(i).getLabel(),
+                                        response.body().getData().getOrderTotals().get(i).getValue()
+                                ));
+                                orderTotal = Double.parseDouble(response.body().getData().getOrderTotals().get(i).getValue());
+                                Log.e(TAG, "onResponse: order total " + orderTotal);
+                            }
                         }
+
+
+                        totalFun();
+
+                            //Updating History User interface
+                            UpdateHistUI(
+                                    response.body().getData().getOrder().get(0).getFirstName(),
+                                    response.body().getData().getOrder().get(0).getLastName(),
+                                    String.valueOf(orderTotal),
+                                    response.body().getData().getOrder().get(0).getStatus()
+                            );
+
+                        ///Inserting new order basic information data in database
+                        Log.e(TAG, "onResponse: Data inserting");
+//                        Constants.ORDER_ITEM = new OrdersItem(
+//                                response.body().getData().getOrder().get(0).getPickuptime(),
+////                                String.valueOf(mRemainTime),
+////                                String.valueOf(currentTime),
+//                                "200",
+//                                response.body().getData().getOrder().get(0).getDateAdded(),
+//                                response.body().getData().getOrder().get(0).getMinPreTime(),
+//                                response.body().getData().getOrder().get(0).getMaxPreTime(),
+//                                response.body().getData().getOrder().get(0).getCourierNotes(),
+//                                response.body().getData().getOrder().get(0).getBusinessId(),
+//                                response.body().getData().getOrder().get(0).getId(),
+//                                "Pending",
+//                                response.body().getData().getOrder().get(0).getOrderType(),
+//                                response.body().getData().getOrder().get(0).getFirstName(),
+//                                response.body().getData().getOrder().get(0).getBusinessRevShare(),
+//                                response.body().getData().getOrder().get(0).getItemCount(),
+//                                response.body().getData().getOrder().get(0).getBusinessName(),
+//                                response.body().getData().getOrder().get(0).getBusinessNotes(),
+//                                response.body().getData().getOrder().get(0).getPaymentStatus(),
+//                                response.body().getData().getOrder().get(0).getLastName(),
+//                                response.body().getData().getOrder().get(0).getAction(),
+//                                response.body().getData().getOrder().get(0).getDateAdded(),
+//                                response.body().getData().getOrder().get(0).getPaymentType(),
+//                                response.body().getData().getOrder().get(0).getDelay(),
+//                                response.body().getData().getOrder().get(0).getDateModified(),
+//                                response.body().getData().getOrder().get(0).getPhoneNumber(),
+//                                response.body().getData().getOrder().get(0).getCustomerId(),
+//                                response.body().getData().getOrder().get(0).getBusinessId(),
+//                                response.body().getData().getOrder().get(0).getStatus()
+//                        );
+//
+
+                    } catch (Exception ignred) {
+                        Log.e(TAG, "onResponse: " + ignred.getMessage());
                     }
+                } else {
+                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                }//not null
 
-                    Log.e(TAG, "onResponse: " + mTotalAmount + mTotalValue);
-
-                    int posi;
-
-                    if (response.body().getData().getResults().get(pos).getOrderTotal().size() > 0)
-                    {
-                        posi = response.body().getData().getResults().get(pos).getOrderTotal().size() - 1;
-
-                        //Updating History User interface
-                        UpdateHistUI(
-                                response.body().getData().getResults().get(pos).getFirstName(),
-                                response.body().getData().getResults().get(pos).getLastName(),
-                                response.body().getData().getResults().get(pos).getOrderTotal().get(posi).getValue(),
-                                response.body().getData().getResults().get(pos).getStatus()
-                        );
-                    }
-                    else {
-
-                        //Updating History User interface
-                        UpdateHistUI(
-                                response.body().getData().getResults().get(pos).getFirstName(),
-                                response.body().getData().getResults().get(pos).getLastName(),
-                                "00.00",
-                                response.body().getData().getResults().get(pos).getStatus()
-                        );
-                    }
-
-
-                    //Total Orders
-                    totalFun();
-
-                } //Not null
             }
 
             @Override
-            public void onFailure(@NotNull Call<NewHistoryWithTotals> call, @NotNull Throwable t) {
-                Toast.makeText(HistoryDetails.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+            public void onFailure(@NotNull Call<NewOrderResponse> call, @NotNull Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage());
             }
         });
-    }
+    }//end get
 
     ////Recieving Data From Server order details of history with addons etc
-    public void getHistDetails(String position) {
-        Call<HistOrderDetailResponse> call = RetrofitNetMan.getRestApiService().getHistOrderDetails(token, position);
+    public void getHistDetails(String id) {
+        Call<HistOrderDetailResponse> call = RetrofitNetMan.getRestApiService().getHistOrderDetails(token, id);
         call.enqueue(new Callback<HistOrderDetailResponse>() {
             @Override
             public void onResponse(@NotNull Call<HistOrderDetailResponse> call, @NotNull Response<HistOrderDetailResponse> response) {
@@ -279,6 +311,7 @@ public class HistoryDetails extends AppCompatActivity {
                             mTotalAmount = mTotalAmount + Double.parseDouble(response.body().getData().get(i).getItemPrice());
                         }
 
+
                         Log.e(TAG, "onResponse: " + mTotalAmount);
 
                         mOrderDetails = response.body().getData().subList(0, response.body().getData().size());
@@ -287,7 +320,8 @@ public class HistoryDetails extends AppCompatActivity {
                         mNSVHistDetails.setVisibility(View.VISIBLE);
                     }
 
-                    getDetails(pos);
+                    getNewBusinessOrders(or);
+//                    getDetails(pos);
                 } else {
                     AppManager.SnackBar(HistoryDetails.this, response.message());
                 }

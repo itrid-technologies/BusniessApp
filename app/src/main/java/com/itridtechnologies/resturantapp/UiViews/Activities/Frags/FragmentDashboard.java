@@ -331,11 +331,6 @@ public class FragmentDashboard extends Fragment {
 
             getBusyMode();
 
-            ///PickUp Orders
-            mBusyMode.setOnClickListener(v -> {
-                busyMode();
-            });
-
             ///First Time (Internet Available No Database)
             if (Internet.isAvailable(requireContext())) {
                 internetButNoDatasbase = 1;
@@ -397,24 +392,10 @@ public class FragmentDashboard extends Fragment {
 
         if (mBusyMode.isChecked())
         {
-            anim_in.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    mBusyNotify.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
-
-            mBusyNotify.startAnimation(anim_in);
+            animIn(mBusyNotify);
+        }
+        else {
+            animOut(mBusyNotify);
         }
 
         ////Setting no orders
@@ -424,6 +405,13 @@ public class FragmentDashboard extends Fragment {
 
         ///PickUp Orders
         mBusyMode.setOnClickListener(v -> {
+            if (mBusyMode.isChecked())
+            {
+                animIn(mBusyNotify);
+            }
+            else {
+                animOut(mBusyNotify);
+            }
             busyMode();
         });
 
@@ -1061,100 +1049,18 @@ public class FragmentDashboard extends Fragment {
                     //resetting busy status value
                     resetBusyStatus();
 
-//                    AppManager.SnackBar((AppCompatActivity) mActivity, response.body().getMessage());
-                    if (mBusyMode.isChecked()) {
-
-                        anim_in.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                mBusyNotify.setVisibility(View.VISIBLE);
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-                        });
-                        mBusyNotify.startAnimation(anim_in);
-
-                    } else if (!mBusyMode.isChecked()) {
-
-
-                        anim_out.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                mBusyNotify.setVisibility(View.GONE);
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-                        });
-
-                        mBusyNotify.startAnimation(anim_out);
-
-                    }
-                    Log.e(TAG, "onResponse: " + response.message());
-
-
                 } else {
 
                     ///Setting delivery Switch
                     if (busyStatus == 1) {
                         mBusyMode.setChecked(true);
-
-
-                        anim_in.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                mBusyNotify.setVisibility(View.VISIBLE);
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-                        });
-
-                        mBusyNotify.startAnimation(anim_in);
+                        animIn(mBusyNotify);
 
                     } else if (busyStatus == 0) {
                         mBusyMode.setChecked(false);
 
-                        anim_out.setAnimationListener(new Animation.AnimationListener() {
-                            @Override
-                            public void onAnimationStart(Animation animation) {
+                        animOut(mBusyNotify);
 
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                mBusyNotify.setVisibility(View.GONE);
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-                        });
-
-                        mBusyNotify.startAnimation(anim_out);
                     }
 
                     if (response.body() != null) {
@@ -1174,6 +1080,16 @@ public class FragmentDashboard extends Fragment {
 
             @Override
             public void onFailure(@NotNull Call<UpdateSettingResponse> call1, @NotNull Throwable t) {
+
+                ///Setting delivery Switch
+                if (busyStatus == 1) {
+                    mBusyMode.setChecked(true);
+                    animIn(mBusyNotify);
+
+                } else if (busyStatus == 0) {
+                    mBusyMode.setChecked(false);
+                    animOut(mBusyNotify);
+                }
                 Log.e(TAG, "onFailure: " + t.getMessage());
                 AppManager.SnackBar((AppCompatActivity) mActivity, t.getMessage());
             }

@@ -548,8 +548,6 @@ public class NewOrder extends AppCompatActivity {
                     Log.e(TAG, "onResponse: Total Amount" + valueTotal);
 
 
-                } else {
-                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }
                 UpdateOrders();
             }

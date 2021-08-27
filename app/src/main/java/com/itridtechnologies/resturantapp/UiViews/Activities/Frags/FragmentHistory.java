@@ -2,6 +2,7 @@ package com.itridtechnologies.resturantapp.UiViews.Activities.Frags;
 
 import static android.content.ContentValues.TAG;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -65,7 +66,7 @@ public class FragmentHistory extends Fragment {
 
     private RecyclerView mHistoryRecyclerView; //Main RecyclerView
     private List<ItemsItem> mHistoryList = new ArrayList<>();
-    private final ArrayList<NewHistory> histOrderList = new ArrayList<>();
+    private List<ResultsItem> histOrderList = new ArrayList<>();
     private ProgressBar mProgressBarHistFull;
     private ProgressBar mProgressBarHistPagination;
     private NestedScrollView mNSVHist;
@@ -281,7 +282,6 @@ public class FragmentHistory extends Fragment {
 
                             mDateET.setEnabled(true);
 
-
                             int startMonth = monthStart + 1;
                             int endMonth = monthEnd + 1;
                             Log.e(TAG, "onStart: month" + startMonth + endMonth);
@@ -377,27 +377,23 @@ public class FragmentHistory extends Fragment {
     //Setting Adapter
     private void adapter(List<ResultsItem> historyList) {
 
-        Log.e(TAG, "adapter: inside adapter" );
+        Log.e(TAG, "adapter: inside adapter");
 
-        try {
-            manager = new LinearLayoutManager(mContext);
-            adapter = new AdapterHistoryFragment( historyList, mContext);
-            mHistoryRecyclerView.setAdapter(adapter);
-            mHistoryRecyclerView.setLayoutManager(manager);
+        manager = new LinearLayoutManager(mContext);
+        adapter = new AdapterHistoryFragment(historyList, mContext);
+        mHistoryRecyclerView.setAdapter(adapter);
+        mHistoryRecyclerView.setLayoutManager(manager);
 
-            adapter.setOnItemClickListener(position -> {
-                Intent intent = new Intent(mContext, HistoryDetails.class);
-                pm.saveMyData("orderIdHis", histOrderList.get(position).getmOrderNumber());
-                pm.saveMyData("pageNo", String.valueOf(page_no));
-                pm.saveMyData("orderHisPos", String.valueOf(position));
-                startActivity(intent);
-            });
+        adapter.setOnItemClickListener(position -> {
+            Intent intent = new Intent(mContext, HistoryDetails.class);
+            Log.e(TAG, "adapter: position" + position);
+            intent.putExtra("orderIdHis", String.valueOf(historyList.get(position).getId()));
+            intent.putExtra("pageNo", String.valueOf(page_no));
+            startActivity(intent);
+        });
 
-            //checking for last item LastItem
-            LastItem();
-
-        } catch (Exception ignored) {
-        }
+        //checking for last item LastItem
+        LastItem();
 
     }//UI
 
@@ -410,40 +406,22 @@ public class FragmentHistory extends Fragment {
                 super.onScrollStateChanged(recyclerView, newState);
 
                 Log.e(TAG, "onScrollStateChanged: " + "");
-
-                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
-                {
-                    isScrolling = true;
-                }
-
-
                 visibleItemCount = manager.getChildCount();
                 totalItemCount = manager.getItemCount();
                 firstVisibleItem = manager.findFirstVisibleItemPosition();
 
+
                 if (!isLoading && !isLastPage) {
 
-                    if (isScrolling && (visibleItemCount + firstVisibleItem) == totalItemCount)
-                    {
-                        page_no ++;
-                        LoadMoreItems();
-                    }
-
-                    if ((visibleItemCount + firstVisibleItem) == totalItemCount &&
+                    if ((visibleItemCount + firstVisibleItem) >= totalItemCount &&
                             firstVisibleItem >= 0 && totalItemCount >= pageSize) {
 
                         mProgressBarHistPagination.setVisibility(View.VISIBLE);
-
                         page_no++;
-
-                        Log.e(TAG, "onScrolled: " + "last item" + page_no);
-
                         LoadMoreItems();
 
                     }
                 } // end if loading and islastpage
-
-
 
             }
 
@@ -452,6 +430,7 @@ public class FragmentHistory extends Fragment {
                 super.onScrolled(recyclerView, dx, dy);
 
                 Log.e(TAG, "onScrolled: " + "");
+
 
             }
         });
@@ -481,23 +460,25 @@ public class FragmentHistory extends Fragment {
 
                     if (response.isSuccessful() && response.body() != null) {
 
-                        DecimalFormat format = new DecimalFormat("0.00");
-
                         //collect data and update UI
                         if (!response.body().getMessage().equals("No records found")) {
+                            histOrderList = response.body().getData().getResults();
 
-                                adapter.AddData(response.body().getData().getResults());
-                                isLastPage = response.body().getData().getResults().size() < pageSize;
+                            mHistoryRecyclerView.setVisibility(View.VISIBLE);
 
-                                mNoHistoryImage.setVisibility(View.GONE);
-                                mTVEmpty.setVisibility(View.GONE);
+                            adapter.AddData(histOrderList);
+                            isLastPage = response.body().getData().getResults().size() < pageSize;
 
-                            }
+                            mNoHistoryImage.setVisibility(View.GONE);
+                            mTVEmpty.setVisibility(View.GONE);
 
-                    }
+                        }
+                        else {
+                            mHistoryRecyclerView.setVisibility(View.GONE);
+                        }
 
-                    else {
-                        Log.e(TAG, "onResponse: Some went Wrong " );
+                    } else {
+                        Log.e(TAG, "onResponse: Some went Wrong ");
                     }
                     mProgressBarHistFull.setVisibility(View.GONE);
                 }
@@ -508,8 +489,7 @@ public class FragmentHistory extends Fragment {
                     AppManager.toast("No Or Poor Internet Connection");
                 }
             });
-        }
-        else {
+        } else {
 
             Log.e(TAG, "LoadMoreItems: p" + mStartDate + mEndDate + page_no);
 
@@ -526,25 +506,24 @@ public class FragmentHistory extends Fragment {
 
                             if (response.body().isSuccess()) {
 
-                                if (response.body().getData().getResults().size() > 0) {
+                                //collect data and update UI
+                                if (!response.body().getMessage().equals("No records found")) {
+                                    mNoHistoryImage.setVisibility(View.GONE);
+                                    mTVEmpty.setVisibility(View.GONE);
 
-
+                                    if (response.body().getData().getResults().size() > 0) {
 //                                    adapter.AddData(histOrderList);.adapter();
-                                    adapter(response.body().getData().getResults());
-                                    isLastPage = response.body().getData().getResults().size() < pageSize;
+                                        histOrderList = response.body().getData().getResults();
+                                        adapter.AddData(histOrderList);
+                                        isLastPage = response.body().getData().getResults().size() < pageSize;
 
-                                } else {
-                                    isLastPage = true;
+                                    } else {
+                                        isLastPage = true;
+                                    }
                                 }
-
                             }
-
                         }
-
-                    }
-
-
-                    else {
+                    } else {
 
                         Log.e(TAG, "onResponse:load more " + "something is wrong");
 
@@ -564,7 +543,7 @@ public class FragmentHistory extends Fragment {
 
         mProgressBarHistPagination.setVisibility(View.GONE);
 
-    }
+    }//LoadMoreItems
 
     //Getting History from Server (API)
     private void getHistoryOrders(String sDate, String eDate) {
@@ -582,16 +561,20 @@ public class FragmentHistory extends Fragment {
                     //collect data and update UI
                     if (!response.body().getMessage().equals("No records found")) {
 
+                        mHistoryRecyclerView.setVisibility(View.VISIBLE);
                         mNoHistoryImage.setVisibility(View.GONE);
                         mTVEmpty.setVisibility(View.GONE);
+                        histOrderList = response.body().getData().getResults();
+                        adapter(histOrderList);
+
                     } else {
+                        mHistoryRecyclerView.setVisibility(View.GONE);
                         mNoHistoryImage.setVisibility(View.VISIBLE);
                         mTVEmpty.setText("No Orders in this period");
                         mTVEmpty.setVisibility(View.VISIBLE);
                     }
                     mNSVHist.setVisibility(View.VISIBLE);
                     isDated = true;
-                    adapter.AddData(response.body().getData().getResults());
                 }
                 mProgressBarHistFull.setVisibility(View.GONE);
             }
@@ -611,6 +594,7 @@ public class FragmentHistory extends Fragment {
         Call<NewHistoryWithTotals> call = RetrofitNetMan.getRestApiService().getFullHistory(token, page_no);
 
         call.enqueue(new Callback<NewHistoryWithTotals>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onResponse(@NonNull Call<NewHistoryWithTotals> call, @NonNull Response<NewHistoryWithTotals> response) {
 
@@ -619,25 +603,21 @@ public class FragmentHistory extends Fragment {
                     //collect data and update UI
                     if (!response.body().getMessage().equals("No records found")) {
 
-                        try {
-                            DecimalFormat format = new DecimalFormat("0.00");
 
-                            //collect data and update UI
-                            Log.e(TAG, "onResponse: " + response.body().getData().getResults().size());
-                            mNSVHist.setVisibility(View.VISIBLE);
-                            isDated = false;
+                        histOrderList = response.body().getData().getResults();
+                        mNoHistoryImage.setVisibility(View.GONE);
+                        mTVEmpty.setVisibility(View.GONE);
 
-                            adapter(response.body().getData().getResults());
-                        } catch (Exception exception) {
-                            Log.e(TAG, "onResponse: " + exception.getMessage());
-                        }
+                        isDated = false;
+                        adapter(histOrderList);
+
                     } else {
+
+
                         mNoHistoryImage.setVisibility(View.VISIBLE);
                         mTVEmpty.setText("No records found");
                         mTVEmpty.setVisibility(View.VISIBLE);
                     }
-                } else {
-                    startActivity(new Intent(requireContext(), MainActivity.class));
                 }
                 mProgressBarHistFull.setVisibility(View.GONE);
             }

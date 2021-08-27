@@ -36,8 +36,8 @@ import java.util.TimeZone;
 
 public class AdapterHistoryFragment extends RecyclerView.Adapter<AdapterHistoryFragment.detailHolder> implements AdapterHistoryFragmentt {
 
-    private List<ResultsItem> histList;
-    private Context mCtx;
+    private final List<ResultsItem> histList;
+    private final Context mCtx;
     //variable for time
     private int givenCurrentMinutes;
     private itemClickListener mListenerr;
@@ -118,11 +118,11 @@ public class AdapterHistoryFragment extends RecyclerView.Adapter<AdapterHistoryF
         String name = mHistoryInfo.getFirstName() + " " +
                 mHistoryInfo.getLastName();
 
-        Log.e(TAG, "onBindViewHolder: " + mHistoryInfo.getId() );
+        Log.e(TAG, "onBindViewHolder: sdfg" + mHistoryInfo.getId() + name + mHistoryInfo.getItemCount());
 
-        holder.mOrderNumberHistory.setText(mHistoryInfo.getId() + "");
+        holder.mOrderNumberHistory.setText("#" + mHistoryInfo.getId() + "");
         holder.mCustomerNameHistory.setText(name);
-        holder.mItemQuantityHistory.setText(mHistoryInfo.getItemCount());
+        holder.mItemQuantityHistory.setText(mHistoryInfo.getItemCount() + "");
         holder.mPriceHistory.setText(format.format(mTotalValue));
 
     }

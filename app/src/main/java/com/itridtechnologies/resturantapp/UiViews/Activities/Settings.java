@@ -62,7 +62,7 @@ public class Settings extends AppCompatActivity {
     private int pickUpStatus;
     private int autoAcceptStatus;
     private int deliveryStatus;
-    private int mAcceptNumber = 1;
+    private int mAcceptNumber;
     private int mRejectNumber;
     ////Edit Texts in case of delivery type = 2
     private EditText delFee;
@@ -99,15 +99,13 @@ public class Settings extends AppCompatActivity {
         //getting value of increment decrement from preference
         //Increment Degrement value
         String mAcceptOrderCopies = pm.getMyDataString("acceptedCopies");
-        if (mAcceptOrderCopies.equals(""))
-        {
-            mAcceptOrderCopies = "0";
+        if (mAcceptOrderCopies.equals("")) {
+            mAcceptOrderCopies = "1";
         }
 
         String mRejectOrderCopies = pm.getMyDataString("rejectedCopies");
-        if (mRejectOrderCopies.equals(""))
-        {
-            mRejectOrderCopies = "0";
+        if (mRejectOrderCopies.equals("")) {
+            mRejectOrderCopies = "1";
         }
 
         mRejectOrder.setText(mRejectOrderCopies);
@@ -565,11 +563,17 @@ public class Settings extends AppCompatActivity {
         //Setting Decreasing accept order button
         mSubAcceptOrder.setOnClickListener(v -> {
 
-            if (mAcceptNumber > 0) {
+            if (mAcceptNumber > 1) {
                 mAcceptNumber = mAcceptNumber - 1;
                 mAcceptOrder.setText(Integer.toString(mAcceptNumber));
-                mSubAcceptOrder.setEnabled(true);
-                mSubAcceptOrder.setImageResource(R.drawable.ic_remove);
+
+                if (mAcceptNumber == 1) {
+                    mSubAcceptOrder.setEnabled(false);
+                    mSubAcceptOrder.setImageResource(R.drawable.ic_remove_gray);
+                } else {
+                    mSubAcceptOrder.setEnabled(true);
+                    mSubAcceptOrder.setImageResource(R.drawable.ic_remove);
+                }
             } else {
                 mSubAcceptOrder.setEnabled(false);
                 mSubAcceptOrder.setImageResource(R.drawable.ic_remove_gray);
@@ -587,11 +591,19 @@ public class Settings extends AppCompatActivity {
         //Setting Decreasing reject order button
         mSubRejectOrder.setOnClickListener(v -> {
 
-            if (mRejectNumber > 0) {
+            if (mRejectNumber > 1) {
                 mRejectNumber = mRejectNumber - 1;
                 mRejectOrder.setText(Integer.toString(mRejectNumber));
-                mSubRejectOrder.setEnabled(true);
-                mSubRejectOrder.setImageResource(R.drawable.ic_remove);
+
+                if (mRejectNumber == 1) {
+                    mSubRejectOrder.setEnabled(false);
+                    mSubRejectOrder.setImageResource(R.drawable.ic_remove_gray);
+                }
+                else {
+                    mSubRejectOrder.setEnabled(true);
+                    mSubRejectOrder.setImageResource(R.drawable.ic_remove);
+                }
+
             } else {
                 mSubRejectOrder.setEnabled(false);
                 mSubRejectOrder.setImageResource(R.drawable.ic_remove_gray);
@@ -718,7 +730,6 @@ public class Settings extends AppCompatActivity {
         Intent intent = new Intent(Settings.this, BasicActvity.class);
         startActivity(intent);
     }//onBackPressed
-
 
 
     @Override

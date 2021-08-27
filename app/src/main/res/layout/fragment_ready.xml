@@ -22,12 +22,12 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_gravity="center"
-        android:visibility="gone"
         android:layout_marginTop="300dp" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/NSVReady"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout

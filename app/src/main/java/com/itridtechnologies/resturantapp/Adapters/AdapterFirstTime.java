@@ -85,7 +85,7 @@ public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.deta
         }
 
         ///Setting data in Textfields On screen
-        holder.mOrderNumber.setText(orderNumber);
+        holder.mOrderNumber.setText("#" + orderNumber);
 
         if (orderType == 1) {
 
