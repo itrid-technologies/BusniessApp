@@ -1,5 +1,7 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities.Frags;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -72,6 +74,8 @@ public class FragmentProcessing extends Fragment {
     private int firstVisibleItem;
     private int visibleItemCount;
     private int totalItemCount;
+    //context
+    private Context mContext;
     //layout manager
     private LinearLayoutManager manager;
 
@@ -92,6 +96,15 @@ public class FragmentProcessing extends Fragment {
     //Preference Manager
     private PreferencesManager pm;
 
+
+    @Override
+    public void onAttach(@NonNull Activity activity) {
+        super.onAttach(activity);
+        //getting context
+        mContext = requireContext();
+    }
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -102,10 +115,10 @@ public class FragmentProcessing extends Fragment {
         mNSVProgress = root.findViewById(R.id.nsv_process);
         Toolbar mToolbar = root.findViewById(R.id.nav_bar_PO);
 
-        pm = new PreferencesManager(requireContext());
+        pm = new PreferencesManager(mContext);
         //Context for Room
         //initializing database
-        databaseRoom = RoomDB.getInstance(requireContext());
+        databaseRoom = RoomDB.getInstance(mContext);
 
         ///Header Name
         mToolbar.setTitle("Preparing");
@@ -131,7 +144,7 @@ public class FragmentProcessing extends Fragment {
                     return false;
                 }
                 case R.id.over_flow_log_out: {
-                    Intent intent = new Intent(requireContext(), MainActivity.class);
+                    Intent intent = new Intent(mContext, MainActivity.class);
                     pm.clearSharedPref();
                     pm.saveMyDataBool("login", false);
                     startActivity(intent);
@@ -183,19 +196,19 @@ public class FragmentProcessing extends Fragment {
 //        }
 
         //Internet Available With No Database (Hit Api/Show Illustrations)
-        if (Internet.isAvailable(requireContext())) {
+        if (Internet.isAvailable(mContext)) {
             ///Hit Api and store in database with state accepted
             getOrdersViaState(AppManager.getBusinessDetails().getData().getToken(), page_no);
         }
         //No Internet No database
         //Show illustrations
-        else if (!Internet.isAvailable(requireContext()) && databaseRoom.mainDao().getProcessOrders().isEmpty()) {
+        else if (!Internet.isAvailable(mContext) && databaseRoom.mainDao().getProcessOrders().isEmpty()) {
             noOrders.setVisibility(View.GONE);
             imgNoOrder.setVisibility(View.GONE);
         }
         //No Internet No database
 //        //Show illustrations
-//        else if (!Internet.isAvailable(requireContext()) && databaseRoom.mainDao().getProcessOrders().isEmpty()) {
+//        else if (!Internet.isAvailable(mContext) && databaseRoom.mainDao().getProcessOrders().isEmpty()) {
 //            noOrders.setVisibility(View.GONE);
 //            imgNoOrder.setVisibility(View.GONE);
 //        }
@@ -310,14 +323,14 @@ public class FragmentProcessing extends Fragment {
     private void setUpRecFirstTime(List<OrdersItem> paginationOrders) {
 
         try {
-            manager = new LinearLayoutManager(requireContext());
-            adapter = new AdapterFirstTime(paginationOrders, requireContext().getApplicationContext());
+            manager = new LinearLayoutManager(mContext);
+            adapter = new AdapterFirstTime(paginationOrders, mContext);
 
             mRecyclerView.setLayoutManager(manager);
             mRecyclerView.setAdapter(adapter);
 
             adapter.setOnItemClickListener(position -> {
-                Intent intent = new Intent(requireContext(), NewOrder.class);
+                Intent intent = new Intent(mContext, NewOrder.class);
                 Log.e(TAG, "setUpRecView: " + paginationOrders.get(position).getId());
                 intent.putExtra("orderId", String.valueOf(paginationOrders.get(position).getId()));
                 intent.putExtra("detailType", "processing");
@@ -406,7 +419,6 @@ public class FragmentProcessing extends Fragment {
                             } else {
 
                                 isLastPage = true;
-                                Toast.makeText(requireContext(), "All caught up", Toast.LENGTH_SHORT).show();
                             }
 
                             mPBPagination.setVisibility(View.GONE);

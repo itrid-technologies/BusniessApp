@@ -1,5 +1,6 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities.Frags;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -73,6 +74,8 @@ public class FragmentReady extends Fragment {
     private int totalItemCount;
     //layout manager
     private LinearLayoutManager manager;
+    //context
+    private Context mContext;
 
     //Adapter
     private AdapterFirstTime adapter;
@@ -102,6 +105,13 @@ public class FragmentReady extends Fragment {
     private PreferencesManager pm;
 
     @Override
+    public void onAttach(@NonNull Activity activity) {
+        super.onAttach(activity);
+            //getting context
+        mContext = requireContext();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -115,12 +125,12 @@ public class FragmentReady extends Fragment {
         Toolbar mToolbar = root.findViewById(R.id.action_bar_ready);
 
         //giving context to preference manager
-        pm = new PreferencesManager(requireContext());
+        pm = new PreferencesManager(mContext);
         ///Header Name
         mToolbar.setTitle("Ready");
         //Context for Room
         //initializing database
-        databaseRoom = RoomDB.getInstance(requireContext());
+        databaseRoom = RoomDB.getInstance(mContext);
 
         //Setting Toolbar Navigation Bar
         mToolbar.setOnMenuItemClickListener(item -> {
@@ -144,7 +154,7 @@ public class FragmentReady extends Fragment {
                     return false;
                 }
                 case R.id.over_flow_log_out:{
-                    Intent intent = new Intent(requireContext(), MainActivity.class);
+                    Intent intent = new Intent(mContext, MainActivity.class);
                     pm.clearSharedPref();
                     pm.saveMyDataBool("login", false);
                     startActivity(intent);
@@ -192,13 +202,13 @@ public class FragmentReady extends Fragment {
 //        }
         //Internet Available With No Database (Hit Api/Show Illustrations)
 
-        if (Internet.isAvailable(requireContext())) {
+        if (Internet.isAvailable(mContext)) {
             ///Hit Api and store in database with state accepted
             getOrdersViaState(AppManager.getBusinessDetails().getData().getToken() , page_no);
         }
         //No Internet No database
         //Show illustrations
-        else if (!Internet.isAvailable(requireContext())) {
+        else if (!Internet.isAvailable(mContext)) {
             mNoOrderImage.setVisibility(View.VISIBLE);
             mNoOrderText.setVisibility(View.VISIBLE);
         }
@@ -300,9 +310,6 @@ public class FragmentReady extends Fragment {
                     }
 
                 }
-                else {
-                    startActivity(new Intent(requireContext(), MainActivity.class));
-                }
             }
 
             @Override
@@ -340,14 +347,14 @@ public class FragmentReady extends Fragment {
 
     private void setUpRecFirstTime(List<OrdersItem> paginationOrders) {
 
-        manager = new LinearLayoutManager(requireContext());
-        adapter = new AdapterFirstTime(paginationOrders, requireContext().getApplicationContext());
+        manager = new LinearLayoutManager(mContext);
+        adapter = new AdapterFirstTime(paginationOrders, mContext);
 
         mReadyRecyclerView.setLayoutManager(manager);
         mReadyRecyclerView.setAdapter(adapter);
 
         adapter.setOnItemClickListener(position -> {
-            Intent intent = new Intent(requireContext(), ReadyDetails.class);
+            Intent intent = new Intent(mContext, ReadyDetails.class);
             Log.e(TAG, "setUpRecView: " + paginationOrders.get(position).getId());
             intent.putExtra("orderId", String.valueOf(paginationOrders.get(position).getId()));
             intent.putExtra("detailType", "ready");

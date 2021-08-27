@@ -1,5 +1,7 @@
 package com.itridtechnologies.resturantapp.Adapters;
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.format.DateUtils;
@@ -17,20 +19,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.model.NewHistory;
 import com.itridtechnologies.resturantapp.models.Pagination.OrdersItem;
+import com.itridtechnologies.resturantapp.models.historyNew.NewHistoryWithTotals;
+import com.itridtechnologies.resturantapp.models.historyNew.ResultsItem;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
 
 public class AdapterHistoryFragment extends RecyclerView.Adapter<AdapterHistoryFragment.detailHolder> implements AdapterHistoryFragmentt {
 
-    private List<NewHistory> histList;
+    private List<ResultsItem> histList;
     private Context mCtx;
     //variable for time
     private int givenCurrentMinutes;
@@ -43,10 +49,10 @@ public class AdapterHistoryFragment extends RecyclerView.Adapter<AdapterHistoryF
     private static final String TAG = "AdapterHistoryFragment";
 
 
-    private final List<NewHistory> searchList;
+    private final List<ResultsItem> searchList;
 
 
-    public AdapterHistoryFragment(List<NewHistory> histList, Context mCtx) {
+    public AdapterHistoryFragment(List<ResultsItem> histList, Context mCtx) {
         this.histList = histList;
         this.mCtx = mCtx;
 
@@ -60,12 +66,6 @@ public class AdapterHistoryFragment extends RecyclerView.Adapter<AdapterHistoryF
         givenCurrentHours = cal.get(Calendar.HOUR);
         int givenCurrentSeconds = cal.get(Calendar.SECOND);
         totalGivenTime = (givenCurrentHours * 3600) + (givenCurrentMinutes * 60) + givenCurrentSeconds;
-    }
-
-    public void AddData(List<NewHistory> list){
-
-        histList.addAll(list);
-        notifyDataSetChanged();
 
     }
 
@@ -81,30 +81,49 @@ public class AdapterHistoryFragment extends RecyclerView.Adapter<AdapterHistoryF
         return new AdapterHistoryFragment.detailHolder(view, mListenerr);
     }
 
-    @SuppressLint("SimpleDateFormat")
+    @SuppressLint({"SimpleDateFormat", "SetTextI18n"})
     @Override
     public void onBindViewHolder(@NonNull AdapterHistoryFragment.detailHolder holder, int position) {
-        NewHistory mHistoryInfo = histList.get(position);
+        ResultsItem mHistoryInfo = histList.get(position);
         sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-        try {
-            long time = sdf.parse(mHistoryInfo.getmTime()).getTime();
-            Log.e(TAG, "onBindViewHolder: " + time);
-            long now = System.currentTimeMillis();
-            CharSequence ago = DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
-            holder.mOrderTimeHistory.setText(ago);
+//        try {
+//            Date time = sdf.parse(mHistoryInfo.getPickuptime());
+//            Log.e(TAG, "onBindViewHolder: " + time);
+//            long now = System.currentTimeMillis();
+////            CharSequence ago = DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
+//            holder.mOrderTimeHistory.setText(String.valueOf(now));
 
-            //split
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
 
+        //Working Variables
+        double mTotalValue = 0.00;
 
-        } catch (ParseException e) {
-            e.printStackTrace();
+        //setting format for total price
+
+        DecimalFormat format = new DecimalFormat("0.00");
+
+        if (mHistoryInfo.getOrderTotal().size() > 0)
+        {
+            //CALCULATING TOTAL
+            for (int j = 0; j < mHistoryInfo.getOrderTotal().size(); j++) {
+                mTotalValue = Double.parseDouble(mHistoryInfo.getOrderTotal().get(j).getValue());
+            }
+            Log.e(TAG, "onResponse: " + mTotalValue);
+
         }
 
-        holder.mOrderNumberHistory.setText(mHistoryInfo.getmOrderNumber());
-        holder.mCustomerNameHistory.setText(mHistoryInfo.getmCustomerName());
-        holder.mItemQuantityHistory.setText(mHistoryInfo.getmItemCount());
-        holder.mPriceHistory.setText(mHistoryInfo.getmPrice());
+        String name = mHistoryInfo.getFirstName() + " " +
+                mHistoryInfo.getLastName();
+
+        Log.e(TAG, "onBindViewHolder: " + mHistoryInfo.getId() );
+
+        holder.mOrderNumberHistory.setText(mHistoryInfo.getId() + "");
+        holder.mCustomerNameHistory.setText(name);
+        holder.mItemQuantityHistory.setText(mHistoryInfo.getItemCount());
+        holder.mPriceHistory.setText(format.format(mTotalValue));
 
     }
 
@@ -113,6 +132,12 @@ public class AdapterHistoryFragment extends RecyclerView.Adapter<AdapterHistoryF
         return histList.size();
     }
 
+    public void AddData(List<ResultsItem> list){
+
+        histList.addAll(list);
+        notifyDataSetChanged();
+
+    }
 
     ///Filtering
     public Filter getFilter(){return filterItem;}
@@ -120,17 +145,16 @@ public class AdapterHistoryFragment extends RecyclerView.Adapter<AdapterHistoryF
     private Filter filterItem = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            List<NewHistory> filteredList = new ArrayList<>();
+            List<ResultsItem> filteredList = new ArrayList<>();
 
             if (constraint == null) {
                 filteredList.addAll(searchList);
                 Log.e("TAG", "performFiltering: hey " );
             } else {
                 String filterPattern = constraint.toString().trim();
-                for (NewHistory item : searchList) {
-                    if (item.getmTime().trim().contains(filterPattern)) {
+                for (ResultsItem item : searchList) {
+                    if (item.getPickuptime().trim().contains(filterPattern)) {
                         filteredList.add(item);
-                        Log.e("TAG", "performFiltering: "+item.getmTime() );
                     }
                 }
             }
@@ -162,7 +186,7 @@ public class AdapterHistoryFragment extends RecyclerView.Adapter<AdapterHistoryF
     }
 
 
-    public class detailHolder extends RecyclerView.ViewHolder {
+    public static class detailHolder extends RecyclerView.ViewHolder {
         private final TextView mOrderNumberHistory;
         private final TextView mCustomerNameHistory;
         private final TextView mOrderTimeHistory;

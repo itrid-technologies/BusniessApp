@@ -328,7 +328,6 @@ public class HistoryDetails extends AppCompatActivity {
         if (status != null) {
             mOrderStatus.setText(status);
         }
-
     }
 
     //Setting Toolbar

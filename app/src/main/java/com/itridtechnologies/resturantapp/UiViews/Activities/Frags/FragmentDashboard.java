@@ -1,6 +1,7 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities.Frags;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
@@ -142,6 +144,8 @@ public class FragmentDashboard extends Fragment {
     //Preference Manager
     private PreferencesManager pm;
 
+    //context
+    private Context mContext;
     ///Room database
     RoomDB databaseRoom;
     //Order item
@@ -164,6 +168,13 @@ public class FragmentDashboard extends Fragment {
     //List for Getting data from API (Pagination)
 //    private List<OrdersItem> mOrders = new ArrayList<>();
 
+
+    @Override
+    public void onAttach(@NonNull Activity activity) {
+        super.onAttach(activity);
+        //getting context
+        mContext = requireContext();
+    }
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -1186,50 +1197,38 @@ public class FragmentDashboard extends Fragment {
         ///Setting delivery Switch
         if (busyStatus == 1) {
             mBusyMode.setChecked(true);
-
-            anim_in.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    mBusyNotify.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
-
-            mBusyNotify.startAnimation(anim_in);
+            animIn(mBusyNotify);
 
         } else if (busyStatus == 0) {
             mBusyMode.setChecked(false);
 
-            anim_out.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
+            animOut(mBusyNotify);
 
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    mBusyNotify.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
-
-            mBusyNotify.startAnimation(anim_out);
         }
 
     }
+
+    private void animIn(LinearLayout mBusyViewIn) {
+
+        anim_in.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mBusyViewIn.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        mBusyViewIn.startAnimation(anim_in);
+    }//animIn
 
     private void timer() {
 
@@ -1296,66 +1295,69 @@ public class FragmentDashboard extends Fragment {
                             imgNoOrder.setVisibility(View.VISIBLE);
                             openCloseFun();
                         }
-                        try {
-                            //Update Database
-                            ///Inserting new order basic information data in database
-                            Constants.ORDER_ITEM = new OrdersItem(
-                                    mOrderItem.getPickuptime(),
-//                                    String.valueOf(mRemainTime),
-//                                    mSavingTime,
-                                    mOrderItem.getBusinessTax(),
-                                    mOrderItem.getDateAdded(),
-                                    mOrderItem.getMinPreTime(),
-                                    mOrderItem.getMaxPreTime(),
-                                    mOrderItem.getCourierNotes(),
-                                    mOrderItem.getBusinessId(),
-                                    mOrderItem.getId(),
-                                    "Expired",
-                                    mOrderItem.getOrderType(),
-                                    mOrderItem.getFirstName(),
-                                    mOrderItem.getBusinessRevShare(),
-                                    mOrderItem.getItemCount(),
-                                    mOrderItem.getBusinessName(),
-                                    mOrderItem.getBusinessNotes(),
-                                    mOrderItem.getPaymentStatus(),
-                                    mOrderItem.getLastName(),
-                                    mOrderItem.getAction(),
-                                    mOrderItem.getDateAdded(),
-                                    mOrderItem.getPaymentType(),
-                                    mOrderItem.getDelay(),
-                                    mOrderItem.getDateModified(),
-                                    mOrderItem.getPhoneNumber(),
-                                    mOrderItem.getCustomerId(),
-                                    mOrderItem.getBusinessId(),
-                                    mOrderItem.getStatus()
 
-                            );
+                        setUpRecView(mNewPageOrderItemList);
 
-                            bgWork = new OneTimeWorkRequest.Builder(OrderWorker.class)
-                                    .build();
-                            WorkManager.getInstance(requireContext()).enqueue(bgWork);
-
-                            WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(bgWork.getId())
-                                    .observe(getViewLifecycleOwner(), info -> {
-                                        if (info != null && info.getState().isFinished()) {
-                                            Log.e(TAG, "onResponse: Information is returning on live data");
-                                            //if work is succeceded then we get data from DB
-                                            final List<OrdersItem> orders = databaseRoom.mainDao().getAll();
-                                            if (!orders.isEmpty()) {
-                                                Log.e(TAG, "onResponse: List in database");
-                                                setUpRecView(mNewPageOrderItemList);
-                                            } else {
-                                                Log.e(TAG, "onResponse: No list in Database");
-                                                noOrders.setVisibility(View.VISIBLE);
-                                                imgNoOrder.setVisibility(View.VISIBLE);
-                                            }
-                                        } else {
-                                            Log.e(TAG, "onResponse: no info returning from live data");
-                                        }
-                                    });
-                        } catch (Exception e) {
-                            Log.e(TAG, "onResponse: " + e.getMessage());
-                        }
+//                        try {
+//                            //Update Database
+//                            ///Inserting new order basic information data in database
+//                            Constants.ORDER_ITEM = new OrdersItem(
+//                                    mOrderItem.getPickuptime(),
+////                                    String.valueOf(mRemainTime),
+////                                    mSavingTime,
+//                                    mOrderItem.getBusinessTax(),
+//                                    mOrderItem.getDateAdded(),
+//                                    mOrderItem.getMinPreTime(),
+//                                    mOrderItem.getMaxPreTime(),
+//                                    mOrderItem.getCourierNotes(),
+//                                    mOrderItem.getBusinessId(),
+//                                    mOrderItem.getId(),
+//                                    "Expired",
+//                                    mOrderItem.getOrderType(),
+//                                    mOrderItem.getFirstName(),
+//                                    mOrderItem.getBusinessRevShare(),
+//                                    mOrderItem.getItemCount(),
+//                                    mOrderItem.getBusinessName(),
+//                                    mOrderItem.getBusinessNotes(),
+//                                    mOrderItem.getPaymentStatus(),
+//                                    mOrderItem.getLastName(),
+//                                    mOrderItem.getAction(),
+//                                    mOrderItem.getDateAdded(),
+//                                    mOrderItem.getPaymentType(),
+//                                    mOrderItem.getDelay(),
+//                                    mOrderItem.getDateModified(),
+//                                    mOrderItem.getPhoneNumber(),
+//                                    mOrderItem.getCustomerId(),
+//                                    mOrderItem.getBusinessId(),
+//                                    mOrderItem.getStatus()
+//
+//                            );
+//
+//                            bgWork = new OneTimeWorkRequest.Builder(OrderWorker.class)
+//                                    .build();
+//                            WorkManager.getInstance(requireContext()).enqueue(bgWork);
+//
+//                            WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(bgWork.getId())
+//                                    .observe(getViewLifecycleOwner(), info -> {
+//                                        if (info != null && info.getState().isFinished()) {
+//                                            Log.e(TAG, "onResponse: Information is returning on live data");
+//                                            //if work is succeceded then we get data from DB
+//                                            final List<OrdersItem> orders = databaseRoom.mainDao().getAll();
+//                                            if (!orders.isEmpty()) {
+//                                                Log.e(TAG, "onResponse: List in database");
+//                                                setUpRecView(mNewPageOrderItemList);
+//                                            } else {
+//                                                Log.e(TAG, "onResponse: No list in Database");
+//                                                noOrders.setVisibility(View.VISIBLE);
+//                                                imgNoOrder.setVisibility(View.VISIBLE);
+//                                            }
+//                                        } else {
+//                                            Log.e(TAG, "onResponse: no info returning from live data");
+//                                        }
+//                                    });
+//                        } catch (Exception e) {
+//                            Log.e(TAG, "onResponse: " + e.getMessage());
+//                        }
 
                     }
                 } else {
@@ -1485,5 +1487,27 @@ public class FragmentDashboard extends Fragment {
 //            Log.e(TAG, "onStop: Face changed with no list");
 //        }
     }//super.onStop();
+
+    private void animOut(LinearLayout busyView){
+        anim_out.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                busyView.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        busyView.startAnimation(anim_out);
+
+    }
 
 }

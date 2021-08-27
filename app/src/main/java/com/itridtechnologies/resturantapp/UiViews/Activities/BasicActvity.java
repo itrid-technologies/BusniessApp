@@ -25,6 +25,7 @@ public class BasicActvity extends AppCompatActivity {
     private PreferencesManager pm;
     //For notifications
     private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private BottomNavigationView mBottomNavigationView;
 
     @SuppressLint("UseCompatLoadingForColorStateLists")
     @Override
@@ -34,6 +35,10 @@ public class BasicActvity extends AppCompatActivity {
 
         String str = getIntent().getStringExtra("AOR");
         pm = new PreferencesManager(this);
+
+
+        //Getting if of bottom navigation
+        mBottomNavigationView = findViewById(R.id.bottom_nav);
 
         LogoutViaNotification.logoutOnType();
 
@@ -54,7 +59,9 @@ public class BasicActvity extends AppCompatActivity {
                     FragmentHistory fragHist = new FragmentHistory();
                     fragHist.setArguments(bundle);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, new FragmentHistory()).commit();
+
                 } else if (str.equals("Accepted")) {
+
                     Log.e(TAG, "onCreate: " + "accepted");
                     String typeOrder = getIntent().getStringExtra("OrderTypeFromNO");
                     Log.e(TAG, "onCreate" + typeOrder);
@@ -65,6 +72,7 @@ public class BasicActvity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, fragobj).commit();
 
                 } else if (str.equals("Ready")) {
+
                     Log.e(TAG, "onCreate: " + "accepted");
                     String typeOrder = getIntent().getStringExtra("OrderTypeFromNO");
                     Log.e(TAG, "onCreate" + typeOrder);
@@ -75,6 +83,7 @@ public class BasicActvity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, fragobj).commit();
 
                 } else if (str.equals("History")) {
+
                     Log.e(TAG, "onCreate: " + "accepted");
                     String typeOrder = getIntent().getStringExtra("OrderTypeFromNO");
                     Log.e(TAG, "onCreate" + typeOrder);
@@ -83,6 +92,7 @@ public class BasicActvity extends AppCompatActivity {
                     FragmentHistory fragobj = new FragmentHistory();
                     fragobj.setArguments(bundle);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, fragobj).commit();
+
 
                 } else {
                     //Loadin Dashboard fragment
@@ -99,8 +109,6 @@ public class BasicActvity extends AppCompatActivity {
             //Making the status bar invisible
             AppManager.hideStatusBar(this);
 
-            //Getting if of bottom navigation
-            BottomNavigationView mBottomNavigationView = findViewById(R.id.bottom_nav);
 
             //setting click listener
             mBottomNavigationView.setOnNavigationItemSelectedListener(item -> {
@@ -110,25 +118,41 @@ public class BasicActvity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     //the dashboard
                     case R.id.nav_home: {
-                        selectedFragment = new FragmentDashboard();
-                        item.setChecked(true);
-                        break;
+
+                        try {
+                            selectedFragment = new FragmentDashboard();
+                            item.setChecked(true);
+                            break;
+
+                        } catch (Exception ignored) {}
+
                     }
                     case R.id.nav_process: {
+                        try {
+                            selectedFragment = new FragmentProcessing();
+                            item.setChecked(true);
+                            break;
 
-                        selectedFragment = new FragmentProcessing();
-                        item.setChecked(true);
-                        break;
+                        } catch (Exception ignored) {}
+
                     }
                     case R.id.nav_ready: {
-                        selectedFragment = new FragmentReady();
-                        item.setChecked(true);
-                        break;
+
+                        try {
+                            selectedFragment = new FragmentReady();
+                            item.setChecked(true);
+                            break;
+
+                        } catch (Exception ignored) {}
+
                     }
                     case R.id.nav_history: {
-                        selectedFragment = new FragmentHistory();
-                        item.setChecked(true);
-                        break;
+                        try {
+                            selectedFragment = new FragmentHistory();
+                            item.setChecked(true);
+                            break;
+
+                        } catch (Exception ignored) {}
                     }
                 }
 
