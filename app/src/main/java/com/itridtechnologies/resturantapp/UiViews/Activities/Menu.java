@@ -1,5 +1,7 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities;
 
+import static com.itridtechnologies.resturantapp.utils.AppManager.logout;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -244,6 +246,10 @@ public class Menu extends AppCompatActivity {
                         }
                         ///Calling set Tabs Function to add all strings
                         setTabs();
+                    }
+                    else if (response.code() == 401)
+                    {
+                        logout();
                     } else {
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     }
@@ -352,6 +358,10 @@ public class Menu extends AppCompatActivity {
                         //Adapter to show the addons
                         adapter();
                     }
+                    else if (response.code() == 401)
+                    {
+                        logout();
+                    }
                 } catch (Exception e) {
                     Log.e("TAG", "onResponse: Exception" + e.getMessage());
                     mNotFound.setVisibility(View.VISIBLE);
@@ -385,6 +395,9 @@ public class Menu extends AppCompatActivity {
             mMenuAddonsList.clear();
             mModifiersList.clear();
             mTabLayout.setEnabled(false);
+
+            mPbCenter.setVisibility(View.VISIBLE);
+
             //mModifiersList.clear();MenuAddOnResponse
             Log.e("Id", "id is " + menuItemList.get(position).getId());
 //            String id = menuItemList.get(position).getId();

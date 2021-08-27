@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".UiViews.Activities.Frags.FragmentProcessing">
+    tools:context=".UiViews.Frags.FragmentProcessing">
 
     <include
         android:id="@+id/nav_bar_PO"

@@ -1,5 +1,7 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities;
 
+import static com.itridtechnologies.resturantapp.utils.AppManager.logout;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
@@ -212,6 +214,10 @@ public class FeedbackActivity extends AppCompatActivity {
                     Intent intent = new Intent(FeedbackActivity.this, BasicActvity.class);
                     startActivity(intent);
                 }
+                else if (response.code() == 401)
+                {
+                    logout();
+                }
             }
 
             @Override
@@ -235,6 +241,10 @@ public class FeedbackActivity extends AppCompatActivity {
                     Log.e(TAG, "onResponse: get tag list " + mTagsFromServer);
                     //Setting chips in View (Chip Group)
                     addInChipGroup();
+                }
+                else if (response.code() == 401)
+                {
+                    logout();
                 }
             }
 

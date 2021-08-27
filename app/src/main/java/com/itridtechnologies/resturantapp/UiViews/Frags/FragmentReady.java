@@ -1,4 +1,6 @@
-package com.itridtechnologies.resturantapp.UiViews.Activities.Frags;
+package com.itridtechnologies.resturantapp.UiViews.Frags;
+
+import static com.itridtechnologies.resturantapp.utils.AppManager.logout;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,9 +23,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
 
-import com.itridtechnologies.resturantapp.Adapters.AdapterFirstTime;
+import com.itridtechnologies.resturantapp.Adapters.AdapterFirstTimeReady;
 import com.itridtechnologies.resturantapp.ClassRoom.RoomDB;
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.UiViews.Activities.MainActivity;
@@ -32,14 +32,12 @@ import com.itridtechnologies.resturantapp.UiViews.Activities.Menu;
 import com.itridtechnologies.resturantapp.UiViews.Activities.ReadyDetails;
 import com.itridtechnologies.resturantapp.UiViews.Activities.Settings;
 import com.itridtechnologies.resturantapp.UiViews.Activities.help;
-import com.itridtechnologies.resturantapp.Work.AllOrderWorker;
 import com.itridtechnologies.resturantapp.model.NewReady;
 import com.itridtechnologies.resturantapp.models.Pagination.OrdersItem;
 import com.itridtechnologies.resturantapp.models.Pagination.PaginationResponse;
 import com.itridtechnologies.resturantapp.models.newOrder.OrderItem;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
-import com.itridtechnologies.resturantapp.utils.Constants;
 import com.itridtechnologies.resturantapp.utils.Internet;
 import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
@@ -78,7 +76,7 @@ public class FragmentReady extends Fragment {
     private Context mContext;
 
     //Adapter
-    private AdapterFirstTime adapter;
+    private AdapterFirstTimeReady adapter;
 
 
     private static final String TAG = "FragmentReady";
@@ -310,6 +308,10 @@ public class FragmentReady extends Fragment {
                     }
 
                 }
+                else if (response.code() == 401)
+                {
+                    logout();
+                }
             }
 
             @Override
@@ -348,7 +350,7 @@ public class FragmentReady extends Fragment {
     private void setUpRecFirstTime(List<OrdersItem> paginationOrders) {
 
         manager = new LinearLayoutManager(mContext);
-        adapter = new AdapterFirstTime(paginationOrders, mContext);
+        adapter = new AdapterFirstTimeReady(paginationOrders, mContext);
 
         mReadyRecyclerView.setLayoutManager(manager);
         mReadyRecyclerView.setAdapter(adapter);
@@ -446,6 +448,10 @@ public class FragmentReady extends Fragment {
 
                     }
 
+                }
+                else if (response.code() == 401)
+                {
+                    logout();
                 } else {
 
                     Log.e(TAG, "onResponse:load more " + "something is wrong");

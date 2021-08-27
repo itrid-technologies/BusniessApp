@@ -1,5 +1,7 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities;
 
+import static com.itridtechnologies.resturantapp.utils.AppManager.logout;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
@@ -188,6 +190,10 @@ public class ReadyDetails extends AppCompatActivity {
                         AppManager.SnackBar(ReadyDetails.this,response.body().getMessage());
                     }
                     Log.e("TAG", "onResponse: " + response.message());
+                }
+                else if (response.code() == 401)
+                {
+                    logout();
                 } else {
                     mDelivered.setEnabled(true);
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -276,6 +282,10 @@ public class ReadyDetails extends AppCompatActivity {
                     Log.e(TAG, "onResponse: Total Amount" + valueTotal);
 
 
+                }
+                else if (response.code() == 401)
+                {
+                    logout();
                 } else {
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }
@@ -660,6 +670,10 @@ public class ReadyDetails extends AppCompatActivity {
 //                    }
 
                 }//not null
+                else if (response.code() == 401)
+                {
+                    logout();
+                }
                 else {
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }

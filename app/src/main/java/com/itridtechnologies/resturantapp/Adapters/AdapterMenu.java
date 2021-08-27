@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -87,6 +88,12 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
         if (mMenuItem.getId() != null) {
             //Setting on click listener
             holder.itemView.setOnClickListener(v -> {
+
+                if (!mMenuItem.getmAddOnAvailable().equals("null"))
+                {
+                    holder.mPBItemLayout.setVisibility(View.VISIBLE);
+                }
+
                 mOrderAddon.clear();
 
                 if (!mMenuItem.getmAddOnAvailable().equals("null")) {
@@ -102,6 +109,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
                             public void onResponse(@NotNull Call<MenuAddOnResponse> call, @NotNull Response<MenuAddOnResponse> response) {
                                 Log.e(TAG, "onResponse called for addons ");
                                 if (response.isSuccessful() && response.body() != null) {
+
                                     for (int i = 0; i < response.body().getData().size(); i++) {
                                         Log.e(TAG, "onResponse: addon respomse" + response.body().getData().size());
                                         mOrderAddon.add(new AddonModel(
@@ -140,6 +148,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
 ////                                mRVAddon.setAdapter(adapterModifer);
 //                            }));
 //                        }
+                                holder.mPBItemLayout.setVisibility(View.GONE);
                             }
 
                             @Override
@@ -153,8 +162,11 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
                         holder.mShowDetails.setVisibility(View.INVISIBLE);
                         holder.view.setVisibility(View.VISIBLE);
                         holder.mHideDetails.setVisibility(View.VISIBLE);
-                    } else {
+                    }
+                    else {
+
                         //rv gone
+                        holder.mPBItemLayout.setVisibility(View.GONE);
                         holder.mAddons.setVisibility(View.GONE);
                         holder.view.setVisibility(View.GONE);
                         holder.mShowDetails.setVisibility(View.VISIBLE);
@@ -162,7 +174,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
                         isVisibleFlag = false;
                     }
                 } else {
-                    Log.e(TAG, "detailHolder: i m f***android:stateListAnimator=\"@null\"ed ");
+                    Log.e(TAG, "detailHolder: i m fandroid:stateListAnimator=\"@null\"ed ");
                 }
 
             });
@@ -177,6 +189,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
             if (!mMenuItem.getmAddOnAvailable().equals("null")) {
                 holder.mShowDetails.setVisibility(View.VISIBLE);
             } else {
+                holder.mPBItemLayout.setVisibility(View.GONE);
                 holder.mShowDetails.setVisibility(View.GONE);
             }
 
@@ -294,6 +307,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
         private final ImageView mHideDetails;
         private final LinearLayout mAddons;
         private final RecyclerView mParent1RV;
+        private final ProgressBar mPBItemLayout;
         private final SwitchCompat mSwitchItem;
         private final View view;
         private Context ctx;
@@ -313,6 +327,7 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.detailHolder> 
             mSwitchItem = itemView.findViewById(R.id.switch_rv);
             mShowDetails = itemView.findViewById(R.id.iv_open_details);
             mHideDetails = itemView.findViewById(R.id.iv_close_details);
+            mPBItemLayout = itemView.findViewById(R.id.PB_item_layout);
             view = itemView.findViewById(R.id.view);
 
             //listener

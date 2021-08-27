@@ -1,8 +1,9 @@
 package com.itridtechnologies.resturantapp.Adapters;
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,12 +11,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.models.Pagination.OrdersItem;
-import com.itridtechnologies.resturantapp.models.newOrder.OrderItem;
 import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
 import org.jetbrains.annotations.NotNull;
@@ -25,16 +24,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import static android.content.ContentValues.TAG;
-
-public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.detailHolder> {
+public class AdapterFirstTimeReady extends RecyclerView.Adapter<AdapterFirstTimeReady.detailHolder> {
 
     private final List<OrdersItem> prepareList;
     private final Context mCtx;
     private itemClickListener mListener;
     private PreferencesManager pm;
 
-    public AdapterFirstTime(List<OrdersItem> prepareList, Context mCtx) {
+    public AdapterFirstTimeReady(List<OrdersItem> prepareList, Context mCtx) {
         this.prepareList = prepareList;
         this.mCtx = mCtx;
         pm = new PreferencesManager(mCtx);
@@ -50,7 +47,7 @@ public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.deta
     @Override
     public detailHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.processing_orders_container, parent, false);
-        return new AdapterFirstTime.detailHolder(view, mListener);
+        return new AdapterFirstTimeReady.detailHolder(view, mListener);
     }
 
     @SuppressLint({"SetTextI18n", "UseCompatLoadingForDrawables"})
@@ -62,6 +59,8 @@ public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.deta
         int isRiderAssigned = 0;
         int orderType;
         orderType = mOrderInfo.getOrderType();
+
+        holder.mOrderTime.setVisibility(View.GONE);
 
         String customerName = prepareList.get(position).getFirstName() + " " + prepareList.get(position).getLastName();
         String orderNumber = String.valueOf(mOrderInfo.getId());
@@ -76,15 +75,12 @@ public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.deta
             holder.mStatus.setBackground(mCtx.getResources().getDrawable(R.drawable.paid_background));
         }
 
-
         ///Setting data in Textfields On screen
         holder.mOrderNumber.setText("#" + orderNumber);
 
-        if (mOrderInfo.getOrderType() == 1) {
+        if (orderType == 1) {
 
             holder.mType.setText("Delivery");
-
-            holder.mStatus.setVisibility(View.INVISIBLE);
 
             if (isRiderAssigned == 1) {
                 holder.mCustomerName.setText(customerName);

@@ -6,7 +6,7 @@
     style="@style/appBack"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UiViews.Activities.Frags.FragmentDashboard">
+    tools:context=".UiViews.Frags.FragmentDashboard">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

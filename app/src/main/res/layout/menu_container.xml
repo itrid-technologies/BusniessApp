@@ -16,6 +16,7 @@
         android:layout_marginTop="15dp"
         android:paddingBottom="15dp"
         android:visibility="gone"
+        tools:visibility="visible"
         android:scaleType="fitXY"
         android:layout_marginBottom="10dp"
         android:src="@color/grey"
@@ -29,6 +30,7 @@
         style="@style/FontMediumBlackMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        tools:visibility="visible"
         android:paddingBottom="25dp"
         app:layout_constraintStart_toEndOf="@id/iv_menu_item"
         app:layout_constraintTop_toTopOf="parent"
@@ -43,6 +45,7 @@
         android:layout_marginRight="10dp"
         android:src="@drawable/ic_up_arrow"
         android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -53,6 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
         android:src="@drawable/ic_down"
+        tools:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -60,6 +64,7 @@
         android:id="@+id/switch_rv"
         android:layout_width="wrap_content"
         android:layout_height="22dp"
+        tools:visibility="visible"
         android:layout_marginTop="20dp"
         android:layout_marginRight="10dp"
         app:layout_constraintEnd_toStartOf="@+id/iv_open_details"
@@ -81,6 +86,17 @@
         app:layout_constraintTop_toBottomOf="@id/tv_itemName"
         tools:text="tription_item" />
 
+    <ProgressBar
+        android:id="@+id/PB_item_layout"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="30dp"
+        />
+
 
     <LinearLayout
         android:id="@+id/lin_lay"
@@ -88,6 +104,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
+        tools:visibility="visible"
         android:paddingBottom="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -98,6 +115,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:background="@color/light_grey" />

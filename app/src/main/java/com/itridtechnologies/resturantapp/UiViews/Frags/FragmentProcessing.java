@@ -1,4 +1,6 @@
-package com.itridtechnologies.resturantapp.UiViews.Activities.Frags;
+package com.itridtechnologies.resturantapp.UiViews.Frags;
+
+import static com.itridtechnologies.resturantapp.utils.AppManager.logout;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -23,9 +24,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.itridtechnologies.resturantapp.Adapters.AdapterFirstTime;
 import com.itridtechnologies.resturantapp.ClassRoom.RoomDB;
 import com.itridtechnologies.resturantapp.R;
@@ -34,13 +33,10 @@ import com.itridtechnologies.resturantapp.UiViews.Activities.Menu;
 import com.itridtechnologies.resturantapp.UiViews.Activities.NewOrder;
 import com.itridtechnologies.resturantapp.UiViews.Activities.Settings;
 import com.itridtechnologies.resturantapp.UiViews.Activities.help;
-import com.itridtechnologies.resturantapp.Work.AllOrderWorker;
-import com.itridtechnologies.resturantapp.models.Pagination.Data;
 import com.itridtechnologies.resturantapp.models.Pagination.OrdersItem;
 import com.itridtechnologies.resturantapp.models.Pagination.PaginationResponse;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
-import com.itridtechnologies.resturantapp.utils.Constants;
 import com.itridtechnologies.resturantapp.utils.Internet;
 import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
@@ -311,6 +307,10 @@ public class FragmentProcessing extends Fragment {
 //                        }
                     }
                 }
+                else if (response.code() == 401)
+                {
+                    logout();
+                }
             }
 
             @Override
@@ -425,6 +425,10 @@ public class FragmentProcessing extends Fragment {
 
                         }
 
+                    }
+                    else if (response.code() == 401)
+                    {
+                        logout();
                     }
 
                 } else {

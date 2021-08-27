@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.itridtechnologies.resturantapp.R;
+import com.itridtechnologies.resturantapp.UiViews.Activities.MainActivity;
 import com.itridtechnologies.resturantapp.models.ActionOrder.ActionResponse;
 import com.itridtechnologies.resturantapp.models.OrderSubItems.OrderAddonsItem;
 import com.itridtechnologies.resturantapp.models.login.LoginResponse;
@@ -119,6 +120,15 @@ public final class AppManager {
         context.startActivity(intent);
     }
 
+    //logout
+    public static void logout()
+    {
+        PreferencesManager pm = new PreferencesManager(Restaurant.getAppContext());
+        pm.saveMyDataBool("login", false);
+        pm.clearSharedPref();
+        AppManager.intent(MainActivity.class);
+    }//logout
+
     //for snackBar
     public static void SnackBar(AppCompatActivity activity, String msg){
 
@@ -166,7 +176,6 @@ public final class AppManager {
                         Constants.KEY_BUSINESS_DETAILS, LoginResponse.class
                 );
     }
-
 
     public static void saveActionDetails(ActionResponse data) {
 

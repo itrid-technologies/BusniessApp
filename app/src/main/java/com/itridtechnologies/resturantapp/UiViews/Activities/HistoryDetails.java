@@ -1,5 +1,7 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities;
 
+import static com.itridtechnologies.resturantapp.utils.AppManager.logout;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
@@ -284,7 +286,12 @@ public class HistoryDetails extends AppCompatActivity {
                     } catch (Exception ignred) {
                         Log.e(TAG, "onResponse: " + ignred.getMessage());
                     }
-                } else {
+                }
+                else if (response.code() == 401)
+                {
+                    logout();
+                }
+                else {
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }//not null
 

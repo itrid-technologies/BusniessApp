@@ -1,5 +1,7 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities;
 
+import static com.itridtechnologies.resturantapp.utils.AppManager.logout;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
@@ -100,12 +102,27 @@ public class Settings extends AppCompatActivity {
         //Increment Degrement value
         String mAcceptOrderCopies = pm.getMyDataString("acceptedCopies");
         if (mAcceptOrderCopies.equals("")) {
+            mAcceptNumber = 1;
             mAcceptOrderCopies = "1";
         }
 
         String mRejectOrderCopies = pm.getMyDataString("rejectedCopies");
+
         if (mRejectOrderCopies.equals("")) {
+            mRejectNumber = 1;
             mRejectOrderCopies = "1";
+        }
+
+        mAcceptNumber = Integer.parseInt(mAcceptOrderCopies);
+        mRejectNumber = Integer.parseInt(mRejectOrderCopies);
+
+        if (mAcceptNumber > 0) {
+            mSubAcceptOrder.setEnabled(true);
+            mSubAcceptOrder.setImageResource(R.drawable.ic_remove);
+        }
+        if (mRejectNumber > 0) {
+            mSubRejectOrder.setEnabled(true);
+            mSubRejectOrder.setImageResource(R.drawable.ic_remove);
         }
 
         mRejectOrder.setText(mRejectOrderCopies);
@@ -220,6 +237,8 @@ public class Settings extends AppCompatActivity {
                     deliveryType = response.body().getMessage().get(0).getDeliveryType();
 
                     mSwipeRefreshLayout.setRefreshing(false);
+                } else if (response.code() == 401) {
+                    logout();
                 }
 
 
@@ -276,7 +295,9 @@ public class Settings extends AppCompatActivity {
                                 saveBtn.setEnabled(true);
                                 saveBtn.setBackgroundColor(getResources().getColor(R.color.theme_color));
 
-                            } else if (response.code() == 400) {
+                            } else if (response.code() == 401) {
+                                logout();
+                            } else {
 
                                 if (response.body() != null) {
                                     AppManager.SnackBar(Settings.this, response.body().getMessage() + "");
@@ -347,6 +368,10 @@ public class Settings extends AppCompatActivity {
                         mDeliverOrders.setEnabled(true);
                         AppManager.SnackBar(Settings.this, " " + response.body().getMessage());
                         Log.e("TAG", "onResponse: " + response.message());
+                    }
+                    else if (response.code() == 401)
+                    {
+                        logout();
                     } else {
                         mDeliverOrders.setEnabled(true);
                         if (response.body() != null) {
@@ -395,6 +420,10 @@ public class Settings extends AppCompatActivity {
                         mPickupOrders.setEnabled(true);
                         AppManager.SnackBar(Settings.this, " " + response.body().getMessage());
                         Log.e("TAG", "onResponse: " + response.message());
+                    }
+                    else if (response.code() == 401)
+                    {
+                        logout();
                     } else {
                         mPickupOrders.setEnabled(true);
                         if (response.body() != null) {
@@ -444,6 +473,10 @@ public class Settings extends AppCompatActivity {
                         mNewOrders.setEnabled(true);
                         AppManager.SnackBar(Settings.this, " " + response.body().getMessage());
                         Log.e("TAG", "onResponse: " + response.message());
+                    }
+                    else if (response.code() == 401)
+                    {
+                        logout();
                     } else {
                         mNewOrders.setEnabled(true);
                         if (response.body() != null) {
@@ -563,11 +596,11 @@ public class Settings extends AppCompatActivity {
         //Setting Decreasing accept order button
         mSubAcceptOrder.setOnClickListener(v -> {
 
-            if (mAcceptNumber > 1) {
+            if (mAcceptNumber > 0) {
                 mAcceptNumber = mAcceptNumber - 1;
                 mAcceptOrder.setText(Integer.toString(mAcceptNumber));
 
-                if (mAcceptNumber == 1) {
+                if (mAcceptNumber == 0) {
                     mSubAcceptOrder.setEnabled(false);
                     mSubAcceptOrder.setImageResource(R.drawable.ic_remove_gray);
                 } else {
@@ -591,15 +624,14 @@ public class Settings extends AppCompatActivity {
         //Setting Decreasing reject order button
         mSubRejectOrder.setOnClickListener(v -> {
 
-            if (mRejectNumber > 1) {
+            if (mRejectNumber > 0) {
                 mRejectNumber = mRejectNumber - 1;
                 mRejectOrder.setText(Integer.toString(mRejectNumber));
 
-                if (mRejectNumber == 1) {
+                if (mRejectNumber == 0) {
                     mSubRejectOrder.setEnabled(false);
                     mSubRejectOrder.setImageResource(R.drawable.ic_remove_gray);
-                }
-                else {
+                } else {
                     mSubRejectOrder.setEnabled(true);
                     mSubRejectOrder.setImageResource(R.drawable.ic_remove);
                 }

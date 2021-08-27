@@ -45,6 +45,7 @@ public class AdapterOrderAddOns extends RecyclerView.Adapter<AdapterOrderAddOns.
         DecimalFormat format = new DecimalFormat("0.00");
 
         holder.mAddonName.setText(mAddonItems.getAddonItemName());
+        holder.mAddonQuantity.setText(mAddonItems.getQty() + "");
         holder.mAddonPrice.setText("(" + Constants.CURRENCY_SIGN + "." + format.format(Double.parseDouble(mAddonItems.getAddonItemPrice())) + ")");
 
     }//onBindViewHolder
@@ -56,11 +57,13 @@ public class AdapterOrderAddOns extends RecyclerView.Adapter<AdapterOrderAddOns.
 
     public static class detailHolderClass extends RecyclerView.ViewHolder {
         private final TextView mAddonName;
+        private final TextView mAddonQuantity;
         private final TextView mAddonPrice;
         public detailHolderClass(@NonNull @NotNull View itemView) {
             super(itemView);
             mAddonName = itemView.findViewById(R.id.tv_sub_item_name);
             mAddonPrice = itemView.findViewById(R.id.tv_sub_item_price);
+            mAddonQuantity = itemView.findViewById(R.id.tv_sub_item_quantity);
         }
     }//detailHolderClass
 }

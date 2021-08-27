@@ -1,5 +1,7 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities;
 
+import static com.itridtechnologies.resturantapp.utils.AppManager.logout;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.widget.NestedScrollView;
@@ -338,6 +340,10 @@ public class Reciept extends AppCompatActivity {
                         //Adapter calling and giving lists
                         UpdateOrders(mOrderItemList);
                     }
+                }
+                else if (response.code() == 401)
+                {
+                    logout();
                 }
 
             }///onResponse

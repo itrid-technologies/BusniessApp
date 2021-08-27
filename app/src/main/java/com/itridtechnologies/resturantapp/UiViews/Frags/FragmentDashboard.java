@@ -1,4 +1,6 @@
-package com.itridtechnologies.resturantapp.UiViews.Activities.Frags;
+package com.itridtechnologies.resturantapp.UiViews.Frags;
+
+import static com.itridtechnologies.resturantapp.utils.AppManager.logout;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -623,6 +625,10 @@ public class FragmentDashboard extends Fragment {
                     setTimeLayout(mIsClosed, mOpenCloseTime, mOpenToday, mOpenDay);
 
                 }
+                else if (response.code() == 401)
+                {
+                    logout();
+                }
             }
 
             @Override
@@ -695,6 +701,10 @@ public class FragmentDashboard extends Fragment {
                 if (response.isSuccessful() && response.body() != null) {
                     AppManager.saveActionDetails(response.body());
                 }
+                else if (response.code() == 401)
+                {
+                    logout();
+                }
             }
 
             @Override
@@ -749,6 +759,10 @@ public class FragmentDashboard extends Fragment {
                                 response.body().getData().getOrder().get(0).getBusinessId(),
                                 response.body().getData().getOrder().get(0).getStatus()
                         ));
+                    }
+                    else if (response.code() == 401)
+                    {
+                        logout();
                     }
 
                     setUpRecView(mNewPageOrderItemList);
@@ -876,6 +890,10 @@ public class FragmentDashboard extends Fragment {
                         imgNoOrder.setVisibility(View.VISIBLE);
                     }
 
+                }
+                else if (response.code() == 401)
+                {
+                    logout();
                 }
 
             }
@@ -1276,6 +1294,10 @@ public class FragmentDashboard extends Fragment {
 //                        }
 
                     }
+                }
+                else if (response.code() == 401)
+                {
+                    logout();
                 } else {
                     startActivity(new Intent(requireContext(), MainActivity.class));
                 }

@@ -1,5 +1,7 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities;
 
+import static com.itridtechnologies.resturantapp.utils.AppManager.logout;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -144,10 +146,14 @@ public class CancelOrder extends AppCompatActivity {
             public void onResponse(@NotNull Call<CancelResponse> call, @NotNull Response<CancelResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     AppManager.SnackBar(CancelOrder.this, response.body().getMessage());
-                    Intent intent = new Intent(CancelOrder.this, OrderIssues.class);
-                    intent.putExtra("orderNo", mOrderNo);
+                    Intent intent = new Intent(CancelOrder.this, BasicActvity.class);
+                    intent.putExtra("AOR","Accepted");
                     startActivity(intent);
 
+                }
+                else if (response.code() == 401)
+                {
+                    logout();
                 } else {
                     if (response.body() != null) {
                         AppManager.SnackBar(CancelOrder.this, response.body().getMessage());

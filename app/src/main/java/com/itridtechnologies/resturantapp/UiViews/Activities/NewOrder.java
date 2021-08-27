@@ -1,5 +1,7 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities;
 
+import static com.itridtechnologies.resturantapp.utils.AppManager.logout;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentValues;
@@ -335,7 +337,12 @@ public class NewOrder extends AppCompatActivity {
                         startActivity(intent);
                     }
 
-                } else {
+                }
+                else if (response.code() == 401)
+                {
+                    logout();
+                }
+                else {
                     mBtnAccept.setEnabled(true);
                     mBtnReject.setEnabled(true);
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -362,6 +369,10 @@ public class NewOrder extends AppCompatActivity {
                     Intent intent = new Intent(NewOrder.this, BasicActvity.class);
                     intent.putExtra("AOR", "Ready");
                     startActivity(intent);
+                }
+                else if (response.code() == 401)
+                {
+                    logout();
                 } else {
                     mBtnReadyOrder.setEnabled(true);
                 }
@@ -548,6 +559,10 @@ public class NewOrder extends AppCompatActivity {
                     Log.e(TAG, "onResponse: Total Amount" + valueTotal);
 
 
+                }
+                else if (response.code() == 401)
+                {
+                    logout();
                 }
                 UpdateOrders();
             }
@@ -744,6 +759,10 @@ public class NewOrder extends AppCompatActivity {
                     } catch (Exception ignred) {
                         Log.e(TAG, "onResponse: " + ignred.getMessage());
                     }
+                }
+                else if (response.code() == 401)
+                {
+                    logout();
                 } else {
                     startActivity(new Intent(getApplicationContext(), MainActivity.class));
                 }//not null

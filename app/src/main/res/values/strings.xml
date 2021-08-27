@@ -7,7 +7,7 @@
     <string name="order_text">Review and confirm the order(s) and start preparing them according to the deadline.</string>
     <string name="help">Help</string>
     <string name="call_customer">Call Customer</string>
-    <string name="call_partner">Call Partner</string>
+    <string name="call_partner">Call Rider</string>
     <string name="sir_imran">Imran Rasheed</string>
     <string name="Print">Print</string>
     <string name="Total">Total</string>
@@ -35,7 +35,7 @@
     <string name="your_order_history">Your Order History</string>
     <string name="logInBodyParcelData">message</string>
     <string name="searching_for_courier">Searching for courier</string>
-    <string name="courier_prepare_time">Courier prepare time</string>
+    <string name="courier_prepare_time">Prepare By</string>
     <string name="Adress">B-50, Block C, North Nazimabad, Karachi, Pakistan</string>
     <string name="order_amount">Order Amount</string>
     <string name="rs">Rs.</string>

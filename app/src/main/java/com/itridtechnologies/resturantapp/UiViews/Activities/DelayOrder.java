@@ -1,5 +1,7 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities;
 
+import static com.itridtechnologies.resturantapp.utils.AppManager.logout;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
@@ -16,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonObject;
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.models.DelayOrder.DelayResponse;
@@ -190,9 +193,18 @@ public class DelayOrder extends AppCompatActivity {
                     AppManager.toast(time + " increased");
 //                    AppManager.intent(BasicActvity.class);
 
-                } else if (response.code() == 400) {
+                }
+                else if (response.code() == 401)
+                {
+                    logout();
+                } else {
 
-                    Toast.makeText(DelayOrder.this, "Order is Delayed", Toast.LENGTH_SHORT).show();
+                    if (response.body() != null) {
+                        AppManager.SnackBar(DelayOrder.this,response.body().getMessage());
+                    }
+                    else {
+                        AppManager.SnackBar(DelayOrder.this,response.message());
+                    }
                 }
             } //res
 

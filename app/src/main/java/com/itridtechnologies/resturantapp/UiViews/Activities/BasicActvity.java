@@ -11,10 +11,10 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.itridtechnologies.resturantapp.R;
-import com.itridtechnologies.resturantapp.UiViews.Activities.Frags.FragmentDashboard;
-import com.itridtechnologies.resturantapp.UiViews.Activities.Frags.FragmentHistory;
-import com.itridtechnologies.resturantapp.UiViews.Activities.Frags.FragmentProcessing;
-import com.itridtechnologies.resturantapp.UiViews.Activities.Frags.FragmentReady;
+import com.itridtechnologies.resturantapp.UiViews.Frags.FragmentDashboard;
+import com.itridtechnologies.resturantapp.UiViews.Frags.FragmentHistory;
+import com.itridtechnologies.resturantapp.UiViews.Frags.FragmentProcessing;
+import com.itridtechnologies.resturantapp.UiViews.Frags.FragmentReady;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 import com.itridtechnologies.resturantapp.utils.LogoutViaNotification;
 import com.itridtechnologies.resturantapp.utils.PreferencesManager;

@@ -1,6 +1,8 @@
-package com.itridtechnologies.resturantapp.UiViews.Activities.Frags;
+package com.itridtechnologies.resturantapp.UiViews.Frags;
 
 import static android.content.ContentValues.TAG;
+
+import static com.itridtechnologies.resturantapp.utils.AppManager.logout;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -13,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -39,7 +40,6 @@ import com.itridtechnologies.resturantapp.UiViews.Activities.MainActivity;
 import com.itridtechnologies.resturantapp.UiViews.Activities.Menu;
 import com.itridtechnologies.resturantapp.UiViews.Activities.Settings;
 import com.itridtechnologies.resturantapp.UiViews.Activities.help;
-import com.itridtechnologies.resturantapp.model.NewHistory;
 import com.itridtechnologies.resturantapp.models.historyNew.NewHistoryWithTotals;
 import com.itridtechnologies.resturantapp.models.historyNew.ResultsItem;
 import com.itridtechnologies.resturantapp.models.orderHistory.ItemsItem;
@@ -50,7 +50,6 @@ import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -477,6 +476,10 @@ public class FragmentHistory extends Fragment {
                             mHistoryRecyclerView.setVisibility(View.GONE);
                         }
 
+                    }
+                    else if (response.code() == 401)
+                    {
+                        logout();
                     } else {
                         Log.e(TAG, "onResponse: Some went Wrong ");
                     }
@@ -523,6 +526,10 @@ public class FragmentHistory extends Fragment {
                                 }
                             }
                         }
+                    }
+                    else if (response.code() == 401)
+                    {
+                        logout();
                     } else {
 
                         Log.e(TAG, "onResponse:load more " + "something is wrong");
@@ -576,6 +583,10 @@ public class FragmentHistory extends Fragment {
                     mNSVHist.setVisibility(View.VISIBLE);
                     isDated = true;
                 }
+                else if (response.code() == 401)
+                {
+                    logout();
+                }
                 mProgressBarHistFull.setVisibility(View.GONE);
             }
 
@@ -618,6 +629,10 @@ public class FragmentHistory extends Fragment {
                         mTVEmpty.setText("No records found");
                         mTVEmpty.setVisibility(View.VISIBLE);
                     }
+                }
+                else if (response.code() == 401)
+                {
+                    logout();
                 }
                 mProgressBarHistFull.setVisibility(View.GONE);
             }
