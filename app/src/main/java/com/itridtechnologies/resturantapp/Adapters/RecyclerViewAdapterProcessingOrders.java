@@ -63,13 +63,19 @@ public class RecyclerViewAdapterProcessingOrders extends RecyclerView.Adapter<Re
             holder.mTypePO.setText("Self Service");
         }
 
+        if (mOrderInfo.getOrderType() == 1) {
+            holder.mStatusPO.setVisibility(View.GONE);
 
-        //Checking If its status is paid
-        if (holder.mStatusPO.getText().toString().equals("1")) {
-            holder.mStatusPO.setText("Paid");
-            holder.mStatusPO.setBackgroundResource(R.drawable.paid_background);
-        } else {
-            holder.mStatusPO.setText("UnPaid");
+        } else if (mOrderInfo.getOrderType() == 0 || mOrderInfo.getOrderType() == 2) {
+
+            //Checking If its status is paid
+            holder.mStatusPO.setVisibility(View.VISIBLE);
+            if (holder.mStatusPO.getText().toString().equals("1")) {
+                holder.mStatusPO.setText("Paid");
+                holder.mStatusPO.setBackgroundResource(R.drawable.paid_background);
+            } else {
+                holder.mStatusPO.setText("UnPaid");
+            }
         }
 
     }

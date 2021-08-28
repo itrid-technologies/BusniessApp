@@ -19,7 +19,9 @@ import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -56,73 +58,56 @@ public class AdapterFirstTimeReady extends RecyclerView.Adapter<AdapterFirstTime
 
         OrdersItem mOrderInfo = prepareList.get(position);
 
-        int isRiderAssigned = 0;
-        int orderType;
-        orderType = mOrderInfo.getOrderType();
-
-        holder.mOrderTime.setVisibility(View.GONE);
-
         String customerName = prepareList.get(position).getFirstName() + " " + prepareList.get(position).getLastName();
         String orderNumber = String.valueOf(mOrderInfo.getId());
         int paymentStatus = mOrderInfo.getPaymentStatus();
         String itemTotal = String.valueOf(mOrderInfo.getItemCount());
 
-        //Payment Status 200 OK
-        if (paymentStatus == 0) {
-            holder.mStatus.setText("Unpaid");
-        } else if (paymentStatus == 1) {
-            holder.mStatus.setText("Paid");
-            holder.mStatus.setBackground(mCtx.getResources().getDrawable(R.drawable.paid_background));
-        }
-
         ///Setting data in Textfields On screen
         holder.mOrderNumber.setText("#" + orderNumber);
+        holder.mCustomerName.setText(customerName);
+        holder.mRider.setText(itemTotal + " items (Rs. N/A)");
 
-        if (orderType == 1) {
-
+        if (mOrderInfo.getOrderType() == 1) {
+            holder.mStatus.setVisibility(View.GONE);
             holder.mType.setText("Delivery");
 
-            if (isRiderAssigned == 1) {
-                holder.mCustomerName.setText(customerName);
-                holder.mRider.setText("RIDER_NAME is Coming in ARRIVING_TIME minutes");
-            } else {
-                holder.mCustomerName.setText(customerName);
-                holder.mRider.setText(itemTotal + " items (Rs. N/A)");
+        }//end if (orderType == 1)
+
+        else if (mOrderInfo.getOrderType() == 0 || mOrderInfo.getOrderType() == 2) {
+
+            //Checking If its status is paid
+            holder.mType.setText("Pickup");
+            holder.mStatus.setVisibility(View.VISIBLE);
+
+            //Payment Status 200 OK
+            if (paymentStatus == 0) {
+                holder.mStatus.setText("Unpaid");
+            } else if (paymentStatus == 1) {
+                holder.mStatus.setText("Paid");
+                holder.mStatus.setBackground(mCtx.getResources().getDrawable(R.drawable.paid_background));
             }
 
-        }//end if (orderType == 1)
-        else if (orderType == 0) {
-
-            holder.mType.setText("Pickup");
-
-            //setting item count and amount
-            holder.mRider.setText(itemTotal + " items (Rs. N/A)");
-
-            //Setting customer name with waiting tag
-            holder.mCustomerName.setText(customerName);
-
-        }//end else if (orderType == 0)
-        else {
-
-            holder.mCustomerName.setText(customerName);
-
-            holder.mRider.setText(
-                    mOrderInfo.getItemCount() + " items (Rs. N/A)"
-            );
-
-            holder.mType.setText("Deliver with own rider");
-
+            if (mOrderInfo.getOrderType() == 2) {
+                holder.mType.setText("Deliver with own rider");
+            }
         }
 
-        String time = prepareList.get(position).getPickuptime();
+        String time = mOrderInfo.getDateAdded();
         String[] minTime = time.split("T");
-        Log.e(TAG, "onBindViewHolder: time 1 " + minTime[1]);
-        Log.e(TAG, "onBindViewHolder: time 1 " + minTime[1]);
 
-        holder.mOrderTime.setText(minTime[1].substring(0, minTime[1].length() - 8));
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+        Date dt = null;
+        try {
+            dt = format.parse(minTime[0]);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        SimpleDateFormat your_format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
+        holder.mOrderTime.setText(your_format.format(dt));
 
     }
 

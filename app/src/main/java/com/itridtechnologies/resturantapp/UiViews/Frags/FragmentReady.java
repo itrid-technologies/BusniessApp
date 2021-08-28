@@ -2,40 +2,40 @@ package com.itridtechnologies.resturantapp.UiViews.Frags;
 
 import static com.itridtechnologies.resturantapp.utils.AppManager.logout;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.work.OneTimeWorkRequest;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.itridtechnologies.resturantapp.Adapters.AdapterFirstTime;
 import com.itridtechnologies.resturantapp.Adapters.AdapterFirstTimeReady;
-import com.itridtechnologies.resturantapp.ClassRoom.RoomDB;
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.UiViews.Activities.MainActivity;
 import com.itridtechnologies.resturantapp.UiViews.Activities.Menu;
 import com.itridtechnologies.resturantapp.UiViews.Activities.ReadyDetails;
 import com.itridtechnologies.resturantapp.UiViews.Activities.Settings;
 import com.itridtechnologies.resturantapp.UiViews.Activities.help;
-import com.itridtechnologies.resturantapp.model.NewReady;
 import com.itridtechnologies.resturantapp.models.Pagination.OrdersItem;
 import com.itridtechnologies.resturantapp.models.Pagination.PaginationResponse;
-import com.itridtechnologies.resturantapp.models.newOrder.OrderItem;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 import com.itridtechnologies.resturantapp.utils.Internet;
@@ -53,52 +53,22 @@ import retrofit2.Response;
 
 public class FragmentReady extends Fragment {
 
-    private RecyclerView mReadyRecyclerView; //Ready RecyclerView
-    private final ArrayList<NewReady> readyList = new ArrayList<>();
-    ///Room database
-    RoomDB databaseRoom;
-
-
-    //page size
-    private final int pageSize = 10;
-    //pagination var
-    private int page_no = 1;
-    //flags
-    private boolean isLastPage;
-    private boolean isLoading;
-    //checking last pos
-    private int firstVisibleItem;
-    private int visibleItemCount;
-    private int totalItemCount;
+    private RecyclerView mRvOrders;
+    private ProgressBar mPageProgressBar;
+    private ConstraintLayout mRootContainer;
+    private LinearLayout mErrorContainer;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private NestedScrollView nestedScrollView;
+    //..
+    private int pageNo = 1;
+    private List<OrdersItem> mOrdersItemList;
     //layout manager
-    private LinearLayoutManager manager;
+    private LinearLayoutManager layoutManager;
     //context
     private Context mContext;
-
     //Adapter
     private AdapterFirstTimeReady adapter;
-
-
     private static final String TAG = "FragmentReady";
-    
-    ////For Order ID
-    private String mOrderId;
-    private List<OrdersItem> mNewPageOrderItemList = new ArrayList<>();
-
-    //Nested Scroll View and progress bar
-    private NestedScrollView mNSV;
-    private ProgressBar mPB;
-    private ProgressBar mPBPagination;
-
-    //Order item
-    private OrderItem mOrderItem = null;
-    //WorkManager
-    OneTimeWorkRequest bgWork;
-
-    //If No Order Available
-    private TextView mNoOrderText;
-    private ImageView mNoOrderImage;
-
     //Prefernce Manager
     private PreferencesManager pm;
 
@@ -114,11 +84,6 @@ public class FragmentReady extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_ready, container, false);
-        mReadyRecyclerView = root.findViewById(R.id.recycler_view_ready);
-        //Variables here
-        mNSV = root.findViewById(R.id.NSVReady);
-        mPB = root.findViewById(R.id.PBReady);
-        mPBPagination = root.findViewById(R.id.PBReadyPagination);
         //setting name of toolbar
         Toolbar mToolbar = root.findViewById(R.id.action_bar_ready);
 
@@ -126,9 +91,6 @@ public class FragmentReady extends Fragment {
         pm = new PreferencesManager(mContext);
         ///Header Name
         mToolbar.setTitle("Ready");
-        //Context for Room
-        //initializing database
-        databaseRoom = RoomDB.getInstance(mContext);
 
         //Setting Toolbar Navigation Bar
         mToolbar.setOnMenuItemClickListener(item -> {
@@ -169,314 +131,172 @@ public class FragmentReady extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mNoOrderText = view.findViewById(R.id.tv_no_order_ready);
-        mNoOrderImage = view.findViewById(R.id.ic_noOrder_ready);
+        //find views
+        //find views
+        mRvOrders = view.findViewById(R.id.rv_ready_orders);
+        mPageProgressBar = view.findViewById(R.id.pg_progress_bar);
+        mRootContainer = view.findViewById(R.id.content_container);
+        mErrorContainer = view.findViewById(R.id.error_container);
+        mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
+        nestedScrollView = view.findViewById(R.id.nested_scroll);
+
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            if (Internet.isAvailable(requireContext())) {
+                refresh();
+            } else {
+                //hide main content
+                //show error container
+                mErrorContainer.setVisibility(View.VISIBLE);
+                mRootContainer.setVisibility(View.GONE);
+            }
+        });
+
+        // adding on scroll change listener method for our nested scroll view.
+        nestedScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            // on scroll change we are checking when users scroll as bottom.
+            if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
+                // in this method we are incrementing page number,
+                // making progress bar visible and calling get data method.
+                mPageProgressBar.setVisibility(View.VISIBLE);
+                Handler handler = new Handler();
+                //paginate after 1 sec
+                handler.postDelayed(this::loadMoreItems, 1000);
+            }
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        //Internet Available With Database
-//        if (Internet.isAvailable(requireContext()) && !databaseRoom.mainDao().getReadyOrders().isEmpty()) {
-//
-//            ///get data from DB
-//            Log.e(TAG, "onResponse: Information is returning on live data");
-//            //if work is succeceded then we get data from DB
-//            List<OrdersItem> orders = databaseRoom.mainDao().getReadyOrders();
-//            Log.e(TAG, "onStart: List size" + orders.size());
-//            if (!orders.isEmpty()) {
-//                Log.e(TAG, "onResponse: List in database");
-//                mNSV.setVisibility(View.VISIBLE);
-//                mPB.setVisibility(View.GONE);
-//                setUpRecFirstTime(orders);
-//            } else {
-//                Log.e(TAG, "onResponse: No list in Database");
-//                mNoOrderImage.setVisibility(View.VISIBLE);
-//                mNoOrderText.setVisibility(View.VISIBLE);
-//            }
-//        }
-        //Internet Available With No Database (Hit Api/Show Illustrations)
-
-        if (Internet.isAvailable(mContext)) {
-            ///Hit Api and store in database with state accepted
-            getOrdersViaState(AppManager.getBusinessDetails().getData().getToken() , page_no);
+        if (Internet.isAvailable(requireContext())) {
+            refresh();
+        } else {
+            //hide main content
+            //show error container
+            mErrorContainer.setVisibility(View.VISIBLE);
+            mRootContainer.setVisibility(View.GONE);
         }
-        //No Internet No database
-        //Show illustrations
-        else if (!Internet.isAvailable(mContext)) {
-            mNoOrderImage.setVisibility(View.VISIBLE);
-            mNoOrderText.setVisibility(View.VISIBLE);
-        }
-//        //No Internet Database Available
-//        else {
-//
-//            ///get data from DB
-//            Log.e(TAG, "onResponse: Information is returning on live data");
-//            //if work is succeceded then we get data from DB
-//            List<OrdersItem> orders = databaseRoom.mainDao().getReadyOrders();
-//            Log.e(TAG, "onStart: List size" + orders.size());
-//            if (!orders.isEmpty()) {
-//                Log.e(TAG, "onResponse: List in database");
-//                setUpRecFirstTime(orders);
-//            } else {
-//                Log.e(TAG, "onResponse: No list in Database");
-//                mNoOrderImage.setVisibility(View.VISIBLE);
-//                mNoOrderText.setVisibility(View.VISIBLE);
-//            }
-//            mNSV.setVisibility(View.VISIBLE);
-//            mPB.setVisibility(View.GONE);
-//        }
     }
-
-    private void getOrdersViaState(String token, int page) {
-        Call<PaginationResponse> call = RetrofitNetMan.getRestApiService().getPaginationReadyOrders(token, page);
-        call.enqueue(new Callback<PaginationResponse>() {
-            @Override
-            public void onResponse(@NotNull Call<PaginationResponse> call, @NotNull Response<PaginationResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-
-
-                    if (!response.body().getMessage().equals("No records found")) {
-                        //collect data & update ui
-//                        mNewPageOrderItemList = response.body().getData().getOrders();
-//                        try {
-//
-//                            if (!mNewPageOrderItemList.isEmpty()) {
-//
-//                                Log.e(TAG, "onResponse: Item List is Not Empty (Condition after API Success)");
-//                                mOrderId = String.valueOf(response.body().getData().getOrders().get(0).getId());
-//
-//                                Log.d("API", "Adding Data");
-//
-//                                ///Inserting data in database
-//                                Constants.ORDER_PAGE_LIST = response.body().getData().getOrders();
-//                                Log.e(TAG, "onResponse: Ready" + Constants.ORDER_PAGE_LIST);
-//
-//
-//                                ///Saving in database
-//                                //////For Order Items (Saving in Database---Will execute one time)
-//                                bgWork = new OneTimeWorkRequest.Builder(AllOrderWorker.class)
-//                                        .build();
-//                                WorkManager.getInstance(requireContext()).enqueue(bgWork);
-//
-//                                ///Getting live data from database
-//                                WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(bgWork.getId())
-//                                        .observe(getViewLifecycleOwner(), info -> {
-//                                            if (info != null && info.getState().isFinished()) {
-//
-//                                                Log.e(TAG, "onResponse: Information is returning on live data");
-//                                                //if work is succeceded then we get data from DB
-//                                                final List<OrdersItem> orders = databaseRoom.mainDao().getAll();
-//                                                if (!orders.isEmpty()) {
-//                                                    Log.e(TAG, "onResponse: List in database");
-//                                                    setUpRecFirstTime(orders);
-//                                                } else {
-//                                                    mNoOrderImage.setVisibility(View.VISIBLE);
-//                                                    mNoOrderText.setVisibility(View.VISIBLE);
-//                                                    Log.e(TAG, "onResponse: No list in Database");
-//                                                }
-//                                            } else {
-//                                                Log.e(TAG, "onResponse: no info returning from live data");
-//                                            }
-//                                        });
-//
-//                                setUpRecFirstTime(response.body().getData().getOrders());
-//
-//                                mNSV.setVisibility(View.VISIBLE);
-//                                mPB.setVisibility(View.GONE);
-//
-//                            }
-//                        } catch (Exception ignored) {
-//                        }
-                        setUpRecFirstTime(response.body().getData().getOrders());
-
-                        mNSV.setVisibility(View.VISIBLE);
-                        mPB.setVisibility(View.GONE);
-                        mNoOrderImage.setVisibility(View.GONE);
-                        mNoOrderText.setVisibility(View.GONE);
-
-                    } else {
-
-                        mNSV.setVisibility(View.GONE);
-                        mPB.setVisibility(View.GONE);
-                        Log.e(TAG, "onResponse: text not shown");
-                        mNoOrderImage.setVisibility(View.VISIBLE);
-                        mNoOrderText.setVisibility(View.VISIBLE);
-                    }
-
-                }
-                else if (response.code() == 401)
-                {
-                    logout();
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull Call<PaginationResponse> call, @NotNull Throwable t) {
-
-            }
-        });
-    }
-
-//
-//    private void setUpRecView(List<OrderItem> orders) {
-//
-//        mReadyRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext().getApplicationContext()));
-//        RecyclerViewAdapterProcessingOrders adapter = new RecyclerViewAdapterProcessingOrders(orders, requireContext().getApplicationContext());
-//        mReadyRecyclerView.setAdapter(adapter);
-//
-//        adapter.setOnItemClickListener(position -> {
-//            Intent intent = new Intent(requireContext(), ReadyDetails.class);
-//            Log.e(TAG, "setUpRecView: " + orders.get(position).getId());
-//            intent.putExtra("orderId", String.valueOf(orders.get(position).getId()));
-//            startActivity(intent);
-//        });
-//
-//    }//end setup
-
-//    public interface SendMessage {
-//        void sendData(String message);
-//    }
 
     @Override
     public void onAttach(@NotNull Context context) {
         super.onAttach(context);
     }
 
-
-    private void setUpRecFirstTime(List<OrdersItem> paginationOrders) {
-
-        manager = new LinearLayoutManager(mContext);
-        adapter = new AdapterFirstTimeReady(paginationOrders, mContext);
-
-        mReadyRecyclerView.setLayoutManager(manager);
-        mReadyRecyclerView.setAdapter(adapter);
-
-        adapter.setOnItemClickListener(position -> {
-            Intent intent = new Intent(mContext, ReadyDetails.class);
-            Log.e(TAG, "setUpRecView: " + paginationOrders.get(position).getId());
-            intent.putExtra("orderId", String.valueOf(paginationOrders.get(position).getId()));
-            intent.putExtra("detailType", "ready");
-            startActivity(intent);
-        });
-
-        //checking for last item LastItem
-        LastItem();
-
-
-    }//end setup
-
-
-
-    private void LastItem() {
-
-        mReadyRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-
-                Log.e(TAG, "onScrollStateChanged: " + "");
-
-
-                visibleItemCount = manager.getChildCount();
-                totalItemCount = manager.getItemCount();
-                firstVisibleItem = manager.findFirstVisibleItemPosition();
-
-                if (!isLoading && !isLastPage) {
-
-                    if ((visibleItemCount + firstVisibleItem) >= totalItemCount &&
-                            firstVisibleItem >= 0 && totalItemCount >= pageSize) {
-
-                        mPBPagination.setVisibility(View.VISIBLE);
-
-                        page_no++;
-                        Log.e(TAG, "onScrolled: " + "last item" + page_no);
-
-                        LoadMoreItems();
-
-                    }
-                }
-
-            }
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                Log.e(TAG, "onScrolled: " + "");
-
-
-            }
-        });
-
-    }
-
-
-    private void LoadMoreItems() {
-
-        isLoading = true;
-
-        Call<PaginationResponse> call = RetrofitNetMan.getRestApiService().getPaginationPreparingOrders(AppManager.getBusinessDetails().getData().getToken(), page_no);
+    private void getOrders(int pageNo) {
+        //hit api with page no 1 and default params
+        Call<PaginationResponse> call = RetrofitNetMan.getRestApiService().getPaginationPreparingOrders
+                (
+                        AppManager.getBusinessDetails().getData().getToken(),
+                        pageNo
+                );
         call.enqueue(new Callback<PaginationResponse>() {
             @Override
             public void onResponse(@NonNull Call<PaginationResponse> call, @NonNull Response<PaginationResponse> response) {
+                mErrorContainer.setVisibility(View.GONE);
+                mRootContainer.setVisibility(View.VISIBLE);
+                mSwipeRefreshLayout.setRefreshing(false);
 
-                isLoading = false;
-
-                if (response.isSuccessful()) {
-
-                    if (response.body() != null) {
-
-                        if (response.body().isSuccess()) {
-
-                            if (response.body().getData().getOrders().size() > 0) {
-
-                                adapter.AddData(response.body().getData().getOrders());
-                                isLastPage = response.body().getData().getOrders().size() < pageSize;
-
-                            } else {
-
-                                isLastPage = true;
-                            }
-
-                            mPBPagination.setVisibility(View.GONE);
-
+                if (response.isSuccessful() && response.body() != null) {
+                    if (response.body().getData() == null) {//TODO: ye list ka check ha
+                        if (mOrdersItemList.isEmpty()) {
+                            mErrorContainer.setVisibility(View.VISIBLE);
+                        } else {
+                            mErrorContainer.setVisibility(View.GONE);
                         }
-
+                    } else {
+                        //orders found
+                        mOrdersItemList = new ArrayList<>();
+                        mOrdersItemList.addAll(response.body().getData().getOrders());
+                        setupRecyclerView();
                     }
-
-                }
-                else if (response.code() == 401)
-                {
+                }//success
+                else if (response.code() == 401) {
                     logout();
-                } else {
-
-                    Log.e(TAG, "onResponse:load more " + "something is wrong");
-
                 }
 
-            }
+            }//onResponse
 
             @Override
             public void onFailure(@NonNull Call<PaginationResponse> call, @NonNull Throwable t) {
+                Log.e(TAG, "onFailure: ", t);
+                mSwipeRefreshLayout.setRefreshing(false);
+                mErrorContainer.setVisibility(View.VISIBLE);
+                mRootContainer.setVisibility(View.GONE);
+            }
+        });
+    }//getOrders
 
-                Log.e(TAG, "onFailure: " + t.getMessage());
-                isLoading = false;
+    private void loadMoreItems() {
+        pageNo++;
 
+        Call<PaginationResponse> call = RetrofitNetMan.getRestApiService().getPaginationPreparingOrders
+                (
+                        AppManager.getBusinessDetails().getData().getToken(),
+                        pageNo
+                );
+        call.enqueue(new Callback<PaginationResponse>() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onResponse(@NonNull Call<PaginationResponse> call, @NonNull Response<PaginationResponse> response) {
+                mPageProgressBar.setVisibility(View.GONE);
+
+                if (response.isSuccessful() && response.body() != null) {
+                    if (response.body().getData() == null) {//TODO: ye list ka chk ha
+                    } else {
+                        //orders found
+                        if (!response.body().getMessage().equals("No records found")) {
+                            mOrdersItemList.addAll(response.body().getData().getOrders());
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                }//success
+                else if (response.code() == 401) {
+                    logout();
+                }
+
+            }//onResponse
+
+            @Override
+            public void onFailure(@NonNull Call<PaginationResponse> call, @NonNull Throwable t) {
+                Log.e(TAG, "onFailure: ", t);
+                mPageProgressBar.setVisibility(View.GONE);
             }
         });
 
-    }
+    }//loadMoreItems
 
+    private void refresh() {
+        pageNo = 1;
+        mSwipeRefreshLayout.setRefreshing(true);
+        mRootContainer.setVisibility(View.VISIBLE);
+        mErrorContainer.setVisibility(View.GONE);
+        mPageProgressBar.setVisibility(View.GONE);
+        getOrders(pageNo);
+    }//refresh
+
+    private void setupRecyclerView() {
+        layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false);
+        adapter = new AdapterFirstTimeReady(mOrdersItemList, mContext);
+        mRvOrders.setLayoutManager(layoutManager);
+        mRvOrders.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(position -> {
+            Intent intent = new Intent(mContext, ReadyDetails.class);
+            Log.e(TAG, "setUpRecView: " + mOrdersItemList.get(position).getId());
+            intent.putExtra("orderId", String.valueOf(mOrdersItemList.get(position).getId()));
+            intent.putExtra("detailType", "ready");
+            startActivity(intent);
+        });
+    }//setupRecyclerView
 
     @Override
     public void onPause() {
         super.onPause();
-        page_no = 1;
-
+        pageNo = 1;
         Log.e(TAG, "onPause: ");
 
     }
@@ -484,16 +304,14 @@ public class FragmentReady extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        page_no = 1;
-
+        pageNo = 1;
         Log.e(TAG, "onDestroy: ");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        page_no = 1;
-
+        pageNo = 1;
         Log.e(TAG, "onResume: ");
     }
 

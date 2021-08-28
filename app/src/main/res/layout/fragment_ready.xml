@@ -8,122 +8,113 @@
     android:orientation="vertical"
     tools:context=".UiViews.Frags.FragmentReady">
 
-
+    <!-- top bar -->
     <include
         android:id="@+id/action_bar_ready"
         layout="@layout/action_bar_frags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_marginTop="25dp" />
+    <!-- top bar -->
 
-    <ProgressBar
-        android:id="@+id/PBReady"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="300dp" />
-
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/NSVReady"
+    <!-- main container -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nested_scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
-            <TableLayout
-                android:id="@+id/TL_ready"
+            <!-- content -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/content_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
-                android:paddingLeft="25dp"
-                android:paddingRight="20dp"
-                android:shrinkColumns="0"
-                android:stretchColumns="0"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:paddingBottom="20dp">
 
-                <TableRow
+                <TextView
+                    android:id="@+id/prepare"
+                    style="@style/textColor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/ReadyOrderTitle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/review"
+                    style="@style/FontSmallGrey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:text="@string/ReadyOrderContent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/prepare" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_ready_orders"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:nestedScrollingEnabled="false"
+                    app:layout_constraintTop_toBottomOf="@id/review" />
 
-                    <TextView
-                        style="@style/textColor"
+                <ProgressBar
+                    android:id="@+id/pg_progress_bar"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="12dp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/rv_ready_orders"
+                    tools:visibility="visible" />
+
+                <!-- error container -->
+                <LinearLayout
+                    android:id="@+id/error_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="UseCompoundDrawables">
+
+                    <ImageView
+                        android:id="@+id/ic_noOrder_process"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="@string/ReadyOrderTitle" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                        android:layout_gravity="center"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_ready" />
 
                     <TextView
-                        style="@style/FontSmallGrey"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingTop="10dp"
-                        android:text="@string/ReadyOrderContent" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler_view_ready"
+                        android:id="@+id/tv_no_order_process"
+                        style="@style/darkText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="0dp"
-                        android:scrollbars="vertical" />
-                </TableRow>
+                        android:layout_marginTop="10dp"
+                        android:text="@string/no_ready_orders"
+                        android:textAlignment="center"
+                        android:textSize="16sp" />
 
+                </LinearLayout>
+                <!-- error container -->
 
-                <TableRow>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- content -->
 
-                    <ProgressBar
-                        android:id="@+id/PBReadyPagination"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_gravity="center"
-                        android:visibility="gone"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginTop="5dp" />
-                </TableRow>
+        </androidx.core.widget.NestedScrollView>
 
-            </TableLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
-
-
-    <ImageView
-        android:id="@+id/ic_noOrder_ready"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="200dp"
-        android:src="@drawable/ic_ready"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/action_bar_dashboard" />
-
-    <TextView
-        android:id="@+id/tv_no_order_ready"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="150dp"
-        android:gravity="center"
-        android:text="@string/no_ready_orders"
-        style="@style/darkText"
-        android:textSize="16dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ic_noOrder" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <!-- main container -->
 
 </LinearLayout>

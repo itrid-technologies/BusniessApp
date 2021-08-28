@@ -37,7 +37,7 @@ public class OrderItem {
 
     @ColumnInfo(name = "order_type")
     @SerializedName("order_type")
-    private int orderType;
+    private final int orderType;
 
     @ColumnInfo(name = "first_name")
     @SerializedName("first_name")

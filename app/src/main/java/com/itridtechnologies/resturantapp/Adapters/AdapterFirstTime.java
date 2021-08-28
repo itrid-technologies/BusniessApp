@@ -68,51 +68,34 @@ public class AdapterFirstTime extends RecyclerView.Adapter<AdapterFirstTime.deta
         int paymentStatus = mOrderInfo.getPaymentStatus();
         String itemTotal = String.valueOf(mOrderInfo.getItemCount());
 
-        //Payment Status 200 OK
-        if (paymentStatus == 0) {
-            holder.mStatus.setText("Unpaid");
-        } else if (paymentStatus == 1) {
-            holder.mStatus.setText("Paid");
-            holder.mStatus.setBackground(mCtx.getResources().getDrawable(R.drawable.paid_background));
-        }
-
         ///Setting data in Textfields On screen
         holder.mOrderNumber.setText("#" + orderNumber);
+        holder.mCustomerName.setText(customerName);
+        holder.mRider.setText(itemTotal + " items (Rs. N/A)");
 
         if (mOrderInfo.getOrderType() == 1) {
-
+            holder.mStatus.setVisibility(View.GONE);
             holder.mType.setText("Delivery");
-//            holder.mStatus.setVisibility(View.INVISIBLE);
-            if (isRiderAssigned == 1) {
-                holder.mCustomerName.setText(customerName);
-                holder.mRider.setText("RIDER_NAME is Coming in ARRIVING_TIME minutes");
-            } else {
-                holder.mCustomerName.setText(customerName);
-                holder.mRider.setText(itemTotal + " items (Rs. N/A)");
-            }
 
         }//end if (orderType == 1)
-        else if (orderType == 0) {
 
+        else if (mOrderInfo.getOrderType() == 0 || mOrderInfo.getOrderType() == 2) {
+
+            //Checking If its status is paid
             holder.mType.setText("Pickup");
+            holder.mStatus.setVisibility(View.VISIBLE);
 
-            //setting item count and amount
-            holder.mRider.setText(itemTotal + " items (Rs. N/A)");
+            //Payment Status 200 OK
+            if (paymentStatus == 0) {
+                holder.mStatus.setText("Unpaid");
+            } else if (paymentStatus == 1) {
+                holder.mStatus.setText("Paid");
+                holder.mStatus.setBackground(mCtx.getResources().getDrawable(R.drawable.paid_background));
+            }
 
-            //Setting customer name with waiting tag
-            holder.mCustomerName.setText(customerName);
-
-        }//end else if (orderType == 0)
-        else {
-
-            holder.mCustomerName.setText(customerName);
-
-            holder.mRider.setText(
-                    mOrderInfo.getItemCount() + " items (Rs. N/A)"
-            );
-
-            holder.mType.setText("Deliver with own rider");
-
+            if (mOrderInfo.getOrderType() == 2)  {
+                holder.mType.setText("Deliver with own rider");
+            }
         }
 
         String time = prepareList.get(position).getPickuptime();
