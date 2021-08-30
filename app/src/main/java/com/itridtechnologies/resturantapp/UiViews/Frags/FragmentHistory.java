@@ -136,7 +136,7 @@ public class FragmentHistory extends Fragment {
         mHistoryRecyclerView = root.findViewById(R.id.recycler_view_history);
         mProgressBarHistFull = root.findViewById(R.id.pb_hist_center);
         mProgressBarHistPagination = root.findViewById(R.id.PBHistoryPagination);
-        pm = new PreferencesManager(requireContext());
+        pm = new PreferencesManager(mContext);
         mNSVHist = root.findViewById(R.id.nsv_history);
         mLayout = root.findViewById(R.id.noOrder);
         mDateET = root.findViewById(R.id.etDate);
@@ -211,6 +211,7 @@ public class FragmentHistory extends Fragment {
             }, 2000);
         });
         getFullHistoryOrders();
+
     }
 
 
@@ -314,7 +315,7 @@ public class FragmentHistory extends Fragment {
             } else {
                 mStartDate = "all";
                 mEndDate = "all";
-
+//
                 mNoHistoryImage.setVisibility(View.GONE);
                 mTVEmpty.setVisibility(View.GONE);
 
@@ -322,9 +323,11 @@ public class FragmentHistory extends Fragment {
                 mDateET.setVisibility(View.GONE);
                 Log.e("TAG", "onCheckedChanged: " + checkedId);
                 mDateET.setVisibility(View.GONE);
-                if (histOrderList.isEmpty() || histOrderList.size() == 0) {
+                if (histOrderList.isEmpty()) {
                     mNoRecordFound.setVisibility(View.VISIBLE);
                     mNoHistoryImage.setVisibility(View.VISIBLE);
+                } else {
+                    histOrderList.size();
                 }
                 mNoRecordFound.setVisibility(View.GONE);
                 mNoHistoryImage.setVisibility(View.GONE);
@@ -600,6 +603,7 @@ public class FragmentHistory extends Fragment {
     //Getting History from Server (API)
     private void getFullHistoryOrders() {
         histOrderList.clear();
+        Log.e(TAG, "getFullHistoryOrders: asgfdsgdf");
         //Getting token
         String token = AppManager.getBusinessDetails().getData().getToken();
         Call<NewHistoryWithTotals> call = RetrofitNetMan.getRestApiService().getFullHistory(token, page_no);
@@ -623,7 +627,6 @@ public class FragmentHistory extends Fragment {
                         adapter(histOrderList);
 
                     } else {
-
 
                         mNoHistoryImage.setVisibility(View.VISIBLE);
                         mTVEmpty.setText("No records found");

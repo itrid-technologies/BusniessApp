@@ -32,6 +32,7 @@ import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.UiViews.Activities.MainActivity;
 import com.itridtechnologies.resturantapp.UiViews.Activities.Menu;
 import com.itridtechnologies.resturantapp.UiViews.Activities.NewOrder;
+import com.itridtechnologies.resturantapp.UiViews.Activities.ReadyDetails;
 import com.itridtechnologies.resturantapp.UiViews.Activities.Settings;
 import com.itridtechnologies.resturantapp.UiViews.Activities.help;
 import com.itridtechnologies.resturantapp.models.Pagination.OrdersItem;
@@ -100,12 +101,12 @@ public class FragmentProcessing extends Fragment {
         mToolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.menu_availability: {
-                    Intent intent = new Intent(getContext(), Menu.class);
+                    Intent intent = new Intent(mContext, Menu.class);
                     startActivity(intent);
                     return false;
                 }
                 case R.id.settings: {
-                    Intent intent = new Intent(getContext(), Settings.class);
+                    Intent intent = new Intent(mContext, Settings.class);
                     startActivity(intent);
                     return false;
                 }
@@ -125,7 +126,7 @@ public class FragmentProcessing extends Fragment {
                     return false;
                 }
                 default: {
-                    Intent intent = new Intent(getContext(), help.class);
+                    Intent intent = new Intent(mContext, help.class);
                     startActivity(intent);
                     return false;
                 }
@@ -145,10 +146,10 @@ public class FragmentProcessing extends Fragment {
         mRootContainer = view.findViewById(R.id.content_container);
         mErrorContainer = view.findViewById(R.id.error_container);
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
-        nestedScrollView = view.findViewById(R.id.nested_scroll);
+        nestedScrollView = view.findViewById(R.id.nested_scroll_processing);
 
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
-            if (Internet.isAvailable(requireContext())) {
+            if (Internet.isAvailable(mContext)) {
                 refresh();
             } else {
                 //hide main content
@@ -158,13 +159,16 @@ public class FragmentProcessing extends Fragment {
             }
         });
 
+
         // adding on scroll change listener method for our nested scroll view.
         nestedScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            mPageProgressBar.setVisibility(View.VISIBLE);
+
             // on scroll change we are checking when users scroll as bottom.
             if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
                 // in this method we are incrementing page number,
                 // making progress bar visible and calling get data method.
-                mPageProgressBar.setVisibility(View.VISIBLE);
+
                 Handler handler = new Handler();
                 //paginate after 1 sec
                 handler.postDelayed(this::loadMoreItems, 1000);
@@ -177,7 +181,7 @@ public class FragmentProcessing extends Fragment {
     public void onStart() {
         super.onStart();
 
-        if (Internet.isAvailable(requireContext())) {
+        if (Internet.isAvailable(mContext)) {
             refresh();
         } else {
             //hide main content
@@ -200,6 +204,7 @@ public class FragmentProcessing extends Fragment {
             public void onResponse(@NonNull Call<PaginationResponse> call, @NonNull Response<PaginationResponse> response) {
                 mProgressBar.setVisibility(View.GONE);
                 mErrorContainer.setVisibility(View.GONE);
+                nestedScrollView.setVisibility(View.VISIBLE);
                 mRootContainer.setVisibility(View.VISIBLE);
                 mSwipeRefreshLayout.setRefreshing(false);
 
@@ -234,6 +239,7 @@ public class FragmentProcessing extends Fragment {
     }//getOrders
 
     private void loadMoreItems() {
+
         pageNo++;
 
         Call<PaginationResponse> call = RetrofitNetMan.getRestApiService().getPaginationReadyOrders
@@ -282,10 +288,19 @@ public class FragmentProcessing extends Fragment {
     }//refresh
 
     private void setupRecyclerView() {
-        layoutManager = new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false);
+        layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         adapter = new AdapterFirstTime(mOrdersItemList, mContext);
         mRvOrders.setLayoutManager(layoutManager);
         mRvOrders.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(position -> {
+            Intent intent = new Intent(mContext, NewOrder.class);
+            Log.e(TAG, "setUpRecView: " + mOrdersItemList.get(position).getId());
+            intent.putExtra("orderId", String.valueOf(mOrdersItemList.get(position).getId()));
+            intent.putExtra("detailType", "processing");
+            startActivity(intent);
+        });
+
     }//setupRecyclerView
 
     @Override

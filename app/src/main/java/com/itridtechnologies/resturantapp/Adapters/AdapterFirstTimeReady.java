@@ -63,6 +63,8 @@ public class AdapterFirstTimeReady extends RecyclerView.Adapter<AdapterFirstTime
         int paymentStatus = mOrderInfo.getPaymentStatus();
         String itemTotal = String.valueOf(mOrderInfo.getItemCount());
 
+        holder.mOrderTime.setVisibility(View.GONE);
+
         ///Setting data in Textfields On screen
         holder.mOrderNumber.setText("#" + orderNumber);
         holder.mCustomerName.setText(customerName);

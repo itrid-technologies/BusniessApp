@@ -183,15 +183,14 @@ public class FragmentDashboard extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        pm = new PreferencesManager(requireContext());
+        pm = new PreferencesManager(mContext);
 
         //vibration context
-        mVibration = (Vibrator) requireContext().getSystemService(Context.VIBRATOR_SERVICE);
+        mVibration = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
         Log.e(TAG, "onCreateView: i m created");
 
-        anim_in = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up);
-        anim_out = AnimationUtils.loadAnimation(requireContext(), R.anim.slide_down);
-
+        anim_in = AnimationUtils.loadAnimation(mContext, R.anim.slide_up);
+        anim_out = AnimationUtils.loadAnimation(mContext, R.anim.slide_down);
 
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_dashboard, container, false);
@@ -214,7 +213,7 @@ public class FragmentDashboard extends Fragment {
 
         //Context for Room
         //initializing database
-        databaseRoom = RoomDB.getInstance(requireContext());
+        databaseRoom = RoomDB.getInstance(mContext);
 
         //getting current time from system
         SimpleDateFormat mdformat = new SimpleDateFormat("HH:mm:ss");
@@ -265,12 +264,12 @@ public class FragmentDashboard extends Fragment {
         mToolbar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.menu_availability: {
-                    Intent intent = new Intent(getContext(), Menu.class);
+                    Intent intent = new Intent(mContext, Menu.class);
                     startActivity(intent);
                     return false;
                 }
                 case R.id.settings: {
-                    Intent intent = new Intent(getContext(), Settings.class);
+                    Intent intent = new Intent(mContext, Settings.class);
                     startActivity(intent);
                     return false;
                 }
@@ -283,14 +282,14 @@ public class FragmentDashboard extends Fragment {
                     return false;
                 }
                 case R.id.over_flow_log_out: {
-                    Intent intent = new Intent(requireContext(), MainActivity.class);
+                    Intent intent = new Intent(mContext, MainActivity.class);
                     pm.clearSharedPref();
                     pm.saveMyDataBool("login", false);
                     startActivity(intent);
                     return false;
                 }
                 default: {
-                    Intent intent = new Intent(getContext(), help.class);
+                    Intent intent = new Intent(mContext, help.class);
                     startActivity(intent);
                     return false;
                 }
@@ -314,7 +313,7 @@ public class FragmentDashboard extends Fragment {
         imgNoOrder = view.findViewById(R.id.ic_noOrder);
 
         //Sound
-        mMediaPlayer = MediaPlayer.create(requireContext(), R.raw.tune);
+        mMediaPlayer = MediaPlayer.create(mContext, R.raw.tune);
 
         mSwipeDash.setProgressViewOffset(true, 10, 180);
 
@@ -334,7 +333,7 @@ public class FragmentDashboard extends Fragment {
             getBusyMode();
 
             ///First Time (Internet Available No Database)
-            if (Internet.isAvailable(requireContext())) {
+            if (Internet.isAvailable(mContext)) {
                 internetButNoDatasbase = 1;
                 Log.e(TAG, "onResponse: internet but No database available");
                 //net available but no database
@@ -343,7 +342,7 @@ public class FragmentDashboard extends Fragment {
                 mPBFull.setVisibility(View.GONE);
             }
             //(Internet Available With Database)
-            else if (Internet.isAvailable(requireContext()) && !databaseRoom.mainDao().getAll().isEmpty()) {
+            else if (Internet.isAvailable(mContext) && !databaseRoom.mainDao().getAll().isEmpty()) {
                 Log.e(TAG, "onResponse: internet with database available");
                 ///get data from DB
                 //if work is succeceded then we get data from DB
@@ -360,7 +359,7 @@ public class FragmentDashboard extends Fragment {
                 imgNoOrder.setVisibility(View.GONE);
             }
             ///(No Internet Available)
-            else if (!Internet.isAvailable(requireContext())) {
+            else if (!Internet.isAvailable(mContext)) {
                 Log.e(TAG, "onResponse: No internet No database available");
 
                 ////no net no database
@@ -418,7 +417,7 @@ public class FragmentDashboard extends Fragment {
         });
 
         ///First Time (Internet Available No Database)
-        if (Internet.isAvailable(requireContext())) {
+        if (Internet.isAvailable(mContext)) {
             internetButNoDatasbase = 1;
             Log.e(TAG, "onResponse: internet but No database available");
             //net available but no database
@@ -427,7 +426,7 @@ public class FragmentDashboard extends Fragment {
             mPBFull.setVisibility(View.GONE);
         }
         //(Internet Available With Database)
-        else if (Internet.isAvailable(requireContext()) && !databaseRoom.mainDao().getAll().isEmpty()) {
+        else if (Internet.isAvailable(mContext) && !databaseRoom.mainDao().getAll().isEmpty()) {
             Log.e(TAG, "onResponse: internet with database available");
             ///get data from DB
             //if work is succeceded then we get data from DB
@@ -444,7 +443,7 @@ public class FragmentDashboard extends Fragment {
             imgNoOrder.setVisibility(View.GONE);
         }
         ///(No Internet Available)
-        else if (!Internet.isAvailable(requireContext())) {
+        else if (!Internet.isAvailable(mContext)) {
             Log.e(TAG, "onResponse: No internet No database available");
 
             ////no net no database
@@ -457,7 +456,7 @@ public class FragmentDashboard extends Fragment {
 
         }
 //        /(No Internet Available But Database Available)
-        else if (!Internet.isAvailable(requireContext()) && !databaseRoom.mainDao().getAll().isEmpty()) {
+        else if (!Internet.isAvailable(mContext) && !databaseRoom.mainDao().getAll().isEmpty()) {
             ///get data from DB
             Log.e(TAG, "onResponse: No internet but database available");
             //if work is succeceded then we get data from DB
@@ -489,7 +488,7 @@ public class FragmentDashboard extends Fragment {
 
     @Override
     public void onPause() {
-        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(mRegistrationBroadcastReceiver);
+        LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mRegistrationBroadcastReceiver);
         super.onPause();
     }
 
@@ -818,16 +817,16 @@ public class FragmentDashboard extends Fragment {
         super.onResume();
 
         // register GCM registration complete receiver
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(mRegistrationBroadcastReceiver,
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(mRegistrationBroadcastReceiver,
                 new IntentFilter(Config.REGISTRATION_COMPLETE));
 
         // register new push id receiver
         // by doing this, the activity will be notified each time a new id arrives
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(mRegistrationBroadcastReceiver,
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(mRegistrationBroadcastReceiver,
                 new IntentFilter(Config.PUSH_NOTIFICATION));
 
         // clear the notification area when the app is opened
-        NotificationsUtils.clearNotifications(requireContext());
+        NotificationsUtils.clearNotifications(mContext);
 
     }
 
@@ -858,10 +857,10 @@ public class FragmentDashboard extends Fragment {
                             //////For Order Items (Saving in Database---Will execute one time)
                             bgWork = new OneTimeWorkRequest.Builder(AllOrderWorker.class)
                                     .build();
-                            WorkManager.getInstance(requireContext()).enqueue(bgWork);
+                            WorkManager.getInstance(mContext).enqueue(bgWork);
 
                             ///Getting live data from database
-                            WorkManager.getInstance(requireContext()).getWorkInfoByIdLiveData(bgWork.getId())
+                            WorkManager.getInstance(mContext).getWorkInfoByIdLiveData(bgWork.getId())
                                     .observe(getViewLifecycleOwner(), info -> {
                                         if (info != null && info.getState().isFinished()) {
 
@@ -911,8 +910,8 @@ public class FragmentDashboard extends Fragment {
         FragmentManager manager = (this).getFragmentManager();
         FragmentTransaction trans = manager.beginTransaction();
 
-        mOrderRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext().getApplicationContext()));
-        adapter = new RecyclerViewAdapterDashboard(requireContext().getApplicationContext(), paginationOrders);
+        mOrderRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        adapter = new RecyclerViewAdapterDashboard(mContext.getApplicationContext(), paginationOrders);
         mOrderRecyclerView.setAdapter(adapter);
         adapter.setOnItemClickListener((position, type) -> {
             if (type.equals("item_click")) {
@@ -922,7 +921,7 @@ public class FragmentDashboard extends Fragment {
                 Log.e(TAG, "setUpRecView: removed");
 
 
-                Intent intent = new Intent(requireContext(), NewOrder.class);
+                Intent intent = new Intent(mContext, NewOrder.class);
                 intent.putExtra("orderId", String.valueOf(paginationOrders.get(position).getId()));
                 intent.putExtra("detailType", "newOrder");
 
@@ -1142,6 +1141,16 @@ public class FragmentDashboard extends Fragment {
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (mBusyMode.isChecked())
+        {
+            animIn(mBusyNotify);
+        }
+    }//onStart
+
     private void animIn(LinearLayout mBusyViewIn) {
 
         anim_in.setAnimationListener(new Animation.AnimationListener() {
@@ -1299,7 +1308,7 @@ public class FragmentDashboard extends Fragment {
                 {
                     logout();
                 } else {
-                    startActivity(new Intent(requireContext(), MainActivity.class));
+                    startActivity(new Intent(mContext, MainActivity.class));
                 }
             }
 

@@ -586,11 +586,13 @@ public class ReadyDetails extends AppCompatActivity {
                     String address;
 
                     if (response.body().getData().getOrderAddress().size() > 0) {
+
                         address = response.body().getData().getOrderAddress().get(0).getAddressLine1() + " "
-                                + response.body().getData().getOrderAddress().get(0).getAddressLine2() + " "
-                                + response.body().getData().getOrderAddress().get(0).getCity() + " "
-                                + response.body().getData().getOrderAddress().get(0).getState() + " "
-                                + response.body().getData().getOrderAddress().get(0).getCountry() + " "
+                                + response.body().getData().getOrderAddress().get(0).getAddressLine2() + ", "
+                                + response.body().getData().getOrderAddress().get(0).getCity() + ", "
+                                + System.getProperty ("line.separator")
+                                + response.body().getData().getOrderAddress().get(0).getState() + ", "
+                                + response.body().getData().getOrderAddress().get(0).getCountry() + ", "
                                 + response.body().getData().getOrderAddress().get(0).getPostCode();
 
                         Log.e(TAG, "onResponse: address" +
