@@ -11,7 +11,7 @@
 
 <!--    Our Colors-->
     <color name="whitee">#FFFFFFFF</color>
-    <color name="red">#e24845</color>
+    <color name="red">#de5246</color>
     <color name="theme_color">#12D2B3</color>
     <color name="grey">#90949C</color>
     <color name="border_grey">#E7E9EB</color>
@@ -20,7 +20,7 @@
     <color name="disable_grey">#E5E5E5</color>
     <color name="unpaid_red">#D21241</color>
     <color name="green">#25C16F</color>
-    <color name="colorPrimary">#12D2B3</color>
+    <color name="colorPrimary">#1f9e38</color>
     <color name="colorPrimaryDark">#FFFFFF</color>
     <color name="colorAccent">#12D2B3</color>
     <color name="blue">#5BBCCD</color>

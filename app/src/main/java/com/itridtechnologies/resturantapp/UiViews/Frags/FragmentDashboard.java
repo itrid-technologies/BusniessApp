@@ -207,7 +207,7 @@ public class FragmentDashboard extends Fragment {
         mBusyNotify = root.findViewById(R.id.busy_notification);
 
         ///Header Name
-        mToolbar.setTitle("New Orders");
+        mToolbar.setTitle("New orders");
 
         Log.e(TAG, "onCreateView:  i m onCreateView");
 
@@ -645,13 +645,13 @@ public class FragmentDashboard extends Fragment {
         Log.e(TAG, "setTimeLayout: open today " + openToday);
 
         if (openToday.equals("N/A") && openCloseTime.equals("N/A")) {
-            String msg = AppManager.getBusinessDetails().getData().getResults().getBusinessName() + " Is Closed";
+            String msg = AppManager.getBusinessDetails().getData().getResults().getBusinessName() + " is closed";
             imgNoOrder.setImageResource(R.drawable.ic_businessclosed);
             noOrders.setText(msg);
 
         } else if (openToday.equals("yes")) {
             Log.e(TAG, "setTimeLayout: " + time12Hours + " close " + openToday);
-            String openMsg = "Open Now - Accepting Orders till " + time12Hours;
+            String openMsg = "Open now - Accepting orders till " + time12Hours;
             if (isClosed == 0) {
                 imgNoOrder.setImageResource(R.drawable.ic_businessopen);
                 noOrders.setText(openMsg);
@@ -1085,11 +1085,11 @@ public class FragmentDashboard extends Fragment {
                     } else {
                         if (mIsClosed == 1)
                         {
-                            AppManager.SnackBar((AppCompatActivity) mActivity, "Business is CLosed");
+                            AppManager.SnackBar((AppCompatActivity) mActivity, "Business is cLosed");
                         }
                         else {
                             AppManager.SnackBar((AppCompatActivity) mActivity,
-                                    "Delivery or Pickup order mode must be enable.");
+                                    "Pickup or delivery order mode must be enabled");
                         }
                     }
                 }

@@ -1,13 +1,13 @@
 <resources>
-    <string name="app_name">Resturant App</string>
-    <string name="enter_email">Email Address</string>
+    <string name="app_name">Terseel</string>
+    <string name="enter_email">Email address</string>
     <string name="enter_password">Password</string>
-    <string name="mail_not_entered">Please Enter You Email Address</string>
+    <string name="mail_not_entered">Enter email address</string>
     <string name="login">Login</string>
     <string name="order_text">Review and confirm the order(s) and start preparing them according to the deadline.</string>
     <string name="help">Help</string>
-    <string name="call_customer">Call Customer</string>
-    <string name="call_partner">Call Rider</string>
+    <string name="call_customer">Call customer</string>
+    <string name="call_partner">Call rider</string>
     <string name="sir_imran">Imran Rasheed</string>
     <string name="Print">Print</string>
     <string name="Total">Total</string>
@@ -16,13 +16,13 @@
     <string name="Subtotal">Subtotal</string>
     <string name="OrderNote">Order note:</string>
     <string name="Reject">Reject Order</string>
-    <string name="GoToCustomer">Go To Customer</string>
+    <string name="GoToCustomer">Go to customer</string>
     <string name="Delivered">Delivered</string>
-    <string name="ReadyToPickUp">Ready To Pickup</string>
+    <string name="ReadyToPickUp">Ready to pickup</string>
     <string name="Accept">Accept Order</string>
-    <string name="BussinessOrderNote">Business Order Note Here</string>
-    <string name="DeliveryNoteHere">Delivery Note Here</string>
-    <string name="WeAreOpen">We Are Open Till</string>
+    <string name="BussinessOrderNote">Business order note</string>
+    <string name="DeliveryNoteHere">Delivery note</string>
+    <string name="WeAreOpen">We are open till</string>
     <string name="DeliveryNote">Delivery note:</string>
     <string name="FriesChoice">CHOICE OF FRIES</string>
     <string name="FriesSauce">CHOICE OF SAUCE</string>
@@ -35,16 +35,14 @@
     <string name="your_order_history">Your Order History</string>
     <string name="logInBodyParcelData">message</string>
     <string name="searching_for_courier">Searching for courier</string>
-    <string name="courier_prepare_time">Prepare By</string>
+    <string name="courier_prepare_time">Prepare by</string>
     <string name="Adress">B-50, Block C, North Nazimabad, Karachi, Pakistan</string>
     <string name="order_amount">Order Amount</string>
     <string name="rs">Rs.</string>
     <string name="order_status">Order Status</string>
     <string name="delay_order">Delay Order</string>
-    <string name="cancel_message">Are you sure you would like to cancel the order? This process is
-permanent and can not be undone.</string>
-    <string name="delay_message">If you need more time to prepare the order, let us know so we can
-update the customer.</string>
+    <string name="cancel_message">Are you sure you would like to cancel the order? This process is permanent and can not be undone.</string>
+    <string name="delay_message">If you need more time to prepare the order, let us know so we can update the customer.</string>
     <string name="cancel_confirm">Why would you like to cancel the order?</string>
     <string name="cancel_hint">Write your reason(s) for cancellation of the order</string>
     <string name="cancel_order">Cancel Order</string>
@@ -88,12 +86,12 @@ update the customer.</string>
     <string name="no_ready_orders">No Ready Orders</string>
     <string name="write_your_compliments_concerns_about_the_pickup_experience">Write your compliments/concerns about the pickup experience</string>
     <string name="todo">TODO</string>
-    <string name="leave_feedback">Leave Feedback</string>
-    <string name="busy_mode_is_enabled_to_receive_new_orders_turn_off_busy_mode">Busy mode is enabled. To receive new orders turn off busy mode.</string>
-    <string name="your_business_is_busy">Your Business is Busy</string>
+    <string name="leave_feedback">Leave feedback</string>
+    <string name="busy_mode_is_enabled_to_receive_new_orders_turn_off_busy_mode">Busy mode is enabled. To receive new orders consider turning it off.</string>
+    <string name="your_business_is_busy">Your business is busy</string>
     <string name="logout">Logout</string>
-    <string name="leave_for_a_customer_review">Leave for a customer Review</string>
-    <string name="leave_for_a_courier_review">Leave for a courier Review</string>
+    <string name="leave_for_a_customer_review">Leave a review for customer</string>
+    <string name="leave_for_a_courier_review">Leave a review for rider</string>
     <string name="orders">Orders</string>
     <string name="preparing">Preparing</string>
     <string name="ready">Ready</string>
@@ -101,6 +99,5 @@ update the customer.</string>
     <string name="modifier_item_1">Modifier item 1</string>
     <string name="order_details">Order details</string>
     <string name="_0">1</string>
-    <string name="no_record_found">No Record Found</string>
-
+    <string name="no_record_found">No record found</string>
 </resources>

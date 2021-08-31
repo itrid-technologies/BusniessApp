@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:elevation="4dp"
-    android:paddingStart="10dp"
-    android:paddingEnd="0dp"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
     android:theme="@style/ToolbarColored"
     app:menu="@menu/action_bar_items"
     app:popupTheme="@style/Theme.ResturantApp" />
