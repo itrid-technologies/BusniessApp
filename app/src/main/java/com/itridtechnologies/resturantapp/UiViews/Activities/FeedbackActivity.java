@@ -21,6 +21,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -139,14 +140,42 @@ public class FeedbackActivity extends AppCompatActivity {
     }//onStart
 
     private void addInChipGroup() {
-        for (String tag : mTagsFromServer) {
-            Chip chip = new Chip(FeedbackActivity.this);
-            Log.e(TAG, "addInChipGroup: " + tag);
-            chip.setText(tag);
-            binding.frequentOptions.addView(chip);
+
+//        for (String tag : mTagsFromServer) {
+//            Chip chip = new Chip(FeedbackActivity.this);
+//            Log.e(TAG, "addInChipGroup: " + tag);
+//            chip.setText(tag);
+//            binding.frequentOptions.addView(chip);
+//        }
+
+        if (binding.frequentOptions.getChildCount() == 0 ){
+            int i = 0;
+            for (String tag : mTagsFromServer){
+                Chip resultChip = new Chip(FeedbackActivity.this);
+//                ChipDrawable chipDrawable =
+//                        ChipDrawable.createFromAttributes(
+//                                getApplicationContext(),
+//                                null,
+//                                0,
+//                                R.style.Widget_MaterialComponents_Chip_Choice);
+                resultChip.setId(i++);
+//                resultChip.setChipDrawable(chipDrawable);
+                resultChip.setText(tag);
+                binding.frequentOptions.addView(resultChip);
+            }
         }
+
+        binding.frequentOptions.setOnCheckedChangeListener((group, checkedId) -> {
+            Chip chip = group.findViewById(checkedId);
+            if(chip != null){
+                tags.add(chip.getText().toString());
+                Toast.makeText(getApplicationContext(), chip.getText().toString(),Toast.LENGTH_SHORT).show();
+            }
+        });
+
         binding.nsvFeedback.setVisibility(View.VISIBLE);
         binding.pbFeedback.setVisibility(View.GONE);
+
     }//addInChipGroup
 
     //click listeners

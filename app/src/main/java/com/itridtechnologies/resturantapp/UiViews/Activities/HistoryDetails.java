@@ -132,17 +132,15 @@ public class HistoryDetails extends AppCompatActivity {
             @Override
             public void onResponse(@NotNull Call<FeedbackReviewGivenResponse> call, @NotNull Response<FeedbackReviewGivenResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    mTopView.setVisibility(View.VISIBLE);
+                    mMiddleView.setVisibility(View.VISIBLE);
+                    mBottomView.setVisibility(View.VISIBLE);
+
                     if (!response.body().getData().isCustomerReview()) {
-                        mTopView.setVisibility(View.VISIBLE);
-                        mMiddleView.setVisibility(View.VISIBLE);
-                        mBottomView.setVisibility(View.VISIBLE);
                         mCustomerReview.setVisibility(View.VISIBLE);
                     }
 
                     if (!response.body().getData().isPartnerReview()) {
-                        mTopView.setVisibility(View.VISIBLE);
-                        mMiddleView.setVisibility(View.VISIBLE);
-                        mBottomView.setVisibility(View.VISIBLE);
                         mCourierReview.setVisibility(View.VISIBLE);
                     }
                 } else {

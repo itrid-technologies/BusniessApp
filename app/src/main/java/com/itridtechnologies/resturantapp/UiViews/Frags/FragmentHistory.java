@@ -26,6 +26,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -46,6 +47,7 @@ import com.itridtechnologies.resturantapp.models.orderHistory.ItemsItem;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 import com.itridtechnologies.resturantapp.utils.Constants;
+import com.itridtechnologies.resturantapp.utils.Internet;
 import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
 import org.jetbrains.annotations.NotNull;
@@ -204,33 +206,51 @@ public class FragmentHistory extends Fragment {
         mSwipeHistory.setProgressViewOffset(true, 10, 180);
         //Pull to Swipe
         mSwipeHistory.setOnRefreshListener(() -> {
-            final Handler handler = new Handler();
-            handler.postDelayed(() -> {
-                mSwipeHistory.setRefreshing(false);
 
-            }, 2000);
+            if (Internet.isAvailable(mContext)) {
+                getFullHistoryOrders();
+            } else {
+                //hide main content
+                //show error container
+                mNoHistoryImage.setVisibility(View.VISIBLE);
+                mTVEmpty.setVisibility(View.VISIBLE);
+            }
         });
-        getFullHistoryOrders();
 
-    }
+
+        //Pagination on scrool view
+        mNSVHist.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+
+
+            mProgressBarHistPagination.setVisibility(View.VISIBLE);
+            // on scroll change we are checking when users scroll as bottom.
+            if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
+                // in this method we are incrementing page number,
+                // making progress bar visible and calling get data method.
+                Handler handler = new Handler();
+                //paginate after 1 sec
+                handler.postDelayed(this::LoadMoreItems, 1000);
+            }
+        });
+
+
+    }//onViewCreated
 
 
     @Override
     public void onStart() {
         super.onStart();
-//
-//        //date Range Picker
-//        MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.dateRangePicker();
-//
-//        builder.setTitleText("Select a Range to get Orders");
-//        builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
+
+        if (Internet.isAvailable(mContext)) {
+            getFullHistoryOrders();
+        } else {//hide main content
+            //show error container
+            mNoHistoryImage.setVisibility(View.VISIBLE);
+            mTVEmpty.setVisibility(View.VISIBLE);
+        }
 
         Calendar c = Calendar.getInstance();
-//
-////        DatePickerDialog.
-//        final MaterialDatePicker materialDatePicker = builder.build();
 
-        //////For taking date from calender
         mRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
 
             if (checkedId == R.id.rbselectDate) {
@@ -257,7 +277,7 @@ public class FragmentHistory extends Fragment {
 
                                 mStartDate = yearStart + "-" + startMonth + "-" + dayStart;
                                 mEndDate = yearEnd + "-" + endMonth + "-" + dayEnd;
-
+                                page_no = 1;
                                 getHistoryOrders(mStartDate, mEndDate);
 
                                 Log.e(TAG, "onStart: Start Date " + mStartDate);
@@ -270,9 +290,6 @@ public class FragmentHistory extends Fragment {
                     dateRangePickerFragment.setMaxDate(c);
                     dateRangePickerFragment.setOnCancelListener(dialog -> mDateET.setEnabled(true));
                     dateRangePickerFragment.show(getChildFragmentManager(), "dateRangePicker");
-
-                    //DateRange Picker
-//                    materialDatePicker.show(getChildFragmentManager(), "Range Picker");
 
                 });
 
@@ -308,13 +325,10 @@ public class FragmentHistory extends Fragment {
                 dateRangePickerFragment.setOnCancelListener(dialog -> mDateET.setEnabled(true));
                 dateRangePickerFragment.show(getChildFragmentManager(), "dateRangePicker");
 
-
-                //DateRange Picker
-//                materialDatePicker.show(getChildFragmentManager(), "Range Picker");
-
-            } else {
-                mStartDate = "all";
-                mEndDate = "all";
+            }
+            else {
+                mStartDate = "";
+                mEndDate = "";
 //
                 mNoHistoryImage.setVisibility(View.GONE);
                 mTVEmpty.setVisibility(View.GONE);
@@ -335,44 +349,6 @@ public class FragmentHistory extends Fragment {
             }
         });
 
-//        materialDatePicker.addOnNegativeButtonClickListener(v -> mDateET.setEnabled(true));
-//
-//        materialDatePicker.addOnPositiveButtonClickListener(selection -> {
-//            Log.e(TAG, "onStart: " + materialDatePicker.getHeaderText());
-//            datee = materialDatePicker.getHeaderText();
-//            mDateET.setText(datee);
-//
-//            mDateET.setEnabled(true);
-//
-//            //Split
-//            String[] range = datee.split(" – ");
-//
-//            mStartDate = range[0];
-//            mEndDate = range[1];
-//
-//            ////Spliting again for start month and day
-//            String[] sDate = mStartDate.split(" ");
-//            mStartMonth = sDate[0];
-//            mStartDay = sDate[1];
-//
-//            ////Spliting again for end month and day
-//            String[] eDate = mEndDate.split(" ");
-//            mEndMonth = eDate[0];
-//            mEndDay = eDate[1];
-//
-//            convertIntoNumberStartMonth(mStartMonth);
-//            convertIntoNumberEndMonth(mEndMonth);
-//
-//            Calendar cal = Calendar.getInstance();
-//            mStartDate = cal.get(Calendar.YEAR) + "-" + mStartMonth + "-" + mStartDay;
-//            mEndDate = cal.get(Calendar.YEAR) + "-" + mEndMonth + "-" + mEndDay;
-//            getHistoryOrders(mStartDate, mEndDate);
-//
-//            Log.e(TAG, "onStart: Start Date " + mStartDate);
-//            Log.e(TAG, "onStart: End Date " + mEndDate);
-//
-//        });
-
     }
 
     ///Updating user Interface
@@ -380,11 +356,16 @@ public class FragmentHistory extends Fragment {
     private void adapter(List<ResultsItem> historyList) {
 
         Log.e(TAG, "adapter: inside adapter");
+        mHistoryRecyclerView.setVisibility(View.VISIBLE);
 
         manager = new LinearLayoutManager(mContext);
+        Log.e(TAG, "adapter: inside adapter1");
         adapter = new AdapterHistoryFragment(historyList, mContext);
+        Log.e(TAG, "adapter: inside adapter2");
         mHistoryRecyclerView.setAdapter(adapter);
+        Log.e(TAG, "adapter: inside adapter3");
         mHistoryRecyclerView.setLayoutManager(manager);
+        Log.e(TAG, "adapter: inside adapter4");
 
         adapter.setOnItemClickListener(position -> {
             Intent intent = new Intent(mContext, HistoryDetails.class);
@@ -395,50 +376,9 @@ public class FragmentHistory extends Fragment {
         });
 
         //checking for last item LastItem
-        LastItem();
+//        LastItem();
 
     }//UI
-
-
-    private void LastItem() {
-
-        mHistoryRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-
-                Log.e(TAG, "onScrollStateChanged: " + "");
-                visibleItemCount = manager.getChildCount();
-                totalItemCount = manager.getItemCount();
-                firstVisibleItem = manager.findFirstVisibleItemPosition();
-
-
-                if (!isLoading && !isLastPage) {
-
-                    if ((visibleItemCount + firstVisibleItem) >= totalItemCount &&
-                            firstVisibleItem >= 0 && totalItemCount >= pageSize) {
-
-                        mProgressBarHistPagination.setVisibility(View.VISIBLE);
-                        page_no++;
-                        LoadMoreItems();
-
-                    }
-                } // end if loading and islastpage
-
-            }
-
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                Log.e(TAG, "onScrolled: " + "");
-
-
-            }
-        });
-
-    }
-
 
     private void LoadMoreItems() {
 
@@ -447,6 +387,7 @@ public class FragmentHistory extends Fragment {
         Log.e(TAG, "LoadMoreItems: pdate" + mStartDate + mEndDate + page_no);
 
         if (isDated) {
+            page_no++;
 
             Log.e(TAG, "LoadMoreItems: p undated" + mStartDate + mEndDate + page_no);
 
@@ -455,6 +396,7 @@ public class FragmentHistory extends Fragment {
             Call<NewHistoryWithTotals> call = RetrofitNetMan.getRestApiService().getHistory(token, mStartDate, mEndDate, page_no);
 
             call.enqueue(new Callback<NewHistoryWithTotals>() {
+                @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onResponse(@NonNull Call<NewHistoryWithTotals> call, @NonNull Response<NewHistoryWithTotals> response) {
 
@@ -464,24 +406,20 @@ public class FragmentHistory extends Fragment {
 
                         //collect data and update UI
                         if (!response.body().getMessage().equals("No records found")) {
-                            histOrderList = response.body().getData().getResults();
 
                             mHistoryRecyclerView.setVisibility(View.VISIBLE);
 
-                            adapter.AddData(histOrderList);
-                            isLastPage = response.body().getData().getResults().size() < pageSize;
+                            histOrderList.addAll(response.body().getData().getResults());
+                            adapter.notifyDataSetChanged();
 
                             mNoHistoryImage.setVisibility(View.GONE);
                             mTVEmpty.setVisibility(View.GONE);
 
-                        }
-                        else {
+                        } else {
                             mHistoryRecyclerView.setVisibility(View.GONE);
                         }
 
-                    }
-                    else if (response.code() == 401)
-                    {
+                    } else if (response.code() == 401) {
                         logout();
                     } else {
                         Log.e(TAG, "onResponse: Some went Wrong ");
@@ -496,11 +434,13 @@ public class FragmentHistory extends Fragment {
                 }
             });
         } else {
+            page_no++;
 
             Log.e(TAG, "LoadMoreItems: p" + mStartDate + mEndDate + page_no);
 
             Call<NewHistoryWithTotals> call = RetrofitNetMan.getRestApiService().getFullHistory(AppManager.getBusinessDetails().getData().getToken(), page_no);
             call.enqueue(new Callback<NewHistoryWithTotals>() {
+                @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onResponse(@NonNull Call<NewHistoryWithTotals> call, @NonNull Response<NewHistoryWithTotals> response) {
 
@@ -516,22 +456,14 @@ public class FragmentHistory extends Fragment {
                                 if (!response.body().getMessage().equals("No records found")) {
                                     mNoHistoryImage.setVisibility(View.GONE);
                                     mTVEmpty.setVisibility(View.GONE);
+                                    isDated = false;
+                                    histOrderList.addAll(response.body().getData().getResults());
+                                    adapter.notifyDataSetChanged();
 
-                                    if (response.body().getData().getResults().size() > 0) {
-//                                    adapter.AddData(histOrderList);.adapter();
-                                        histOrderList = response.body().getData().getResults();
-                                        adapter.AddData(histOrderList);
-                                        isLastPage = response.body().getData().getResults().size() < pageSize;
-
-                                    } else {
-                                        isLastPage = true;
-                                    }
                                 }
                             }
                         }
-                    }
-                    else if (response.code() == 401)
-                    {
+                    } else if (response.code() == 401) {
                         logout();
                     } else {
 
@@ -580,14 +512,13 @@ public class FragmentHistory extends Fragment {
                     } else {
                         mHistoryRecyclerView.setVisibility(View.GONE);
                         mNoHistoryImage.setVisibility(View.VISIBLE);
+                        mProgressBarHistPagination.setVisibility(View.GONE);
                         mTVEmpty.setText("No Orders in this period");
                         mTVEmpty.setVisibility(View.VISIBLE);
                     }
                     mNSVHist.setVisibility(View.VISIBLE);
                     isDated = true;
-                }
-                else if (response.code() == 401)
-                {
+                } else if (response.code() == 401) {
                     logout();
                 }
                 mProgressBarHistFull.setVisibility(View.GONE);
@@ -602,7 +533,9 @@ public class FragmentHistory extends Fragment {
 
     //Getting History from Server (API)
     private void getFullHistoryOrders() {
+        mSwipeHistory.setRefreshing(false);
         histOrderList.clear();
+        mProgressBarHistPagination.setVisibility(View.GONE);
         Log.e(TAG, "getFullHistoryOrders: asgfdsgdf");
         //Getting token
         String token = AppManager.getBusinessDetails().getData().getToken();
@@ -632,9 +565,7 @@ public class FragmentHistory extends Fragment {
                         mTVEmpty.setText("No records found");
                         mTVEmpty.setVisibility(View.VISIBLE);
                     }
-                }
-                else if (response.code() == 401)
-                {
+                } else if (response.code() == 401) {
                     logout();
                 }
                 mProgressBarHistFull.setVisibility(View.GONE);
@@ -642,7 +573,7 @@ public class FragmentHistory extends Fragment {
 
             @Override
             public void onFailure(@NotNull Call<NewHistoryWithTotals> call, @NotNull Throwable t) {
-                AppManager.toast("No Or Poor Internet Connection");
+                mSwipeHistory.setRefreshing(false);
             }
         });
     }//getFullHistoryOrders
