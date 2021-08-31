@@ -200,14 +200,14 @@ public class RetrofitNetMan {
 
 
         ////New Order with state ready
-        @GET("business/orders?state=ready&")
+        @GET("business/orders?state=Preparing&")
         Call<PaginationResponse> getPaginationReadyOrders(
                 @Header("x-access-token") String token,
                 @Query("page") int page
         );
 
         ////New Order with state preparing
-        @GET("business/orders?state=Preparing&")
+        @GET("business/orders?state=ready&")
         Call<PaginationResponse> getPaginationPreparingOrders(
                 @Header("x-access-token") String token,
                 @Query("page") int page

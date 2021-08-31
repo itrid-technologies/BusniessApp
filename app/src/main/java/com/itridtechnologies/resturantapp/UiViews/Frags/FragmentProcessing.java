@@ -65,6 +65,7 @@ public class FragmentProcessing extends Fragment {
     private NestedScrollView nestedScrollView;
     //..
     private int pageNo = 1;
+    private boolean shouldPaginate = true;
     private List<OrdersItem> mOrdersItemList;
 
     //context
@@ -162,16 +163,17 @@ public class FragmentProcessing extends Fragment {
 
         // adding on scroll change listener method for our nested scroll view.
         nestedScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
-            mPageProgressBar.setVisibility(View.VISIBLE);
 
             // on scroll change we are checking when users scroll as bottom.
             if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
                 // in this method we are incrementing page number,
                 // making progress bar visible and calling get data method.
-
-                Handler handler = new Handler();
-                //paginate after 1 sec
-                handler.postDelayed(this::loadMoreItems, 1000);
+                if (shouldPaginate) {
+                    mPageProgressBar.setVisibility(View.VISIBLE);
+                    Handler handler = new Handler();
+                    //paginate after 1 sec
+                    handler.postDelayed(this::loadMoreItems, 1000);
+                }
             }
         });
 
@@ -260,6 +262,8 @@ public class FragmentProcessing extends Fragment {
                         if (!response.body().getMessage().equals("No records found")) {
                             mOrdersItemList.addAll(response.body().getData().getOrders());
                             adapter.notifyDataSetChanged();
+                        } else {
+                            shouldPaginate = false;
                         }
                     }
                 }//success
