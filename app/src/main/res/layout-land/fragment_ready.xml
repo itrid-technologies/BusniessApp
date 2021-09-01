@@ -26,7 +26,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -41,19 +40,6 @@
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
-
-                    <TextView
-                        style="@style/textColor"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="@string/ReadyOrderTitle" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <TextView
@@ -63,7 +49,6 @@
                         android:layout_height="wrap_content"
                         android:text="@string/ReadyOrderContent" />
                 </TableRow>
-
 
                 <TableRow
                     android:layout_width="match_parent"
@@ -82,6 +67,5 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
-
 
 </FrameLayout>

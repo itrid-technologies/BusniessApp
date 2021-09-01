@@ -5,27 +5,12 @@
     style="@style/NavBarColor"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
     android:elevation="4dp"
     android:theme="@style/ToolbarColored"
     app:menu="@menu/action_bar_items"
     app:titleTextAppearance="@style/Toolbar.TitleText"
     app:popupTheme="@style/Theme.ResturantApp">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="end">
-
-        <ImageView
-            android:id="@+id/btn_help_action_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/todo"
-            android:src="@drawable/ic_help"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.appcompat.widget.Toolbar>

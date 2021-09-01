@@ -257,6 +257,5 @@ public class RetrofitNetMan {
                 @Path("id") String orderId
         );
 
-
     }//interface
 }

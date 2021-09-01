@@ -207,8 +207,6 @@ public class FragmentDashboard extends Fragment {
         mPBFull = root.findViewById(R.id.pb_dash_center);
         mToolbar = root.findViewById(R.id.action_bar_dashboard);
         mNSVDash = root.findViewById(R.id.nsv_dashboard);
-        mHelpAction = root.findViewById(R.id.btn_help_action_bar);
-
 
 
         //Busy Notification
@@ -301,10 +299,6 @@ public class FragmentDashboard extends Fragment {
                     return false;
                 }
             }
-        });
-
-        mHelpAction.setOnClickListener(v->{
-            startActivity(new Intent(mContext,help.class));
         });
 
         mOrderRecyclerView.setVisibility(View.VISIBLE);
@@ -662,13 +656,13 @@ public class FragmentDashboard extends Fragment {
 
         } else if (openToday.equals("yes")) {
             Log.e(TAG, "setTimeLayout: " + time12Hours + " close " + openToday);
-            String openMsg = "Open now - Accepting orders till " + time12Hours;
+            String openMsg = "Open now" +"\n"+ "Accepting orders till " + time12Hours;
             if (isClosed == 0) {
                 imgNoOrder.setImageResource(R.drawable.ic_businessopen);
                 noOrders.setText(openMsg);
             }
         } else {
-            String closeMsg = "Closed - Opening " + day + " " + time12Hours;
+            String closeMsg = "Closed" +"\n"+ "Opening " + day + " " + time12Hours;
             imgNoOrder.setImageResource(R.drawable.ic_businessclosed);
             noOrders.setText(closeMsg);
         }

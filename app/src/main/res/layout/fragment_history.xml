@@ -57,18 +57,6 @@
                             android:layout_height="wrap_content">
 
                             <TextView
-                                style="@style/textColor"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="12dp"
-                                android:text="@string/your_order_history" />
-                        </TableRow>
-
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <TextView
                                 style="@style/FontSmallGrey"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -100,7 +88,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginLeft="20dp"
-                                        android:text="Show All" />
+                                        android:text="Show all" />
 
                                     <RadioButton
                                         android:id="@+id/rbselectDate"
@@ -108,7 +96,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginLeft="20dp"
-                                        android:text="Select Date" />
+                                        android:text="Select date" />
                                 </RadioGroup>
 
                                 <TextView
@@ -120,10 +108,10 @@
                                     android:layout_marginRight="35dp"
                                     android:layout_marginBottom="10dp"
                                     android:background="@drawable/date_bg"
-                                    android:hint="Click To Select Date"
+                                    android:hint="Select date"
                                     android:paddingLeft="15dp"
-                                    android:paddingTop="5dp"
-                                    android:paddingBottom="5dp"
+                                    android:paddingTop="15dp"
+                                    android:paddingBottom="15dp"
                                     android:visibility="gone" />
                             </LinearLayout>
 

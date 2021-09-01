@@ -63,13 +63,10 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TableLayout
+                    android:stretchColumns="0"
                     android:id="@+id/TL_dashboard"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingLeft="25dp"
-                    android:paddingRight="8dp"
-                    android:shrinkColumns="0"
-                    android:stretchColumns="0"
                     app:layout_constraintTop_toBottomOf="@id/busy_mode_switch_dashboard">
 
                     <TableRow
@@ -81,10 +78,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginRight="20dp"
-                            android:paddingTop="20dp"
+                            android:layout_marginLeft="20dp"
                             android:text="@string/order_text" />
                     </TableRow>
-
 
                     <TableRow
                         android:layout_width="match_parent"
@@ -97,8 +93,7 @@
                             android:layout_marginTop="10dp"
                             android:layout_marginRight="20dp"
                             android:layout_marginBottom="?attr/actionBarSize"
-                            android:paddingBottom="25dp"
-                            tools:listitem="@layout/new_order_container" />
+                            android:paddingBottom="25dp" />
                         />
                     </TableRow>
 
@@ -136,6 +131,7 @@
                     android:layout_marginTop="12dp"
                     android:text="@string/WeAreOpen"
                     android:visibility="gone"
+                    tools:visibility="visible"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/open_pic" />
 
@@ -147,6 +143,7 @@
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="30dp"
                     android:text="12:00"
+                    tools:visibility="visible"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.101"
@@ -163,18 +160,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="230dp"
-            android:src="@drawable/ic_no_menu"
+            android:src="@drawable/ic_businessopen"
             android:visibility="gone"
+            tools:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/action_bar_dashboard" />
 
+        <!-- Open/Closed Text -->
         <TextView
             android:id="@+id/tv_no_order"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="45dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="15dp"
             android:layout_marginEnd="45dp"
             android:layout_marginBottom="150dp"
             android:fontFamily="@font/regular"
@@ -187,6 +186,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ic_noOrder" />
 
+        <!-- Busy mode card -->
         <LinearLayout
             android:id="@+id/busy_notification"
             android:layout_width="match_parent"
@@ -201,13 +201,12 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/semibold"
+                android:fontFamily="@font/medium"
                 android:paddingStart="25dp"
                 android:paddingTop="15dp"
                 android:paddingBottom="10dp"
                 android:text="@string/your_business_is_busy"
-                android:textColor="@color/white"
-                android:textSize="15sp" />
+                android:textColor="@color/white" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -219,7 +218,6 @@
                 android:text="@string/busy_mode_is_enabled_to_receive_new_orders_turn_off_busy_mode"
                 android:textColor="@color/white"
                 android:textSize="13sp" />
-
 
         </LinearLayout>
 

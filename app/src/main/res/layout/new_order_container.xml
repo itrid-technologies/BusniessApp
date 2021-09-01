@@ -37,8 +37,8 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="15dp"
                 android:textColor="@color/white"
-                android:textSize="21sp"
-                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textStyle= "bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="#7789" />
@@ -47,11 +47,10 @@
                 android:id="@+id/order_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="20dp"
                 android:layout_marginBottom="100dp"
                 android:text="11:56 AM"
                 android:textColor="@color/white"
-                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -64,7 +63,7 @@
                 android:layout_marginTop="10dp"
                 android:text="Imran Rasheed"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/order_number" />
 
@@ -74,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="5dp"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/customer_name">
@@ -85,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:text="3"
                     android:textColor="@color/white"
-                    android:textSize="14sp" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/item_text"
@@ -93,7 +92,7 @@
                     android:layout_height="wrap_content"
                     android:text=" items (Rs. "
                     android:textColor="@color/white"
-                    android:textSize="14sp" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/price"
@@ -101,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:text="140.00"
                     android:textColor="@color/white"
-                    android:textSize="14sp" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/end_bracket"
@@ -109,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:text=")"
                     android:textColor="@color/white"
-                    android:textSize="14sp" />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -145,7 +144,7 @@
                 android:id="@+id/btm_layout_container_db"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="20dp"
                 android:background="@color/darkGreen"
                 android:orientation="horizontal"
                 app:layout_constraintTop_toBottomOf="@id/items_price">
@@ -163,16 +162,15 @@
 
                 <TextView
                     android:id="@+id/status"
-                    android:layout_width="65dp"
+                    android:layout_width="55dp"
                     android:layout_height="25dp"
                     android:layout_marginTop="0dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginRight="20dp"
                     android:background="@drawable/paid_unpaid_background"
                     android:gravity="center"
                     android:text="Unpaid"
-                    android:textAllCaps="false"
+                    android:textAllCaps="true"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
