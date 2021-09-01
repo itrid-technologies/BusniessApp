@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -69,6 +70,8 @@ public class FragmentReady extends Fragment {
     private LinearLayoutManager layoutManager;
     //context
     private Context mContext;
+    //image view help
+    private ImageView mHelpAction;
     //Adapter
     private AdapterFirstTimeReady adapter;
     private static final String TAG = "FragmentReady";
@@ -145,6 +148,7 @@ public class FragmentReady extends Fragment {
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         nestedScrollView = view.findViewById(R.id.nested_scroll_ready);
         mProgressBar = view.findViewById(R.id.progress_bar_ready);
+        mHelpAction = view.findViewById(R.id.btn_help_action_bar);
 
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
             if (Internet.isAvailable(mContext)) {
@@ -155,6 +159,11 @@ public class FragmentReady extends Fragment {
                 mErrorContainer.setVisibility(View.VISIBLE);
                 mRootContainer.setVisibility(View.GONE);
             }
+        });
+
+
+        mHelpAction.setOnClickListener(v->{
+            startActivity(new Intent(mContext,help.class));
         });
 
         // adding on scroll change listener method for our nested scroll view.

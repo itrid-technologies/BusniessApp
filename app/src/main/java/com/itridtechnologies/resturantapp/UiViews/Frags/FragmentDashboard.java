@@ -153,6 +153,9 @@ public class FragmentDashboard extends Fragment {
     //Order item
     private OrdersItem mOrderItem = null;
 
+    //image view help
+    private ImageView mHelpAction;
+
     //Declare timer
     private CountDownTimer cTimer = null;
     private int mFlagCounter = 0;
@@ -162,6 +165,8 @@ public class FragmentDashboard extends Fragment {
 
     //Receiving Broadcast for notifications
     private BroadcastReceiver mRegistrationBroadcastReceiver;
+
+    //
 
     private SwipeRefreshLayout mSwipeDash;
     //retrieve token from pref
@@ -202,6 +207,9 @@ public class FragmentDashboard extends Fragment {
         mPBFull = root.findViewById(R.id.pb_dash_center);
         mToolbar = root.findViewById(R.id.action_bar_dashboard);
         mNSVDash = root.findViewById(R.id.nsv_dashboard);
+        mHelpAction = root.findViewById(R.id.btn_help_action_bar);
+
+
 
         //Busy Notification
         mBusyNotify = root.findViewById(R.id.busy_notification);
@@ -289,11 +297,14 @@ public class FragmentDashboard extends Fragment {
                     return false;
                 }
                 default: {
-                    Intent intent = new Intent(mContext, help.class);
-                    startActivity(intent);
+                    Log.e(TAG, "onCreateView: i m cool" );
                     return false;
                 }
             }
+        });
+
+        mHelpAction.setOnClickListener(v->{
+            startActivity(new Intent(mContext,help.class));
         });
 
         mOrderRecyclerView.setVisibility(View.VISIBLE);

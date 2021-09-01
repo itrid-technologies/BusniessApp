@@ -106,6 +106,10 @@ public class FragmentHistory extends Fragment {
     //Working Variables
     private Double mTotalValue = 0.00;
 
+
+    //image view help
+    private ImageView mHelpAction;
+
     //Calender View
     private TextView mDateET;
     private String datee = "";
@@ -147,12 +151,17 @@ public class FragmentHistory extends Fragment {
         mNoRecordFound = root.findViewById(R.id.tvNoRecordFound);
         mNoHistoryImage = root.findViewById(R.id.ic_noOrder_hist);
         mTVEmpty = root.findViewById(R.id.tv_no_order_hist);
+        mHelpAction = root.findViewById(R.id.btn_help_action_bar);
 
         mShowAll.setChecked(true);
         //Swipe Refresh Layout
         mSwipeHistory = root.findViewById(R.id.srl_hist);
         //setting name of toolbar
         Toolbar mToolbarHist = root.findViewById(R.id.action_bar_history);
+
+        mHelpAction.setOnClickListener(v->{
+            startActivity(new Intent(mContext,help.class));
+        });
 
         ///Header Name
         mToolbarHist.setTitle("History");

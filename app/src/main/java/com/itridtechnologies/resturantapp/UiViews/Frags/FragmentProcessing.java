@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -67,6 +68,9 @@ public class FragmentProcessing extends Fragment {
     private int pageNo = 1;
     private boolean shouldPaginate = true;
     private List<OrdersItem> mOrdersItemList;
+
+    //image view help
+    private ImageView mHelpAction;
 
     //context
     private Context mContext;
@@ -148,6 +152,7 @@ public class FragmentProcessing extends Fragment {
         mErrorContainer = view.findViewById(R.id.error_container);
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
         nestedScrollView = view.findViewById(R.id.nested_scroll_processing);
+        mHelpAction = view.findViewById(R.id.btn_help_action_bar);
 
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
             if (Internet.isAvailable(mContext)) {
@@ -160,6 +165,10 @@ public class FragmentProcessing extends Fragment {
             }
         });
 
+
+        mHelpAction.setOnClickListener(v->{
+            startActivity(new Intent(mContext,help.class));
+        });
 
         // adding on scroll change listener method for our nested scroll view.
         nestedScrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {

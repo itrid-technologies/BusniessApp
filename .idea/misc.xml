@@ -5,12 +5,14 @@
       <map>
         <entry key="..\:/Daniyal Project/Projects/BusinessApp/app/src/main/res/drawable/ic_cross.xml" value="0.36302083333333335" />
         <entry key="..\:/Daniyal Project/Projects/BusinessApp/app/src/main/res/drawable/ic_dislike_tint.xml" value="0.36302083333333335" />
+        <entry key="..\:/Daniyal Project/Projects/BusinessApp/app/src/main/res/drawable/ic_help.xml" value="0.36302083333333335" />
         <entry key="..\:/Daniyal Project/Projects/BusinessApp/app/src/main/res/drawable/ic_plus.xml" value="0.36302083333333335" />
         <entry key="..\:/Daniyal Project/Projects/BusinessApp/app/src/main/res/drawable/ic_plus_gray.xml" value="0.36302083333333335" />
         <entry key="..\:/Daniyal Project/Projects/BusinessApp/app/src/main/res/drawable/ic_ready.xml" value="0.3559754851889683" />
         <entry key="..\:/Daniyal Project/Projects/BusinessApp/app/src/main/res/drawable/ic_remove.xml" value="0.36302083333333335" />
         <entry key="..\:/Daniyal Project/Projects/BusinessApp/app/src/main/res/drawable/ic_remove_gray.xml" value="0.36302083333333335" />
         <entry key="..\:/Daniyal Project/Projects/BusinessApp/app/src/main/res/drawable/paid_background.xml" value="0.36302083333333335" />
+        <entry key="..\:/Daniyal Project/Projects/BusinessApp/app/src/main/res/layout/action_bar.xml" value="0.34270833333333334" />
         <entry key="..\:/Daniyal Project/Projects/BusinessApp/app/src/main/res/layout/action_bar_frags.xml" value="0.31851851851851853" />
         <entry key="..\:/Daniyal Project/Projects/BusinessApp/app/src/main/res/layout/activity_history_details.xml" value="0.34270833333333334" />
         <entry key="..\:/Daniyal Project/Projects/BusinessApp/app/src/main/res/layout/activity_main.xml" value="0.33605720122574056" />
@@ -31,17 +33,6 @@
         <entry key="..\:/Daniyal Project/Projects/BusinessApp/app/src/main/res/layout/rcv_footer.xml" value="0.34270833333333334" />
         <entry key="..\:/Daniyal Project/Projects/BusinessApp/app/src/main/res/menu/action_bar_items.xml" value="0.33605720122574056" />
         <entry key="..\:/Daniyal Project/Projects/BusinessApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.34270833333333334" />
-        <entry key="app/src/main/res/layout-land/activity_basic_actvity.xml" value="0.22486772486772486" />
-        <entry key="app/src/main/res/layout-land/activity_cancel_order.xml" value="0.22486772486772486" />
-        <entry key="app/src/main/res/layout-sw600dp/activity_basic_actvity.xml" value="0.16905737704918034" />
-        <entry key="app/src/main/res/layout/action_bar_frags.xml" value="0.265625" />
-        <entry key="app/src/main/res/layout/activity_basic_actvity.xml" value="0.15062165649928722" />
-        <entry key="app/src/main/res/layout/activity_cancel_order.xml" value="0.32408515453720627" />
-        <entry key="app/src/main/res/layout/activity_new_order.xml" value="0.22418478260869565" />
-        <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.12708006623613113" />
-        <entry key="app/src/main/res/layout/fragment_processing.xml" value="0.265625" />
-        <entry key="app/src/main/res/layout/nav_bar_setting.xml" value="0.265625" />
-        <entry key="app/src/main/res/layout/new_order_container.xml" value="0.5" />
       </map>
     </option>
   </component>
