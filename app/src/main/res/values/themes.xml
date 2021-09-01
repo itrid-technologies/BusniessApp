@@ -18,7 +18,9 @@
         <!--        <item name="android:textColor">@color/blackColorText</item>-->
     </style>
 
-
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">18sp</item>
+    </style>
 
     <style name="ToolbarColored" parent="Theme.ResturantApp">
         <item name="android:textColorSecondary">#AFAFAF</item>
