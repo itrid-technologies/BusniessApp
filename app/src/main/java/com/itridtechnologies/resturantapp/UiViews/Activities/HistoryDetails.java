@@ -63,6 +63,8 @@ public class HistoryDetails extends AppCompatActivity {
     private RecyclerView mRVTotals;
     private PreferencesManager pm;
 
+    private String customerName;
+
     private double orderTotal = 0;
     //Reviews
     private TextView mCustomerReview;
@@ -159,6 +161,7 @@ public class HistoryDetails extends AppCompatActivity {
         mCustomerReview.setOnClickListener(v -> {
             list.clear();
             Intent intent = new Intent(HistoryDetails.this, FeedbackActivity.class);
+            intent.putExtra("NAME", customerName);
             intent.putExtra("ORDER_ID", or);
             startActivity(intent);
         });
@@ -166,6 +169,7 @@ public class HistoryDetails extends AppCompatActivity {
         mCourierReview.setOnClickListener(v -> {
             list.clear();
             Intent intent = new Intent(HistoryDetails.this, FeedbackActivity.class);
+            intent.putExtra("NAME", customerName);
             intent.putExtra("ORDER_ID", or);
             startActivity(intent);
         });
@@ -354,7 +358,7 @@ public class HistoryDetails extends AppCompatActivity {
 
         ///Name of Customer
         if (fCustName != null && lCustName != null) {
-            String customerName = fCustName + " " + lCustName;
+            customerName = fCustName + " " + lCustName;
             mCustomerName.setText(customerName);
         }
         //Amount

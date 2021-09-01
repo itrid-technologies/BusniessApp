@@ -16,7 +16,8 @@
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/btn_delivered_ll"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -41,12 +42,12 @@
                     android:layout_marginTop="35dp"
                     android:layout_marginEnd="15dp"
                     android:gravity="center"
-                    android:text="@string/how_was_your_overall_experience_with_imran"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/nav_bar_HD" />
+                    app:layout_constraintTop_toBottomOf="@+id/nav_bar_HD"
+                    tools:text="@string/how_was_your_overall_experience_with_imran" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/ll_like_dislike"
@@ -99,89 +100,32 @@
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="35dp"
                     android:gravity="center"
-                    android:text="Excellent rating. What did you enjoy? What was wrong with your pickup experience?/ What was wrong with Bilal?"
                     android:textColor="@color/grey"
                     android:textSize="13sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/ll_like_dislike" />
+                    app:layout_constraintTop_toBottomOf="@+id/ll_like_dislike"
+                    tools:text="What was wrong with your pickup experience?/ What was wrong with Bilal?" />
 
 
-                <com.google.android.material.chip.ChipGroup
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/frequent_options"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="15dp"
-                    android:textColor="@android:color/black"
-                    android:textSize="12sp"
-                    app:chipSpacingHorizontal="3dp"
-                    app:chipSpacingVertical="5dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/rating_tv"
-                    app:singleLine="false"
-                    app:singleSelection="false">
+                    app:layout_constraintTop_toBottomOf="@+id/rating_tv" />
 
-                    <!--                    <com.google.android.material.chip.Chip-->
-                    <!--                        android:id="@+id/chip1"-->
-                    <!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_margin="5dp"-->
-                    <!--                        android:text="@string/didn_t_come_inside" />-->
-
-                    <!--                    <com.google.android.material.chip.Chip-->
-                    <!--                        android:id="@+id/chip2"-->
-                    <!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_margin="5dp"-->
-                    <!--                        android:text="@string/delivery_bag_unavailable" />-->
-
-                    <!--                    <com.google.android.material.chip.Chip-->
-                    <!--                        android:id="@+id/chip3"-->
-                    <!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_margin="5dp"-->
-                    <!--                        android:text="@string/unprofessional_behavior" />-->
-                    <!--                    -->
-                    <!--                    <com.google.android.material.chip.Chip-->
-                    <!--                        android:id="@+id/chip4"-->
-                    <!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_margin="5dp"-->
-                    <!--                        android:text="@string/late_pickup" />-->
-                    <!--                    -->
-                    <!--                    <com.google.android.material.chip.Chip-->
-                    <!--                        android:id="@+id/chip5"-->
-                    <!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_margin="5dp"-->
-                    <!--                        android:text="@string/late_dropoff" />-->
-
-                    <!--                    <com.google.android.material.chip.Chip-->
-                    <!--                        android:id="@+id/chip6"-->
-                    <!--                        style="@style/Widget.MaterialComponents.Chip.Choice"-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_margin="5dp"-->
-                    <!--                        android:text="@string/delivery_partner_using_someone_else_account" />-->
-
-                </com.google.android.material.chip.ChipGroup>
 
                 <TextView
                     android:id="@+id/tv_leave_back"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
-                    android:layout_marginTop="35dp"
+                    android:layout_marginTop="30dp"
                     android:layout_marginEnd="15dp"
                     android:text="@string/leave_feedback"
                     android:textSize="13sp"

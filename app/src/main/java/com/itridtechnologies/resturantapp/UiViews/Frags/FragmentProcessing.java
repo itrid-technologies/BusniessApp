@@ -28,12 +28,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.itridtechnologies.resturantapp.Adapters.AdapterFirstTime;
+import com.itridtechnologies.resturantapp.Adapters.MainAdapter;
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.UiViews.Activities.MainActivity;
 import com.itridtechnologies.resturantapp.UiViews.Activities.Menu;
 import com.itridtechnologies.resturantapp.UiViews.Activities.NewOrder;
-import com.itridtechnologies.resturantapp.UiViews.Activities.ReadyDetails;
 import com.itridtechnologies.resturantapp.UiViews.Activities.Settings;
 import com.itridtechnologies.resturantapp.UiViews.Activities.help;
 import com.itridtechnologies.resturantapp.models.Pagination.OrdersItem;
@@ -42,8 +41,6 @@ import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
 import com.itridtechnologies.resturantapp.utils.Internet;
 import com.itridtechnologies.resturantapp.utils.PreferencesManager;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +75,7 @@ public class FragmentProcessing extends Fragment {
     private LinearLayoutManager layoutManager;
 
     //Adapter
-    private AdapterFirstTime adapter;
+    private MainAdapter adapter;
 
     //Preference Manager
     private PreferencesManager pm;
@@ -302,7 +299,7 @@ public class FragmentProcessing extends Fragment {
 
     private void setupRecyclerView() {
         layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
-        adapter = new AdapterFirstTime(mOrdersItemList, mContext);
+        adapter = new MainAdapter(mOrdersItemList, mContext);
         mRvOrders.setLayoutManager(layoutManager);
         mRvOrders.setAdapter(adapter);
 

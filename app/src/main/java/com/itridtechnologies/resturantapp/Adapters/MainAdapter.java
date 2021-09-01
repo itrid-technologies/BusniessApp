@@ -1,7 +1,5 @@
 package com.itridtechnologies.resturantapp.Adapters;
 
-import static android.content.ContentValues.TAG;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
@@ -19,21 +17,21 @@ import com.itridtechnologies.resturantapp.utils.PreferencesManager;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class AdapterFirstTimeReady extends RecyclerView.Adapter<AdapterFirstTimeReady.detailHolder> {
+import static android.content.ContentValues.TAG;
+
+public class MainAdapter extends RecyclerView.Adapter<MainAdapter.detailHolder> {
 
     private final List<OrdersItem> prepareList;
     private final Context mCtx;
     private itemClickListener mListener;
     private PreferencesManager pm;
 
-    public AdapterFirstTimeReady(List<OrdersItem> prepareList, Context mCtx) {
+    public MainAdapter(List<OrdersItem> prepareList, Context mCtx) {
         this.prepareList = prepareList;
         this.mCtx = mCtx;
         pm = new PreferencesManager(mCtx);
@@ -49,7 +47,7 @@ public class AdapterFirstTimeReady extends RecyclerView.Adapter<AdapterFirstTime
     @Override
     public detailHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.processing_orders_container, parent, false);
-        return new AdapterFirstTimeReady.detailHolder(view, mListener);
+        return new MainAdapter.detailHolder(view, mListener);
     }
 
     @SuppressLint({"SetTextI18n", "UseCompatLoadingForDrawables"})
@@ -58,12 +56,14 @@ public class AdapterFirstTimeReady extends RecyclerView.Adapter<AdapterFirstTime
 
         OrdersItem mOrderInfo = prepareList.get(position);
 
+        int isRiderAssigned = 0;
+        int orderType;
+        orderType = mOrderInfo.getOrderType();
+
         String customerName = prepareList.get(position).getFirstName() + " " + prepareList.get(position).getLastName();
         String orderNumber = String.valueOf(mOrderInfo.getId());
         int paymentStatus = mOrderInfo.getPaymentStatus();
         String itemTotal = String.valueOf(mOrderInfo.getItemCount());
-
-        holder.mOrderTime.setVisibility(View.GONE);
 
         ///Setting data in Textfields On screen
         holder.mOrderNumber.setText("#" + orderNumber);
@@ -90,26 +90,20 @@ public class AdapterFirstTimeReady extends RecyclerView.Adapter<AdapterFirstTime
                 holder.mStatus.setBackground(mCtx.getResources().getDrawable(R.drawable.paid_background));
             }
 
-            if (mOrderInfo.getOrderType() == 2) {
+            if (mOrderInfo.getOrderType() == 2)  {
                 holder.mType.setText("Deliver with own rider");
             }
         }
 
-        String time = mOrderInfo.getDateAdded();
+        String time = prepareList.get(position).getPickuptime();
         String[] minTime = time.split("T");
+        Log.e(TAG, "onBindViewHolder: time 1 " + minTime[1]);
+        Log.e(TAG, "onBindViewHolder: time 1 " + minTime[1]);
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        holder.mOrderTime.setText(minTime[1].substring(0, minTime[1].length() - 8));
 
-        Date dt = null;
-        try {
-            dt = format.parse(minTime[0]);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        SimpleDateFormat your_format = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
-        holder.mOrderTime.setText(your_format.format(dt));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 
     }
 

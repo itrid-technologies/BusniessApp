@@ -105,46 +105,60 @@
         app:layout_constraintStart_toStartOf="@id/password"
         app:layout_constraintTop_toBottomOf="@id/view4" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/loginBtn"
+
+
+    <LinearLayout
+        android:id="@+id/btn_delivered_ll"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="70dp"
-        android:layout_marginRight="30dp"
-        android:enabled="false"
-        android:orientation="horizontal"
-        android:background="@color/theme_color"
+        android:layout_height="80dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/password">
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
-            android:id="@+id/tvLogin"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/loginBtn"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/login"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:gravity="center"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="44dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="30dp"
+            android:enabled="false"
+            android:layout_marginBottom="30dp"
+            android:background="@color/theme_color"
+            >
 
-        <ProgressBar
-            android:id="@+id/pbLogin"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:visibility="gone"
-            android:indeterminateTint="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/tvLogin"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/login"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ProgressBar
+                android:id="@+id/pbLogin"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:visibility="gone"
+                android:indeterminateTint="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,12 +1,17 @@
 package com.itridtechnologies.resturantapp.UiViews.Activities;
 
+import static android.content.ContentValues.TAG;
 import static com.itridtechnologies.resturantapp.utils.AppManager.logout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,9 +31,11 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.itridtechnologies.resturantapp.Adapters.AdapterFeedback;
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.databinding.ActivityFeedback2Binding;
 import com.itridtechnologies.resturantapp.models.Feedback.FeedbackResponse;
+import com.itridtechnologies.resturantapp.models.feedbacktags.DataItem;
 import com.itridtechnologies.resturantapp.models.feedbacktags.FeedbackTagsResponse;
 import com.itridtechnologies.resturantapp.network.RetrofitNetMan;
 import com.itridtechnologies.resturantapp.utils.AppManager;
@@ -40,6 +47,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FeedbackActivity extends AppCompatActivity {
 
@@ -58,6 +66,14 @@ public class FeedbackActivity extends AppCompatActivity {
     private String mOrderId;
     private int mRating = 1;
 
+    private RecyclerView mRCV;
+
+    //Customer name
+    private String mName;
+
+    //RCV Variables
+    private AdapterFeedback mAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +83,9 @@ public class FeedbackActivity extends AppCompatActivity {
         AppManager.hideStatusBar(FeedbackActivity.this);
 
         mFeedbackBtn = findViewById(R.id.btn_delivered);
+        mRCV = findViewById(R.id.frequent_options);
         mOrderId = String.valueOf(getIntent().getStringExtra("ORDER_ID"));
+        mName = getIntent().getStringExtra("NAME");
         Log.e(TAG, "onCreate: mOrderId = " + mOrderId);
 
         toolbarfun();
@@ -129,17 +147,32 @@ public class FeedbackActivity extends AppCompatActivity {
     }//toolbarfun
 
     //onStart Method
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onStart() {
         super.onStart();
+
+        //setting cutomer name
+        binding.yourExpereinceTv.setText("How was your overall experience with " + mName);
+
         //setting chips
-        setChips();
+        setFeedback();
 //        getFromChips();
         //setting listener on button
         listeners();
     }//onStart
 
-    private void addInChipGroup() {
+    private void addInChipGroup(List<DataItem> feedbackList) {
+
+        Log.e(TAG, "setRCV: + rcv ");
+//        binding.frequentOptions.setLayoutManager(new GridLayoutManager(this, 2));
+//        mAdapter = new AdapterFeedback(FeedbackActivity.this, feedbackList);
+//        binding.frequentOptions.setAdapter(mAdapter);
+//
+//        mAdapter.setOnItemClickListener((position, type) -> {
+//            tags.add(feedbackList.get(position).getDisplayName());
+//        });
+
 
 //        for (String tag : mTagsFromServer) {
 //            Chip chip = new Chip(FeedbackActivity.this);
@@ -148,30 +181,23 @@ public class FeedbackActivity extends AppCompatActivity {
 //            binding.frequentOptions.addView(chip);
 //        }
 
-        if (binding.frequentOptions.getChildCount() == 0 ){
-            int i = 0;
-            for (String tag : mTagsFromServer){
-                Chip resultChip = new Chip(FeedbackActivity.this);
-//                ChipDrawable chipDrawable =
-//                        ChipDrawable.createFromAttributes(
-//                                getApplicationContext(),
-//                                null,
-//                                0,
-//                                R.style.Widget_MaterialComponents_Chip_Choice);
-                resultChip.setId(i++);
-//                resultChip.setChipDrawable(chipDrawable);
-                resultChip.setText(tag);
-                binding.frequentOptions.addView(resultChip);
-            }
-        }
+//        if (binding.frequentOptions.getChildCount() == 0) {
+//            int i = 0;
+//            for (String tag : mTagsFromServer) {
+//                Chip resultChip = new Chip(FeedbackActivity.this);
+//                resultChip.setId(i++);
+//                resultChip.setText(tag);
+//                binding.frequentOptions.addView(resultChip);
+//            }
+//        }
 
-        binding.frequentOptions.setOnCheckedChangeListener((group, checkedId) -> {
-            Chip chip = group.findViewById(checkedId);
-            if(chip != null){
-                tags.add(chip.getText().toString());
-                Toast.makeText(getApplicationContext(), chip.getText().toString(),Toast.LENGTH_SHORT).show();
-            }
-        });
+//        binding.frequentOptions.setOnCheckedChangeListener((group, checkedId) -> {
+//            Chip chip = group.findViewById(checkedId);
+//            if (chip != null) {
+//                tags.add(chip.getText().toString());
+//                Toast.makeText(getApplicationContext(), chip.getText().toString(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         binding.nsvFeedback.setVisibility(View.VISIBLE);
         binding.pbFeedback.setVisibility(View.GONE);
@@ -179,6 +205,7 @@ public class FeedbackActivity extends AppCompatActivity {
     }//addInChipGroup
 
     //click listeners
+    @SuppressLint("SetTextI18n")
     private void listeners() {
 
         mFeedbackBtn.setOnClickListener(v -> {
@@ -191,6 +218,9 @@ public class FeedbackActivity extends AppCompatActivity {
         //updating thumbs up and thumbs down and updating rating value
         if (binding.thumbsUp != null) {
             binding.thumbsUp.setOnClickListener(v -> {
+
+                binding.ratingTv.setText("Excellent rating. What did you enjoy? ");
+
                 binding.thumbsUp.setImageResource(R.drawable.ic_like_tint);
                 binding.thumbsDown.setImageResource(R.drawable.ic_dislike_untint);
                 binding.thumbsDown.setBackgroundResource(R.drawable.unselected_thumb_bg);
@@ -203,6 +233,10 @@ public class FeedbackActivity extends AppCompatActivity {
 
         if (binding.thumbsDown != null) {
             binding.thumbsDown.setOnClickListener(v -> {
+
+
+                binding.ratingTv.setText("What was wrong with Bilal's Order? ");
+
                 binding.thumbsUp.setImageResource(R.drawable.ic_like_untint);
                 binding.thumbsDown.setImageResource(R.drawable.ic_dislike_tint);
                 binding.thumbsDown.setBackgroundResource(R.drawable.selected_thumb_down_bg);
@@ -242,9 +276,7 @@ public class FeedbackActivity extends AppCompatActivity {
                     Toast.makeText(FeedbackActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(FeedbackActivity.this, BasicActvity.class);
                     startActivity(intent);
-                }
-                else if (response.code() == 401)
-                {
+                } else if (response.code() == 401) {
                     logout();
                 }
             }
@@ -258,21 +290,27 @@ public class FeedbackActivity extends AppCompatActivity {
     }//postFeedback
 
     //setting chips
-    private void setChips() {
+    private void setFeedback() {
         Call<FeedbackTagsResponse> call = RetrofitNetMan.getRestApiService().getTags();
         call.enqueue(new Callback<FeedbackTagsResponse>() {
             @Override
             public void onResponse(@NotNull Call<FeedbackTagsResponse> call, @NotNull Response<FeedbackTagsResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    for (int i = 0; i < response.body().getData().size(); i++) {
-                        mTagsFromServer.add(response.body().getData().get(i).getDisplayName());
-                    }
-                    Log.e(TAG, "onResponse: get tag list " + mTagsFromServer);
-                    //Setting chips in View (Chip Group)
-                    addInChipGroup();
-                }
-                else if (response.code() == 401)
-                {
+
+                    mAdapter = new AdapterFeedback(FeedbackActivity.this, response.body().getData());
+                    mRCV.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+                    mRCV.setAdapter(mAdapter);
+
+                    mAdapter.setOnItemClickListener((position, type) -> {
+                        tags.add(response.body().getData().get(position).getDisplayName());
+                    });
+
+                    binding.nsvFeedback.setVisibility(View.VISIBLE);
+                    binding.pbFeedback.setVisibility(View.GONE);
+
+//                    addInChipGroup(response.body().getData());
+
+                } else if (response.code() == 401) {
                     logout();
                 }
             }

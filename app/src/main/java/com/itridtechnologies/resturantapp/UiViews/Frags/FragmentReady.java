@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,8 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.itridtechnologies.resturantapp.Adapters.AdapterFirstTime;
-import com.itridtechnologies.resturantapp.Adapters.AdapterFirstTimeReady;
+import com.itridtechnologies.resturantapp.Adapters.AdapterReady;
 import com.itridtechnologies.resturantapp.R;
 import com.itridtechnologies.resturantapp.UiViews.Activities.MainActivity;
 import com.itridtechnologies.resturantapp.UiViews.Activities.Menu;
@@ -73,7 +71,7 @@ public class FragmentReady extends Fragment {
     //image view help
     private ImageView mHelpAction;
     //Adapter
-    private AdapterFirstTimeReady adapter;
+    private AdapterReady adapter;
     private static final String TAG = "FragmentReady";
     //Prefernce Manager
     private PreferencesManager pm;
@@ -300,7 +298,7 @@ public class FragmentReady extends Fragment {
 
     private void setupRecyclerView() {
         layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
-        adapter = new AdapterFirstTimeReady(mOrdersItemList, mContext);
+        adapter = new AdapterReady(mOrdersItemList, mContext);
         mRvOrders.setLayoutManager(layoutManager);
         mRvOrders.setAdapter(adapter);
 
